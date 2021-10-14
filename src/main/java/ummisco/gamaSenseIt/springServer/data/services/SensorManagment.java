@@ -92,8 +92,7 @@ public class SensorManagment implements ISensorManagment {
     String[] data = message.split(";");
     if (data.length < 4)
       return;
-    long capturedateS = 0;
-    long token = 0;
+    long capturedateS, token;
     String sensorName = data[1];
 
     try {
