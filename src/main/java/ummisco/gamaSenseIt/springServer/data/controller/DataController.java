@@ -43,12 +43,16 @@ public class DataController {
 
     }
 
-    private <MT, D> List<D> createByApplying(
-            Iterable<MT> findResult, DisplayConverter<MT, D> caster) {
+    public static <MT, D> List<D> createByApplying(
+            Iterable<MT> findResult, Converter<MT, D> caster) {
         var result = new ArrayList<D>();
         for (var data : findResult)
             result.add(caster.cast(data));
         return result;
+    }
+
+    interface Converter<MT, D> {
+        D cast(MT mt);
     }
 
     @CrossOrigin
@@ -167,9 +171,5 @@ public class DataController {
     @RequestMapping(value = IDataController.DEFAULT_DATA_SEPARATOR)
     public String getDefaultDataSeparator() {
         return SensorMetadata.DEFAULT_DATA_SEPARATOR;
-    }
-
-    interface DisplayConverter<MT, D> {
-        D cast(MT mt);
     }
 }
