@@ -1,8 +1,11 @@
-# Out build
+# Out build and package
 target/
 .mvn/
 *.class
 *.jar
+*.war
+*.ear
+*.iml
 
 
 # Eclipse project
@@ -13,13 +16,8 @@ target/
 .project
 .settings/
 
-
-# Package Files #
-*.war
-*.ear
-*.iml
+# Idea Project
 *.idea
-
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
