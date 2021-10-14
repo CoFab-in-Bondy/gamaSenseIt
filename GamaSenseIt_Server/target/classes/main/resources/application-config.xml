@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+	<context:annotation-config/>
+	
+<!--
+The bean 'SensorManagment', defined in class path resource [application-config.xml], could not be registered. A bean with that name has already been defined in file [~/gamaSenseIt/GamaSenseIt_Server/target/classes/ummisco/gamaSenseIt/springServer/data/services/SensorManagment.class] and overriding is disabled.
+
+	<bean id="SensorManagment"
+		class="ummisco.gamaSenseIt.springServer.data.services.SensorManagment" >
+	</bean>
+-->
+
+	
+</beans>

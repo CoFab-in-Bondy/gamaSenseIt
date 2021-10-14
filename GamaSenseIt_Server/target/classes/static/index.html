@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+ 
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+     
+ 
+   </head>
+   
+   
+  <body>
+		<h1>MAP</h1>
+		
+		
+		    <!--The div element for the map -->
+    <div id="map"></div>
+    <script>
+		// Initialize and add the map
+		function initMap() {
+		  // The location of Uluru
+		  var uluru = {lat: 47.21026519999999, lng: 5.548803799999973};
+		  // The map, centered at Uluru
+		  var map = new google.maps.Map(
+		      document.getElementById('map'), {zoom: 4, center: uluru});
+		  // The marker, positioned at Uluru
+		  var marker = new google.maps.Marker({position: uluru, map: map});
+		}
+    </script>
+    
+    
+    
+		
+		<h1>Data</h1>
+<main>
+		<table id="table" data-toggle="table" data-origin='' cross-origin="null" data-url="/getData"> 
+		    <thead>
+					<tr>
+						<th data-field="date">Date</th>
+						<th data-field="sensorName">Sensor Name</th>
+						<th data-field="value">Value</th>
+						<th data-field="unit">Unit</th>
+						<th data-field="measuredParameter">Parameter</th>
+						<th data-field="latitude">Latitude</th>
+						<th data-field="longitude">Longitude</th>
+					</tr>
+			</thead>
+		
+		</table>
+	</main>
+
+
+		<!-- TODO lisible depuis le navigateur -->
+	   <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt3H1XAnphx5LiIQhuWjI_JCRwVIDIBEY&callback=initMap">
+    </script>
+	 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<!-- Latest compiled and minified JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+<!-- Latest compiled and minified Locales -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-en-US.min.js"></script>
+
+    </body>
+</html>
