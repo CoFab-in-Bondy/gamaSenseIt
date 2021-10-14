@@ -1,1 +1,5 @@
 .idea/
+GamaSenseIt_Server/target
+*.o
+mqtt_test/test_mqtt
+mqtt_test/test
