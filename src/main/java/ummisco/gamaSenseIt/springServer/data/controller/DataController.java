@@ -43,7 +43,7 @@ public class DataController {
 
     }
 
-    private <MT, D> List<D> makeDisplayable(
+    private <MT, D> List<D> createByApplying(
             Iterable<MT> findResult, DisplayConverter<MT, D> caster) {
         var result = new ArrayList<D>();
         for (var data : findResult)
@@ -54,7 +54,7 @@ public class DataController {
     @CrossOrigin
     @RequestMapping(IDataController.SENSORS)
     public List<DisplayableSensor> getSensors() {
-        return makeDisplayable(sensors.findAll(), DisplayableSensor::new);
+        return createByApplying(sensors.findAll(), DisplayableSensor::new);
     }
 
     @CrossOrigin
@@ -68,20 +68,20 @@ public class DataController {
     @CrossOrigin
     @RequestMapping(IDataController.SENSORS_NAMES)
     public List<String> getSensorsNames() {
-        return makeDisplayable(sensors.findAll(), Sensor::getName);
+        return createByApplying(sensors.findAll(), Sensor::getName);
     }
 
     @CrossOrigin
     @RequestMapping(IDataController.SENSOR_META_DATA_FULLNAMES)
     public List<String> getSensorMetadataName() {
-        return makeDisplayable(sensorMetadata.findAll(),
+        return createByApplying(sensorMetadata.findAll(),
                 s -> s.getName() + " -- " + s.getVersion());
     }
 
     @CrossOrigin
     @RequestMapping(IDataController.META_DATA)
     public List<DisplayableParameterMetadata> getMetadata() {
-        return makeDisplayable(metadataRepo.findAll(), DisplayableParameterMetadata::new);
+        return createByApplying(metadataRepo.findAll(), DisplayableParameterMetadata::new);
     }
 
     @CrossOrigin
@@ -95,7 +95,7 @@ public class DataController {
     @CrossOrigin
     @RequestMapping(IDataController.SENSOR_META_DATA)
     public List<DisplayableSensorMetadata> getSensorMetadata() {
-        return makeDisplayable(sensorMetadata.findAll(), DisplayableSensorMetadata::new);
+        return createByApplying(sensorMetadata.findAll(), DisplayableSensorMetadata::new);
     }
 
     @CrossOrigin
@@ -105,7 +105,7 @@ public class DataController {
         var mt = sensorMetadata.findById(id);
         if (mt.isEmpty()) return null;
         var sensor = mt.get();
-        return makeDisplayable(sensor.getParameterMetadata(),
+        return createByApplying(sensor.getParameterMetadata(),
                 DisplayableParameterMetadata::new);
     }
 
@@ -133,9 +133,8 @@ public class DataController {
             @RequestParam(value = IDataController.BEGIN_DATE)
             @DateTimeFormat(pattern = IDataController.DATE_PATTERN) Date start,
             @RequestParam(value = IDataController.END_DATE)
-            @DateTimeFormat(pattern = IDataController.DATE_PATTERN) Date enddate) {
-//    List<DisplayableData> dpl = new ArrayList<DisplayableData>();
-        List<SensorData> dts = this.sensorData.findAllByDate(id, idParam, start, enddate);
+            @DateTimeFormat(pattern = IDataController.DATE_PATTERN) Date endDate) {
+        List<SensorData> dts = this.sensorData.findAllByDate(id, idParam, start, endDate);
         return buildList(dts);
     }
 
@@ -153,7 +152,7 @@ public class DataController {
     }
 
     private List<DisplayableData> buildList(Iterable<SensorData> dts) {
-        return makeDisplayable(dts, dt -> new DisplayableData(
+        return createByApplying(dts, dt -> new DisplayableData(
                 dt.getDataObject(),
                 dt.getCaptureDate(),
                 dt.getParameter().getUnit(),
