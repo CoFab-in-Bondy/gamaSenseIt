@@ -1,138 +1,131 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
+import javax.persistence.*;
 import java.nio.ByteBuffer;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class ParameterMetadata {
-  public enum DataFormat {
-    INTEGER(0),
-    DOUBLE(1),
-    STRING(2);
 
-    private int type;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    private String varName;
+    private String unit;
+    @ManyToOne
+    private SensorMetadata sensorMetadata;
+    private DataFormat dataFormat;
+    private DataParameter parameter;
+    private String icon = "";
 
-    private DataFormat(int abreviation) {
-      this.type = abreviation;
+    public ParameterMetadata(String varName, String unit, DataFormat typeOfData, DataParameter typeOfSensor) {
+        super();
+        this.varName = varName;
+        this.unit = unit;
+        this.dataFormat = typeOfData;
+        this.parameter = typeOfSensor;
+        this.setIconFromParameter();
     }
 
-    public Object convertToObject(byte[] data) {
-      ByteBuffer buffer = ByteBuffer.wrap(data);
-      Object res = null;
-      return switch (type) {
-        case 0 -> buffer.getInt();
-        case 1 -> buffer.getDouble();
-        case 2 -> new String(data);
-        default -> res;
-      };
+    public ParameterMetadata() {
+        super();
     }
 
-  }
+    private void setIconFromParameter() {
+        icon = switch (this.parameter) {
+            case TEMPERATURE -> "fas fa-thermometer-three-quarters";
+            case PM10, PM2_5, PM1 -> "fab fa-cloudversify";
+            case HUMIDITY -> "fas fa-tint";
+            default -> "";
+        };
+    }
 
-  public enum DataParameter {
-    TEMPERATURE,
-    CO2,
-    PM10,
-    PM2_5,
-    PM1,
-    PRESSURE,
-    HUMIDITY
-  }
+    public long getId() {
+        return id;
+    }
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  private String varName;
-  private String unit;
+    public String getVarName() {
+        return varName;
+    }
 
-  @ManyToOne
-  private SensorMetadata sensorMetadata;
+    public void setVarName(String varName) {
+        this.varName = varName;
+    }
 
-  private DataFormat dataFormat;
-  private DataParameter parameter;
-  private String icon = "";
+    public String getUnit() {
+        return unit;
+    }
 
-  public ParameterMetadata(String varName, String unit, DataFormat typeOfData, DataParameter typeOfSensor) {
-    super();
-    this.varName = varName;
-    this.unit = unit;
-    this.dataFormat = typeOfData;
-    this.parameter = typeOfSensor;
-    this.setIconFromParameter();
-  }
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
-  public ParameterMetadata() {
-    super();
-  }
+    public DataFormat getDataFormat() {
+        return dataFormat;
+    }
 
-  private void setIconFromParameter() {
-    icon = switch (this.parameter) {
-      case TEMPERATURE -> "fas fa-thermometer-three-quarters";
-      case PM10, PM2_5, PM1 -> "fab fa-cloudversify";
-      case HUMIDITY -> "fas fa-tint";
-      default -> "";
-    };
-  }
+    public void setTypeOfData(DataFormat typeOfData) {
+        this.dataFormat = typeOfData;
+    }
 
-  public long getId() {
-    return id;
-  }
+    public DataParameter getParameter() {
+        return parameter;
+    }
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public void setParameter(DataParameter typeOfSensor) {
+        this.parameter = typeOfSensor;
+    }
 
-  public String getVarName() {
-    return varName;
-  }
+    public SensorMetadata getSensorMetadata() {
+        return sensorMetadata;
+    }
 
-  public void setVarName(String varName) {
-    this.varName = varName;
-  }
+    public void setSensorMetadata(SensorMetadata sensorMetadata) {
+        this.sensorMetadata = sensorMetadata;
+    }
 
-  public String getUnit() {
-    return unit;
-  }
+    public String getIcon() {
+        return icon;
+    }
 
-  public void setUnit(String unit) {
-    this.unit = unit;
-  }
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
-  public DataFormat getDataFormat() {
-    return dataFormat;
-  }
+    // TODO maybe do an interface ?
 
-  public void setTypeOfData(DataFormat typeOfData) {
-    this.dataFormat = typeOfData;
-  }
+    public enum DataParameter {
+        TEMPERATURE,
+        CO2,
+        PM10,
+        PM2_5,
+        PM1,
+        PRESSURE,
+        HUMIDITY
+    }
 
-  public DataParameter getParameter() {
-    return parameter;
-  }
+    public enum DataFormat {
+        INTEGER(0),
+        DOUBLE(1),
+        STRING(2);
 
-  public void setParameter(DataParameter typeOfSensor) {
-    this.parameter = typeOfSensor;
-  }
+        private final int type;
 
-  public SensorMetadata getSensorMetadata() {
-    return sensorMetadata;
-  }
+        DataFormat(int abbreviation) {
+            this.type = abbreviation;
+        }
 
-  public void setSensorMetadata(SensorMetadata sensorMetadata) {
-    this.sensorMetadata = sensorMetadata;
-  }
-
-  public String getIcon() {
-    return icon;
-  }
-
-  public void setIcon(String icon) {
-    this.icon = icon;
-  }
+        public Object convertToObject(byte[] data) {
+            ByteBuffer buffer = ByteBuffer.wrap(data);
+            return switch (type) {
+                case 0 -> buffer.getInt();
+                case 1 -> buffer.getDouble();
+                case 2 -> new String(data);
+                default -> null;
+            };
+        }
+    }
 }

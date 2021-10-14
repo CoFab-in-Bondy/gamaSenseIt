@@ -1,50 +1,32 @@
 package ummisco.gamaSenseIt.springServer.data.services;
 
-// import java.text.NumberFormat;
-// import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-// import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorData;
-// import ummisco.gamaSenseIt.springServer.data.model.DisplayableData;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataFormat;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
-import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.SensoredBulkData;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensoredBulkDataRepository;
+import java.util.Date;
+import java.util.List;
 
 @Service("SensorManagment")
 public class SensorManagment implements ISensorManagment {
 
-  @Autowired
-  IParameterMetadataRepository parameterSensorRepo;
-  @Autowired
-  ISensorRepository sensorRepo;
-  @Autowired
-  ISensoredBulkDataRepository bulkDataRepo;
-  @Autowired
-  ISensorMetadataRepository sensorMetadataRepo;
-  @Autowired
-  ISensorDataRepository analysedDataRepo;
-  @Autowired
-  ISensorDataAnalyser dataAnalyser;
+    @Autowired
+    IParameterMetadataRepository parameterSensorRepo;
+    @Autowired
+    ISensorRepository sensorRepo;
+    @Autowired
+    ISensoredBulkDataRepository bulkDataRepo;
+    @Autowired
+    ISensorMetadataRepository sensorMetadataRepo;
+    @Autowired
+    ISensorDataRepository analysedDataRepo;
+    @Autowired
+    ISensorDataAnalyser dataAnalyser;
 
-  @Override
-  public void saveDefaultSensorInit() {
+    @Override
+    public void saveDefaultSensorInit() {
 /*
     GeometryFactory gf = new GeometryFactory();
 
@@ -84,80 +66,80 @@ public class SensorManagment implements ISensorManagment {
     Sensor sx = new Sensor("node_1", DEFAULT_SENSOR_DISPLAY_NAME, DEFAULT_SENSOR_PLACE, p, smd);
     sensorRepo.save(sx);
 */
-  }
-
-  @Override
-  public void saveData(String message, Date date) {
-
-    String[] data = message.split(";");
-    if (data.length < 4)
-      return;
-    long capturedateS, token;
-    String sensorName = data[1];
-
-    try {
-      capturedateS = Long.parseLong(data[0]);
-      token = Long.parseLong(data[2]);
-    } catch (NumberFormatException e) {
-      return;
     }
 
-    String contents = data[3];
-    List<Sensor> foundSensors = sensorRepo.findByName(sensorName);
-    Sensor selectedSensor = null;
-    if (foundSensors.isEmpty())
-      return;
+    @Override
+    public void saveData(String message, Date date) {
 
-    /*
-     * if(foundSensors.isEmpty()) { SensorMetadata typeSens =
-     * sensorMetadataRepo.findByNameAndVersion(DEFAULT_SENSOR_TYPE_NAME,
-     * DEFAULT_SENSOR_VERSION).get(0); GeometryFactory gf=new GeometryFactory();
-     * Point p = gf.createPoint(new Coordinate(0, 0)); selectedSensor = new
-     * Sensor(sensorName,p,typeSens); sensorRepo.save(selectedSensor); } else {
-     */
-    selectedSensor = foundSensors.get(0);
-    // }
+        String[] data = message.split(";");
+        if (data.length < 4)
+            return;
+        long capturedateS, token;
+        String sensorName = data[1];
 
-    Date capturedate = new Date(capturedateS * 1000);
+        try {
+            capturedateS = Long.parseLong(data[0]);
+            token = Long.parseLong(data[2]);
+        } catch (NumberFormatException e) {
+            return;
+        }
 
-    /*
-     * System.out.println(
-     * "*************************************************************************************"
-     * );
-     * 
-     * System.out.println("capture date "+capturedateS);
-     * 
-     * System.out.println("sensorName "+sensorName);
-     * System.out.println("sensorName "+sensorName);
-     * System.out.println("token "+token); System.out.println("contents "+contents);
-     */
+        String contents = data[3];
+        List<Sensor> foundSensors = sensorRepo.findByName(sensorName);
+        Sensor selectedSensor = null;
+        if (foundSensors.isEmpty())
+            return;
 
-    SensoredBulkData bulkData = new SensoredBulkData(selectedSensor, token, capturedate, date, contents);
-    bulkDataRepo.save(bulkData);
-    List<SensorData> aData = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
-    // System.out.println("*************************************************************************************");
+        /*
+         * if(foundSensors.isEmpty()) { SensorMetadata typeSens =
+         * sensorMetadataRepo.findByNameAndVersion(DEFAULT_SENSOR_TYPE_NAME,
+         * DEFAULT_SENSOR_VERSION).get(0); GeometryFactory gf=new GeometryFactory();
+         * Point p = gf.createPoint(new Coordinate(0, 0)); selectedSensor = new
+         * Sensor(sensorName,p,typeSens); sensorRepo.save(selectedSensor); } else {
+         */
+        selectedSensor = foundSensors.get(0);
+        // }
 
-    analysedDataRepo.saveAll(aData);
-  }
+        Date capturedate = new Date(capturedateS * 1000);
 
-  @Override
-  public Sensor updateSensorInformation(Sensor s) {
-    return sensorRepo.save(s);
-  }
+        /*
+         * System.out.println(
+         * "*************************************************************************************"
+         * );
+         *
+         * System.out.println("capture date "+capturedateS);
+         *
+         * System.out.println("sensorName "+sensorName);
+         * System.out.println("sensorName "+sensorName);
+         * System.out.println("token "+token); System.out.println("contents "+contents);
+         */
 
-  @Override
-  public SensorMetadata addSensorMetadata(SensorMetadata s) {
+        SensoredBulkData bulkData = new SensoredBulkData(selectedSensor, token, capturedate, date, contents);
+        bulkDataRepo.save(bulkData);
+        List<SensorData> aData = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
+        // System.out.println("*************************************************************************************");
 
-    return sensorMetadataRepo.save(s);
-  }
+        analysedDataRepo.saveAll(aData);
+    }
 
-  @Override
-  public ParameterMetadata addParameterToSensorMetadata(SensorMetadata s, ParameterMetadata md) {
-    md.setSensorMetadata(s);
-    ParameterMetadata res = parameterSensorRepo.save(md);
-    s.addmeasuredData(res);
-    sensorMetadataRepo.save(s);
-    return res;
-  }
+    @Override
+    public Sensor updateSensorInformation(Sensor s) {
+        return sensorRepo.save(s);
+    }
+
+    @Override
+    public SensorMetadata addSensorMetadata(SensorMetadata s) {
+
+        return sensorMetadataRepo.save(s);
+    }
+
+    @Override
+    public ParameterMetadata addParameterToSensorMetadata(SensorMetadata s, ParameterMetadata md) {
+        md.setSensorMetadata(s);
+        ParameterMetadata res = parameterSensorRepo.save(md);
+        s.addMeasuredData(res);
+        sensorMetadataRepo.save(s);
+        return res;
+    }
 
 }

@@ -51,10 +51,6 @@ public class DataController {
         return result;
     }
 
-    interface Converter<MT, D> {
-        D cast(MT mt);
-    }
-
     @CrossOrigin
     @RequestMapping(IDataController.SENSORS)
     public List<DisplayableSensor> getSensors() {
@@ -171,5 +167,9 @@ public class DataController {
     @RequestMapping(value = IDataController.DEFAULT_DATA_SEPARATOR)
     public String getDefaultDataSeparator() {
         return SensorMetadata.DEFAULT_DATA_SEPARATOR;
+    }
+
+    interface Converter<MT, D> {
+        D cast(MT mt);
     }
 }

@@ -1,65 +1,60 @@
 package ummisco.gamaSenseIt.springServer.data.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorData;
-import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataFormat;
-import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
 
 @Service
 public class SensorDataAnalyser implements ISensorDataAnalyser {
 
-  @Autowired
-  IParameterMetadataRepository metadataRepo;
+    @Autowired
+    IParameterMetadataRepository metadataRepo;
 
-  @Override
-  public List<SensorData> analyseBulkData(String data, Date captureDate, Sensor s) {
-    System.out.println("sensor " + s.getName() + " data " + data);
-    ArrayList<SensorData> res = new ArrayList<SensorData>();
-    SensorMetadata smd = s.getMetadata();
-    String sep = smd.getDataSeparator();
-    System.out.println("separator " + sep);
-    int i = 0;
-    String[] datas = data.split(sep);
+    // TODO make it better
+    @Override
+    public List<SensorData> analyseBulkData(String bulkData, Date captureDate, Sensor sensor) {
+        System.out.println("sensor " + sensor.getName() + " data " + bulkData);
+        var res = new ArrayList<SensorData>();
+        SensorMetadata metadata = sensor.getMetadata();
+        String sep = metadata.getDataSeparator();
+        System.out.println("separator " + sep);
+        int i = 0;
+        String[] datas = bulkData.split(sep);
 
-    System.out.println("order_" + smd.getMeasuredDataOrder() + "_");
-    String[] metadata = smd.getMeasuredDataOrder().split(SensorMetadata.MEASURE_ORDER_SEPARATOR);
+        System.out.println("order_" + metadata.getMeasuredDataOrder() + "_");
+        String[] measure = metadata.getMeasuredDataOrder().split(SensorMetadata.MEASURE_ORDER_SEPARATOR);
 
-    for (String xx : metadata) {
-      System.out.println("meta_" + xx + "_");
-    }
-
-    for (String sid : metadata) {
-      System.out.println("SID/" + sid + "/");
-      long metaKey = Long.parseLong(sid);
-      Optional<ParameterMetadata> md = s.getParameterMetadata(metaKey);
-      if (md.isPresent()) {
-        SensorData dt = null;
-        ParameterMetadata pmd = md.get();
-        if (pmd.getDataFormat().equals(DataFormat.DOUBLE)) {
-          double localData = Double.valueOf(datas[i]).doubleValue();
-          dt = new SensorData(localData, captureDate, md.get(), s);
-        } else if (pmd.getDataFormat().equals(DataFormat.DOUBLE)) {
-          long localData = Long.valueOf(datas[i]).longValue();
-          dt = new SensorData(localData, captureDate, md.get(), s);
-        } else if (pmd.getDataFormat().equals(DataFormat.STRING)) {
-          String localData = datas[i];
-          dt = new SensorData(localData, captureDate, md.get(), s);
+        for (String xx : measure) {
+            System.out.println("meta_" + xx + "_");
         }
-        res.add(dt);
-      }
-      i++;
+
+        for (String sid : measure) {
+            System.out.println("SID/" + sid + "/");
+            long metaKey = Long.parseLong(sid);
+            var optParams = sensor.getParameterMetadata(metaKey);
+            if (optParams.isPresent()) {
+                SensorData data = null;
+                ParameterMetadata params = optParams.get();
+                if (params.getDataFormat().equals(ParameterMetadata.DataFormat.DOUBLE)) {
+                    double localData = Double.parseDouble(datas[i]);
+                    data = new SensorData(localData, captureDate, optParams.get(), sensor);
+                } else if (params.getDataFormat().equals(ParameterMetadata.DataFormat.INTEGER)) {
+                    long localData = Long.parseLong(datas[i]);
+                    data = new SensorData(localData, captureDate, optParams.get(), sensor);
+                } else if (params.getDataFormat().equals(ParameterMetadata.DataFormat.STRING)) {
+                    String localData = datas[i];
+                    data = new SensorData(localData, captureDate, optParams.get(), sensor);
+                }
+                res.add(data);
+            }
+            i++;
+        }
+        return res;
     }
-    return res;
-  }
 
 }
