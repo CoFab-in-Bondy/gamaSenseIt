@@ -1,5 +1,25 @@
-.idea/
-GamaSenseIt_Server/target
-*.o
-mqtt_test/test_mqtt
-mqtt_test/test
+# Out build
+target/
+.mvn/
+*.class
+*.jar
+
+
+# Eclipse project
+.classpath
+.editorconfig
+.factorypath
+.gitattributes
+.project
+.settings/
+
+
+# Package Files #
+*.war
+*.ear
+*.iml
+*.idea
+
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
