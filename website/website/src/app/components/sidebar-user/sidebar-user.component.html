@@ -1,0 +1,63 @@
+<nav class="navbar navbar-vertical navbar-expand-md navbar-light bg-white"
+  id="sidenav-main">
+  <div class="container-fluid">
+    <!-- Toggler -->
+    <button class="navbar-toggler only-outline"
+      type="button"
+      (click)="isCollapsed=!isCollapsed"
+      aria-controls="sidenav-collapse-main">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Brand -->
+    <a class="pt-1"
+      routerLinkActive="active"
+      [routerLink]="['/userDashboard']">
+      <img class="Ulogo"
+        src="assets/img/brand/U-logo.jpg"
+        alt="www.ummisco.fr">
+    </a>
+
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse"
+      [ngbCollapse]="isCollapsed"
+      id="sidenav-collapse-main">
+      <!-- Collapse header -->
+      <div class="navbar-collapse-header d-md-none">
+        <div class="row">
+          <div class="col-6 collapse-brand">
+            <a href="#">
+              <img src="assets/img/brand/U.png" alt="www.ummisco.fr">
+            </a>
+          </div>
+          <div class="col-6 collapse-close">
+            <button class="navbar-toggler"
+              type="button"
+              (click)="isCollapsed=!isCollapsed">
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <ul class="navbar-nav">
+        <li class="{{menuItem.class}} nav-item"
+          *ngFor="let menuItem of menuItems;">
+          <a class="nav-link"
+            routerLinkActive="active"
+            [routerLink]="[menuItem.path]">
+            <i class="{{menuItem.icon}}"></i>{{menuItem.title}}
+          </a>
+        </li>
+      </ul>
+      <!-- Divider -->
+      <hr class="my-3">
+
+      <br><br>
+
+      <a class="pt-1 pb-1">
+        <img src="assets/img/brand/logo-ird.png" alt="www.ird.fr" width="200">
+      </a>
+    </div>
+  </div>
+</nav>

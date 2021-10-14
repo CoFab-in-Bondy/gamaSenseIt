@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* @import '~@angular/material/prebuilt-themes/deeppurple-amber.css'; */
+
+/* @import '~@angular/material/prebuilt-themes/pink-bluegrey.css'; */
+
+/* @import '~@angular/material/prebuilt-themes/purple-green.css'; */
+
+.green-qameleo {
+  background-color: #00A465;
+}
+
+.multi-line {
+  white-space: pre-line;
+}
+
+.no-outline {
+  outline: none;
+}
+
+.only-outline {
+  background: transparent;
+  border:none;
+}

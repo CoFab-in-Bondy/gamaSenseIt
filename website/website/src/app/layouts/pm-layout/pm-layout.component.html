@@ -1,0 +1,29 @@
+<div class="background">
+  <div class="row" >
+    <div class="col-xs col-md-3 col-lg-3">
+      <img class="rounded float-left logo-qameleo"
+        src="assets/img/logo/qameleo.png"
+        alt="www.ird.fr">
+    </div>
+    <div class="col-xs col-sm col-md-9 col-lg-9">
+      <div *ngIf="!browseQRcode; else elseBlock">
+        <h1 class="display-title ml-1 mr-1">{{qameleo.displayName}}</h1>
+        <h3 class="display-title ml-1 mr-1">{{qameleo.subDisplayName}}</h3>
+      </div>
+      <ng-template #elseBlock>
+        <h1 class="display-title ml-1 mr-1">Charger un QR code</h1>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- <div style='background-image:linear-gradient(#265baa,#88bfdc)'-->
+  <div class="bg-gradient">
+    <qr-qameleo #qameleo></qr-qameleo>
+    <div class="note">
+      * mesures réalisées en continue avec une périodicité de 15 minutes.
+    </div>
+    <div class="container-fluid">
+      <qr-qameleo-footer></qr-qameleo-footer>
+    </div>
+  </div>
+</div>
