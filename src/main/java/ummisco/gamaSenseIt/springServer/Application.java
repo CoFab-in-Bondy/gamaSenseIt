@@ -1,8 +1,5 @@
 package ummisco.gamaSenseIt.springServer;
 
-// import java.text.SimpleDateFormat;
-// import java.util.Arrays;
-
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Autowired;
