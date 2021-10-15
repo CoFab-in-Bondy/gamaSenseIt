@@ -17,8 +17,7 @@ public class SensorMetadata {
     private String name;
     private String measuredDataOrder;
 
-    // TODO remove this ?
-    private String dataSeparator = ":";
+    private String dataSeparator;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sensorMetadata")
     private Set<ParameterMetadata> parameterMetadata = new HashSet<>();
