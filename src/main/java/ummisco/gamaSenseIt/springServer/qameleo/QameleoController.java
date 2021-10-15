@@ -65,11 +65,9 @@ public class QameleoController {
         if (sensorData.isEmpty())
             return null;
         double sum = 0.0;
-        // FIXME unsafe cast
+        // FIXME unsafe cast, make generic for data
         for (var dataFromSensor : sensorData)
             sum += ((Double) dataFromSensor.getDataObject());
         return sum / sensorData.size();
-
     }
-
 }
