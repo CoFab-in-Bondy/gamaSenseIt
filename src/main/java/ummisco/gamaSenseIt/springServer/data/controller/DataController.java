@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+// TODO function should have the same name as their route
 @RestController
 @RequestMapping("/public/")
 public class DataController {
@@ -133,16 +134,15 @@ public class DataController {
             @RequestParam(value = IDataController.BEGIN_DATE)
             @DateTimeFormat(pattern = IDataController.DATE_PATTERN) Date start,
             @RequestParam(value = IDataController.END_DATE)
-            @DateTimeFormat(pattern = IDataController.DATE_PATTERN) Date endDate) {
-        List<SensorData> dts = this.sensorData.findAllByDate(id, idParam, start, endDate);
-        return buildList(dts);
+            @DateTimeFormat(pattern = IDataController.DATE_PATTERN) Date endDate
+    ) {
+        return buildList(sensorData.findAllByDate(id, idParam, start, endDate));
     }
 
     @CrossOrigin
     @RequestMapping(value = IDataController.SENSOR_DATA)
     public List<DisplayableData> getDataBetween() {
-        Iterable<SensorData> dts = this.sensorData.findAll();
-        return buildList(dts);
+        return buildList(sensorData.findAll());
     }
 
     @CrossOrigin
