@@ -95,8 +95,6 @@ public class ParameterMetadata {
         this.icon = icon;
     }
 
-    // TODO maybe do an interface ?
-
     public enum DataParameter {
         TEMPERATURE,
         CO2,
@@ -107,6 +105,7 @@ public class ParameterMetadata {
         HUMIDITY
     }
 
+    // TODO maybe do an interface ?
     public enum DataFormat {
         INTEGER(0),
         DOUBLE(1),
