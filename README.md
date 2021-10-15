@@ -47,6 +47,10 @@ FLUSH PRIVILEGES;
 ```
 Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables
 
+This will create tables following the model below
+
+![Model representing the schema](https://github.com/CoFab-in-Bondy/gamaSenseIt/blob/master/model.png?raw=true)
+
 ## Configure Mosquito
 
 Install for Manjaro
