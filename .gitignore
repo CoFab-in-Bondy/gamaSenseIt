@@ -1,12 +1,11 @@
 # Out build and package
 target/
-.mvn/
+.mvn/wrapper/maven-wrapper.jar
 *.class
 *.jar
 *.war
 *.ear
 *.iml
-
 
 # Eclipse project
 .classpath
