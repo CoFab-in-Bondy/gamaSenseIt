@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ummisco.gamaSenseIt.springServer.data.controller.DataController;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorData;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 
@@ -30,49 +27,48 @@ public class QameleoController {
     @CrossOrigin
     @RequestMapping(value = IQameleoController.AIR_QUALITY)
     public QameleoData getLastData(@RequestParam(value = IQameleoController.SENSOR_ID, required = true) long sensorID) {
-        Optional<Sensor> sns = sensors.findById(sensorID);
-        if (sns.isEmpty())
+        var sensorFound = sensors.findById(sensorID);
+        if (sensorFound.isEmpty())
             return null;
-        Sensor s = sns.get();
-        if (s.isHidden()) {
-            return new QameleoData(s.getName(), s.getDisplayName(), s.getSubDisplayName(), s.getHiddenMessage());
+        var sensor = sensorFound.get();
+        if (sensor.isHidden()) {
+            return new QameleoData(sensor.getName(), sensor.getDisplayName(),
+                    sensor.getSubDisplayName(), sensor.getHiddenMessage());
         }
 
-        Optional<Set<ParameterMetadata>> ps = s.getParameters();
-        if (ps.isEmpty())
+        var parametersFound = sensor.getParameters();
+        if (parametersFound.isEmpty())
             return null;
-        Set<ParameterMetadata> parameters = ps.get();
+        var parameters = parametersFound.get();
 
-        HashMap<DataParameter, Double> res = new HashMap<DataParameter, Double>();
+        var qameleoData = new HashMap<DataParameter, Double>();
         Calendar start = Calendar.getInstance();
         Calendar startHour = Calendar.getInstance();
-        Calendar enddate = Calendar.getInstance();
-        enddate.add(Calendar.DAY_OF_MONTH, 1);
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.DAY_OF_MONTH, 1);
         start.add(Calendar.DAY_OF_MONTH, -1);
         startHour.add(Calendar.HOUR_OF_DAY, -1);
 
-        for (ParameterMetadata p : parameters) {
-            long idParam = p.getId();
-            Double mean;
-            if (p.getParameter().equals(DataParameter.TEMPERATURE) || p.getParameter().equals(DataParameter.HUMIDITY)) {
-                mean = getMeanValue(sensorID, idParam, startHour.getTime(), enddate.getTime());
-            } else {
-                mean = getMeanValue(sensorID, idParam, start.getTime(), enddate.getTime());
-            }
-            res.put(p.getParameter(), mean == null ? 0.0 : mean);
+        for (var param : parameters) {
+            var relativeStart = switch (param.getParameter()) {
+                case TEMPERATURE, HUMIDITY -> startHour;
+                default -> start;
+            };
+            Double mean = getMeanValue(sensorID, param.getId(), relativeStart.getTime(), endDate.getTime());
+            qameleoData.put(param.getParameter(), mean == null ? 0.0 : mean);
         }
-        return new QameleoData(s.getName(), s.getDisplayName(), s.getSubDisplayName(), res);
+        return new QameleoData(sensor.getName(), sensor.getDisplayName(), sensor.getSubDisplayName(), qameleoData);
     }
 
     private Double getMeanValue(long id, long idParam, Date start, Date endDate) {
-        List<SensorData> dts = this.sensorData.findAllByDate(id, idParam, start, endDate);
-        if (dts.isEmpty())
+        var sensorData = this.sensorData.findAllByDate(id, idParam, start, endDate);
+        if (sensorData.isEmpty())
             return null;
-        double res = 0.0;
-        for (SensorData d : dts)
-            res += ((Double) d.getDataObject());
-        res = res / dts.size();
-        return res;
+        double sum = 0.0;
+        // FIXME unsafe cast
+        for (var dataFromSensor : sensorData)
+            sum += ((Double) dataFromSensor.getDataObject());
+        return sum / sensorData.size();
 
     }
 
