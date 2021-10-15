@@ -10,14 +10,14 @@ Application for sensors.
 ## Setup MySQL
 
 Install for Manjaro
-```bash
+```sh
 yay -Syyu
 yay -S mysql
 sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 ```
 
 Install for Ubuntu
-```bash
+```sh
 sudo apt update
 sudo apt upgrade
 sudo apt install mysql-server
@@ -25,14 +25,14 @@ sudo apt install mysql-server
 
 ***
 Make MySQL a service
-```bash
+```sh
 sudo systemctl enable mysqld
 sudo systemctl restart mysqld
 systemctl status mysqld
 ```
 
 Install and login as root
-```bash
+```sh
 sudo mysql_secure_installation
 mysql -u root -p
 ```
@@ -54,13 +54,13 @@ This will create tables following the model below
 ## Configure Mosquito
 
 Install for Manjaro
-```bash
+```sh
 yay -Syyu
 yay -S mosquitto
 ```
 
 Install for Ubuntu
-```bash
+```sh
 sudo apt update
 sudo apt upgrade
 sudo apt install mosquitto
@@ -70,7 +70,7 @@ sudo apt install mosquitto-clients
 ***
 
 Make mosquitto a service
-```bash
+```sh
 sudo systemctl enable mosquitto
 sudo systemctl restart mosquitto
 systemctl status mosquitto
@@ -79,11 +79,11 @@ systemctl status mosquitto
 
 Set up authentication
  * Make a password file with user gamaseniseit
-    ```bash
+    ```sh
     sudo mosquitto_passwd -c /etc/mosquitto/passwd gamasenseiy
     ```
  * Create a configuration file for gamesenseit
-    ```bash
+    ```sh
     cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/gamasenseit.conf
     sudo nano /etc/mosquitto/gamasenseit.conf
     ```
@@ -92,12 +92,12 @@ Set up authentication
    * `password_file /etc/mosquitto/passswd` : path to passwords file
    * `allow_anonymous false` allow only authenticated users
  * Assign configuration to mosquitto
-    ```````bash
+    ```sh
     mosquitto -v -c '/etc/mosquitto/gamasenseit.conf'
-    ```````
- 
+    ```
+   
 For subscribe and publish (_see more with `man mosquitto_sub` and `man mosquitto_pub`_)
-```bash
+```sh
 mosquitto_sub [-h host] [-u user] [-P password] [-t topic]
 mosquitto_pub [-h host] [-u user] [-P password] [-t topic] -m [message]
 ```
@@ -105,14 +105,14 @@ mosquitto_pub [-h host] [-u user] [-P password] [-t topic] -m [message]
 ## Install and run GamaSenseIt
 
 Build standalone JAR package
-```bash
+```sh
 git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
 cd gamaSenseIt
 mvn clean package
 ```
 
 Run the server
-```bash
+```sh
 java -jar target/gamasenseit-0.0.1-SNAPSHOT.jar
 ```
 
