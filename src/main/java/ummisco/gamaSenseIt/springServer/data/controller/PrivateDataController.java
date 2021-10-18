@@ -65,11 +65,6 @@ public class PrivateDataController {
         if (!selectedSensors.isEmpty())
             return new DisplayableSensor(selectedSensors.get(0));
 
-        // TODO remove this is already checked
-        typeSensor = sensorTypeRepo.findById(idSensorType);
-        if (typeSensor.isEmpty())
-            return null;
-
         Sensor sensor = new Sensor(name, displayName, subDisplayName, longitude, latitude, typeSensor.get());
         sensors.save(sensor);
         return new DisplayableSensor(sensor);

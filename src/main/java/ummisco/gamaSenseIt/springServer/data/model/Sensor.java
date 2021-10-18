@@ -59,19 +59,6 @@ public class Sensor {
         this.isHidden = false;
     }
 
-    // TODO description not used
-    public Sensor(String sensorName, String displayName, String subDisplayName, double locationX, double locationY,
-                  SensorMetadata sensorType, String description) {
-        this();
-        this.name = sensorName;
-        this.displayName = displayName;
-        this.subDisplayName = subDisplayName;
-        this.longitude = locationX;
-        this.latitude = locationY;
-        this.sensorType = sensorType;
-        this.isHidden = false;
-    }
-
     public Long getIdSensor() {
         return idSensor;
     }

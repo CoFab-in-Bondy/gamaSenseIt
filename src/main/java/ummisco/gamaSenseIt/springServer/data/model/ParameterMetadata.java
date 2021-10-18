@@ -105,7 +105,6 @@ public class ParameterMetadata {
         HUMIDITY
     }
 
-    // TODO maybe do an interface ?
     public enum DataFormat {
         INTEGER(0),
         DOUBLE(1),
