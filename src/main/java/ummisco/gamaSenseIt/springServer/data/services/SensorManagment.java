@@ -101,6 +101,11 @@ public class SensorManagment implements ISensorManagment {
         // }
 
         Date capturedate = new Date(capturedateS * 1000);
+        
+        long diff = Math.abs(date.getTime() - capturedate.getTime());
+        long diffDays = (diff / (1000 * 60 * 60 * 24));
+        if(diffDays > 3)
+        	capturedate = date;
 
         /*
          * System.out.println(
