@@ -90,13 +90,7 @@ public class SensorManagment implements ISensorManagment {
         if (foundSensors.isEmpty())
             return;
 
-        /*
-         * if(foundSensors.isEmpty()) { SensorMetadata typeSens =
-         * sensorMetadataRepo.findByNameAndVersion(DEFAULT_SENSOR_TYPE_NAME,
-         * DEFAULT_SENSOR_VERSION).get(0); GeometryFactory gf=new GeometryFactory();
-         * Point p = gf.createPoint(new Coordinate(0, 0)); selectedSensor = new
-         * Sensor(sensorName,p,typeSens); sensorRepo.save(selectedSensor); } else {
-         */
+        
         selectedSensor = foundSensors.get(0);
         // }
 
