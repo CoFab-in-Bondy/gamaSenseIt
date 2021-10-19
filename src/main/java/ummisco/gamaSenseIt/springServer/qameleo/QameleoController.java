@@ -54,8 +54,11 @@ public class QameleoController {
                 case TEMPERATURE, HUMIDITY -> startHour;
                 default -> start;
             };
-            Double mean = getMeanValue(sensorID, param.getId(), relativeStart.getTime(), endDate.getTime());
-            qameleoData.put(param.getParameter(), mean == null ? 0.0 : mean);
+            if(!param.getVarName().equals("sensor_temperature"))
+            {
+                Double mean = getMeanValue(sensorID, param.getId(), relativeStart.getTime(), endDate.getTime());
+                qameleoData.put(param.getParameter(), mean == null ? 0.0 : mean);
+            }
         }
         return new QameleoData(sensor.getName(), sensor.getDisplayName(), sensor.getSubDisplayName(), qameleoData);
     }
