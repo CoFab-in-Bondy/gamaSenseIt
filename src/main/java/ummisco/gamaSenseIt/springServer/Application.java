@@ -118,8 +118,8 @@ public class Application {
         }
     }
     
-    /* PUBLISH */
-
+   /* PUBLISH */
+/*
     @Bean
     public MessageChannel mqttOutboundChannel() {
         return new DirectChannel();
@@ -133,6 +133,6 @@ public class Application {
         messageHandler.setDefaultTopic(defaultTopic);
         return messageHandler;
     }
-    
+*/    
 
 }
