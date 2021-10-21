@@ -8,6 +8,9 @@ public class GamaSenseItProperties {
     public String brokerUsername;
     public String brokerPassword;
     public String brokerTopic;
+    public String brokerTimeTopic;
+    public int brokerTimeUpdatePeriod;
+    
 
     public String getBrokerTopic() {
         return brokerTopic;
@@ -40,4 +43,21 @@ public class GamaSenseItProperties {
     public void setBrokerPassword(String brokerPassword) {
         this.brokerPassword = brokerPassword;
     }
+
+	public String getBrokerTimeTopic() {
+		return brokerTimeTopic;
+	}
+
+	public void setBrokerTimeTopic(String brokerTimeTopic) {
+		this.brokerTimeTopic = brokerTimeTopic;
+	}
+
+	public int getBrokerTimeUpdatePeriod() {
+		return brokerTimeUpdatePeriod;
+	}
+
+	public void setBrokerTimeUpdatePeriod(int brokerTimeUpdatePeriod) {
+		this.brokerTimeUpdatePeriod = brokerTimeUpdatePeriod;
+	}
+    
 }
