@@ -14,6 +14,7 @@ import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import ummisco.gamaSenseIt.springServer.data.services.ISensorManagment;
+import ummisco.gamaSenseIt.springServer.services.csvFormatter.IFormatter;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -44,6 +45,9 @@ public class DataController {
 
     @Autowired
     IParameterMetadataRepository metadataRepo;
+    
+    @Autowired
+    IFormatter formatter;
 
     public DataController() {
 
@@ -158,22 +162,8 @@ public class DataController {
 
     @CrossOrigin
     @RequestMapping(value = IDataController.CSV_DATA_BY_SENSOR_ID, produces = "text/csv")
-    public String csvDataBySensorId(@RequestParam(value = IDataController.SENSOR_ID) long id) {
-        return csvFormat(buildList(sensorData.findAllBySensorId(id)));
-    }
-
-    private <T> String csvFormat(List<T> list) {
-        StringWriter writer = new StringWriter();
-        var beanToCsv = new StatefulBeanToCsvBuilder<T>(writer)
-                .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                .build();
-        try {
-            beanToCsv.write(list);
-            return writer.toString();
-        } catch (CsvRequiredFieldEmptyException | CsvDataTypeMismatchException e) {
-            e.printStackTrace();
-            return "";
-        }
+    public String csvDataBySensorId(@RequestParam(value = IDataController.SENSOR_ID) Sensor s) {
+        return formatter.format(buildList(sensorData.findAllBySensor(s)));
     }
 
     private List<DisplayableData> buildList(Iterable<SensorData> dts) {
