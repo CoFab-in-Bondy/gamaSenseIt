@@ -45,6 +45,11 @@ GRANT ALL PRIVILEGES ON gamasenseit.* TO 'gamasenseit'@'localhost';
 FLUSH PRIVILEGES;
 \q
 ```
+
+Then try to connect to the database as gamasenseit
+```sh
+mysql -u gamasenseit -pgamasenseit -h 127.0.0.1 -P 3306 -D gamasenseit
+```
 Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables
 
 This will create tables following the model below
