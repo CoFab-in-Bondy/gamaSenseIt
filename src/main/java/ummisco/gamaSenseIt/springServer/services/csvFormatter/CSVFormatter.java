@@ -10,9 +10,6 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import ummisco.gamaSenseIt.springServer.data.model.DisplayableData;
-import ummisco.gamaSenseIt.springServer.data.model.SensorData;
-
 @Service("CSVFormatter")
 public class CSVFormatter implements IFormatter {
     public <T> String format(List<T> list) {
