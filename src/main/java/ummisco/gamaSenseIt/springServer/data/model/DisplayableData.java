@@ -1,14 +1,30 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 import java.util.Date;
 
 public class DisplayableData {
+
+    @CsvBindByPosition(position = 0)
     private Object value;
+
+    @CsvBindByPosition(position = 1)
     private Date date;
+
+    @CsvBindByPosition(position = 2)
     private String unit;
+
+    @CsvBindByPosition(position = 3)
     private String sensorName;
+
+    @CsvBindByPosition(position = 4)
     private double latitude;
+
+    @CsvBindByPosition(position = 5)
     private double longitude;
+
+    @CsvBindByPosition(position = 6)
     private String measuredParameter;
 
     public DisplayableData(Object value, Date date, String unit, String sensorName,

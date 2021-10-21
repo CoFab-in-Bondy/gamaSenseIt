@@ -122,7 +122,7 @@ public class PrivateDataController {
     }
 
     @CrossOrigin
-    @RequestMapping(IDataController.ADD_PARAMETER_META_DATA)
+    @RequestMapping(IDataController.ADD_PARAMETER_METADATA)
     public DisplayableParameterMetadata addParameterMetadata(
             @RequestParam(value = IDataController.METADATA_ID, defaultValue = "nil") long id,
             @RequestParam(value = IDataController.NAME, defaultValue = "nil") String varName,

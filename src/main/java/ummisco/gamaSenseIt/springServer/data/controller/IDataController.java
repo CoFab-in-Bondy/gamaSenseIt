@@ -1,22 +1,30 @@
 package ummisco.gamaSenseIt.springServer.data.controller;
 
+import org.springframework.http.MediaType;
+
 public interface IDataController {
-    String ADD_PARAMETER_META_DATA = "addParameterMetadata";
+    String SERVER_DATETIME = "serverDateTime";
+    
+    String ADD_PARAMETER_METADATA = "addParameterMetadata";
     String ADD_SENSOR = "addSensor";
     String ADD_SENSOR_METADATA = "addSensorMetadata";
-    String SENSOR = "getSensorById";
-    String SENSOR_DATA = "getData";
-    String SENSOR_DATA_BETWEEN_DATES = "getDataOfSensorBetweenDate";
-    String SENSOR_DATA_SINCE_DATE = "getDataOfSensorSinceDate";
-    String SENSOR_META_DATA = "getSensorMetadata";
-    String SENSOR_META_DATA_FULLNAMES = "getSensorTypeNames";
-    String SENSORS = "getSensors";
-    String SENSORS_NAMES = "getSensorsNames";
-    String SERVER_DATE = "serverDateTime";
-    String META_DATA = "getMetadata";
-    String META_DATA_ID = "getMetadataByParameterId";
-    String META_DATA_SENSOR_META_DATA_ID = "getMetadataBySensorMetadataId";
-    String UPDATE_PARAMETER_META_DATA = "updateParameterMetadata";
+
+    String GET_SENSOR_BY_ID = "getSensorById";
+    String GET_DATA = "getData";
+    String GET_DATA_BY_SENSOR_ID = "getDataBySensorId";
+    String GET_DATA_OF_SENSOR_BETWEEN_DATE = "getDataOfSensorBetweenDate";
+    String GET_DATA_OF_SENSOR_SINCE_DATE = "getDataOfSensorSinceDate";
+    String GET_SENSOR_METADATA = "getSensorMetadata";
+    String GET_SENSOR_TYPE_NAMES = "getSensorTypeNames";
+    String GET_SENSORS = "getSensors";
+    String GET_SENSORS_NAMES = "getSensorsNames";
+    String GET_META_DATA = "getMetadata";
+    String GET_METADATA_BY_PAREMETER_ID = "getMetadataByParameterId";
+    String GET_METADATA_BY_SENSOR_METADATA_ID = "getMetadataBySensorMetadataId";
+
+    String CSV_DATA_BY_SENSOR_ID = "csvDataBySensorId";
+    
+    String UPDATE_PARAMETER_METADATA = "updateParameterMetadata";
     String UPDATE_SENSOR = "updateSensor";
     String UPDATE_SENSOR_METADATA = "updateSensorMetadata";
 
