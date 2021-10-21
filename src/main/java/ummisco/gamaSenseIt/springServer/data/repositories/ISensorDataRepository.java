@@ -16,6 +16,9 @@ import java.util.List;
 public interface ISensorDataRepository extends CrudRepository<SensorData, Long> {
     List<SensorData> findAllByCaptureDateLessThanEqualAndCaptureDateGreaterThanEqual(Date endDate, Date startDate);
 
+    @Query("select a from SensorData a where a.sensor.id = :idSensor ")
+    List<SensorData> findAllBySensorId(long idSensor);
+
     @Query("select a from SensorData a where a.sensor.id = :idSensor and a.parameter.id = :idParameter and a.captureDate >= :start and  a.captureDate <= :end ")
     List<SensorData> findAllByDate(
             @Param(value = "idSensor") long idSensor,
