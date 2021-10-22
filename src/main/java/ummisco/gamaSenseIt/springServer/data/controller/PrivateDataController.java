@@ -10,7 +10,7 @@ import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParamet
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
-import ummisco.gamaSenseIt.springServer.data.services.ISensorManagment;
+import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 
 @CrossOrigin
 @RestController

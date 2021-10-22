@@ -20,7 +20,8 @@ import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessagingException;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ummisco.gamaSenseIt.springServer.data.services.ISensorManagment;
+
+import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 import ummisco.gamaSenseIt.springServer.services.activation.IActivation;
 
 import java.util.Calendar;

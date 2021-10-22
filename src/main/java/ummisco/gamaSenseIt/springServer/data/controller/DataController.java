@@ -13,7 +13,7 @@ import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepo
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
-import ummisco.gamaSenseIt.springServer.data.services.ISensorManagment;
+import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 import ummisco.gamaSenseIt.springServer.services.csvFormatter.IFormatter;
 
 import java.io.StringWriter;
