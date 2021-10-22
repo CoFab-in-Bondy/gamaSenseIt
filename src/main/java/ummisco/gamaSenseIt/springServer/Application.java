@@ -21,6 +21,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessagingException;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ummisco.gamaSenseIt.springServer.data.services.ISensorManagment;
+import ummisco.gamaSenseIt.springServer.services.activation.IActivation;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +39,11 @@ public class Application {
 
     @Autowired
     ISensorManagment sensorManager;
+    
+    
+    @Autowired 
+    IActivation activationProt;
+    
     @Value("${gamaSenseIt.broker-url}")
     private String brokerURL;
     @Value("${gamaSenseIt.broker-username}")
@@ -55,6 +61,8 @@ public class Application {
         // ClassPathXmlApplicationContext("classpath:application-config.xml");
 
         ApplicationContext context = SpringApplication.run(Application.class, args);
+        IActivation activ = (IActivation) context.getBean("BasicActivation");
+        activ.activate();
         // Question 1
         ISensorManagment saver = (ISensorManagment) context.getBean("SensorManagment");
         saver.saveDefaultSensorInit();
