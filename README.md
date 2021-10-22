@@ -123,6 +123,35 @@ java -jar target/gamasenseit-0.0.1-SNAPSHOT.jar
 
 And that's all !
 
+## Routes
+
+```
+/public/data?sensorID=<ID>       | GET List<SensorData>
+   [&parameterID=<ID>]
+   [&start=MMddyyyy]
+   [&end=MMddyyyy]
+   [&type=json]
+
+/public/sensors                  | GET List<Sensor>
+/public/sensors/<ID>             | GET Sensor
+/public/sensors/names            | GET List<Sensor.name>
+
+/public/types                    | GET List<SensorMetadata>
+/public/types/names              | GET List<name + " -- " + version>
+/public/types/<ID>/parameters    | GET List<ParameterMetadata>
+
+/public/parameters               | GET List<ParameterMetadata>
+/public/parameters/<ID>          | GET ParameterMetadata
+
+/public/server/date              | GET Date
+/public/server/separator         | GET ":"
+
+/private/sensors                 | POST (add Sensor)
+/private/sensors                 | PATCH (update Sensor)
+/private/types                   | POST (add SensorMetadata)
+/private/parameters              | POST (add ParameterMetadata)
+```
+
 ## License
 
 GamaSenseIt is licensed under the terms of the GNU License (see the file LICENSE).

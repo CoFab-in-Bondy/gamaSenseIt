@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ummisco.gamaSenseIt.springServer.data.controller.DataController;
+import ummisco.gamaSenseIt.springServer.data.controller.PublicDataController;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
@@ -16,7 +16,7 @@ import java.util.*;
 @RequestMapping("/qameleo/")
 public class QameleoController {
     @Autowired
-    DataController dataController;
+    PublicDataController dataController;
 
     @Autowired
     ISensorRepository sensors;
@@ -64,7 +64,7 @@ public class QameleoController {
     }
 
     private Double getMeanValue(long id, long idParam, Date start, Date endDate) {
-        var sensorData = this.sensorData.findAllByDate(id, idParam, start, endDate);
+        var sensorData = this.sensorData.advancedFindAll(id, idParam, start, endDate);
         if (sensorData.isEmpty())
             return null;
         double sum = 0.0;
