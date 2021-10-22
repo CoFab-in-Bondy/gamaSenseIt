@@ -1,4 +1,4 @@
-package ummisco.gamaSenseIt.springServer.data.services;
+package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
 import ummisco.gamaSenseIt.springServer.data.model.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.SensorData;

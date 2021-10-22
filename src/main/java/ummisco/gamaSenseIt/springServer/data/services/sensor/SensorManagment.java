@@ -1,4 +1,4 @@
-package ummisco.gamaSenseIt.springServer.data.services;
+package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
