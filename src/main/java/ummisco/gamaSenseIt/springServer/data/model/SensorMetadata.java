@@ -6,7 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class SensorMetadata {
+public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
+    // TODO data with : inside ?
     public final static String MEASURE_ORDER_SEPARATOR = ":";
     public final static String DEFAULT_DATA_SEPARATOR = ":";
 
@@ -18,6 +19,7 @@ public class SensorMetadata {
     private String measuredDataOrder;
 
     private String dataSeparator;
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sensorMetadata")
     private Set<ParameterMetadata> parameterMetadata = new HashSet<>();
@@ -123,5 +125,10 @@ public class SensorMetadata {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public DisplayableSensorMetadata convert() {
+        return new DisplayableSensorMetadata(this);
     }
 }

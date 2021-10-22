@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 
 @Entity
-public class SensorData {
+public class SensorData implements IConvertible<DisplayableData> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -89,6 +89,11 @@ public class SensorData {
 
     public void setSensor(Sensor sensor) {
         this.sensor = sensor;
+    }
+
+    @Override
+    public DisplayableData convert() {
+        return new DisplayableData(this);
     }
 
     /*

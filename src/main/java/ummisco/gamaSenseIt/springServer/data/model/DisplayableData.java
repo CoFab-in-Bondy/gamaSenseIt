@@ -7,7 +7,7 @@ import java.util.Date;
 public class DisplayableData {
 
     @CsvBindByPosition(position = 0)
-    private Object value;
+    public Object value;
 
     @CsvBindByPosition(position = 1)
     private Date date;
@@ -27,8 +27,15 @@ public class DisplayableData {
     @CsvBindByPosition(position = 6)
     private String measuredParameter;
 
-    public DisplayableData(Object value, Date date, String unit, String sensorName,
-                           double latitude, double longitude, String measuredParameter) {
+    public DisplayableData(
+            Object value,
+            Date date,
+            String unit,
+            String sensorName,
+            double latitude,
+            double longitude,
+            String measuredParameter
+    ) {
         super();
         this.value = value;
         this.date = date;
@@ -37,6 +44,18 @@ public class DisplayableData {
         this.latitude = latitude;
         this.longitude = longitude;
         this.measuredParameter = measuredParameter;
+    }
+
+    public DisplayableData(SensorData data) {
+        this(
+                data.getDataObject(),
+                data.getCaptureDate(),
+                data.getParameter().getUnit(),
+                data.getSensor().getName(),
+                data.getSensor().getLatitude(),
+                data.getSensor().getLongitude(),
+                data.getParameter().getParameter().toString()
+        );
     }
 
     public Object getValue() {

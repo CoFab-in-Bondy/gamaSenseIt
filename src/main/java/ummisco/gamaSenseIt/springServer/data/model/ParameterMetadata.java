@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.nio.ByteBuffer;
 
 @Entity
-public class ParameterMetadata {
+public class ParameterMetadata implements IConvertible<DisplayableParameterMetadata> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -93,6 +93,11 @@ public class ParameterMetadata {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    @Override
+    public DisplayableParameterMetadata convert() {
+        return new DisplayableParameterMetadata(this);
     }
 
     public enum DataParameter {

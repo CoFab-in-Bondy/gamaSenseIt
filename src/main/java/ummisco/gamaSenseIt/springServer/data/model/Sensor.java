@@ -8,10 +8,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Sensor {
+public class Sensor implements IConvertible<DisplayableSensor>{
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
     private final Set<SensoredBulkData> bulkData = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idSensor;
@@ -22,6 +23,7 @@ public class Sensor {
     private double latitude;
     private boolean isHidden;
     private String hiddenMessage;
+
     @ManyToOne
     private SensorMetadata sensorType;
 
@@ -141,5 +143,10 @@ public class Sensor {
 
     public void setHiddenMessage(String hiddenMessage) {
         this.hiddenMessage = hiddenMessage;
+    }
+
+    @Override
+    public DisplayableSensor convert() {
+        return new DisplayableSensor(this);
     }
 }
