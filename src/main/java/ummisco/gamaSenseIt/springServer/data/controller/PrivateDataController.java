@@ -3,10 +3,6 @@ package ummisco.gamaSenseIt.springServer.data.controller;
 import org.springframework.web.bind.annotation.*;
 import ummisco.gamaSenseIt.springServer.data.model.*;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
-import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 
 @CrossOrigin
 @RestController

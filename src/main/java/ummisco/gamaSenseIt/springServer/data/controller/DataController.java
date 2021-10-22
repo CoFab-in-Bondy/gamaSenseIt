@@ -55,6 +55,4 @@ public abstract class DataController {
     interface Converter<MT, D> {
         D cast(MT mt);
     }
-
-
 }

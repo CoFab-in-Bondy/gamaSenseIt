@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Set;
 
 public class DisplayableSensorMetadata {
+    private final List<String> parameterMetadata;
     private Long idType;
     private String name;
     private String version;
     private String dataSeparator;
     private String measuredDataOrder;
-    private final List<String> parameterMetadata;
     private String description;
 
     public DisplayableSensorMetadata(Long idType, String name, String version, String dataSeparator,

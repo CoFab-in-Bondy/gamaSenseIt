@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ummisco.gamaSenseIt.springServer.data.model.*;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
 @RestController
@@ -23,7 +25,7 @@ public class PublicDataController extends DataController {
             @RequestParam(value = Param.SENSOR_ID) long sensorId,
             @RequestParam(value = Param.PARAMETER_ID, required = false) Long parameterId,
             @RequestParam(value = Param.START, required = false) @DateTimeFormat(pattern = Param.DATE_PATTERN) Date start,
-            @RequestParam(value = Param.END, required = false) @DateTimeFormat(pattern = Param.DATE_PATTERN)Date end,
+            @RequestParam(value = Param.END, required = false) @DateTimeFormat(pattern = Param.DATE_PATTERN) Date end,
             @RequestParam(value = Param.TYPE, defaultValue = "json") String type
     ) {
         return formatter.format(type, display(sensorsData.advancedFindAll(sensorId, parameterId, start, end)));

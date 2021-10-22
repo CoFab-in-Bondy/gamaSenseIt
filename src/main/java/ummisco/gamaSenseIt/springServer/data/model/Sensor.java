@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Sensor implements IConvertible<DisplayableSensor>{
+public class Sensor implements IConvertible<DisplayableSensor> {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
     private final Set<SensoredBulkData> bulkData = new HashSet<>();
