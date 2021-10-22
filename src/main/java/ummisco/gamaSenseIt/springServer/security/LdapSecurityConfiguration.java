@@ -11,7 +11,7 @@ import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 
 import java.util.List;
 
-@Configuration
+
 public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
