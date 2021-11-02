@@ -5,7 +5,9 @@ Application for sensors.
 1. [Setup MySQL](#setup-mysql)
 2. [Configure Mosquito](#configure-mosquito)
 3. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
-4. [License](#license)
+4. [Api](#api)
+5. [Convention](#convention)
+6. [License](#license)
 
 ## Setup MySQL
 
@@ -123,34 +125,59 @@ java -jar target/gamasenseit-0.0.1-SNAPSHOT.jar
 
 And that's all !
 
-## Routes
+## API
 
 ```
-/public/data?sensorID=<ID>       | GET List<SensorData>
-   [&parameterID=<ID>]
-   [&start=MMddyyyy]
-   [&end=MMddyyyy]
-   [&type=json]
+GET /public/parameters?sensorId=<ID>         | List<SensorData>
+        [&parameterMetadataId=<ID>]
+        [&start=MMddyyyy]
+        [&end=MMddyyyy]
+        [&type=json]
 
-/public/sensors                  | GET List<Sensor>
-/public/sensors/<ID>             | GET Sensor
-/public/sensors/names            | GET List<Sensor.name>
+GET /public/sensors                          | List<Sensor>
+GET /public/sensors/<ID>                     | Sensor
+GET /public/sensors/names                    | List<Sensor.name>
 
-/public/types                    | GET List<SensorMetadata>
-/public/types/names              | GET List<name + " -- " + version>
-/public/types/<ID>/parameters    | GET List<ParameterMetadata>
+GET /public/sensors/metadata                 | List<SensorMetadata>
+GET /public/sensors/metadata/names           | List<name + " -- " + version>
+GET /public/sensors/metadata/<ID>/parameters | List<ParameterMetadata>
 
-/public/parameters               | GET List<ParameterMetadata>
-/public/parameters/<ID>          | GET ParameterMetadata
+GET /public/parameters/metadata              | List<ParameterMetadata>
+GET /public/parameters/metadata/<ID>         | ParameterMetadata
 
-/public/server/date              | GET Date
-/public/server/separator         | GET ":"
+GET /public/server/date                      | Current time in EPOCH
+GET /public/server/separator                 | DEFAULT_DATA_SEPARATOR
 
-/private/sensors                 | POST (add Sensor)
-/private/sensors                 | PATCH (update Sensor)
-/private/types                   | POST (add SensorMetadata)
-/private/parameters              | POST (add ParameterMetadata)
+POST /private/sensors                        | add Sensor
+PATCH /private/sensors                       | update Sensor
+POST /private/sensors/metadata               | add SensorMetadata
+POST /private/parameters/metadata            | add ParameterMetadata
 ```
+
+
+## Convention
+
+- Interface must be named with an `I` in front.
+- Enum must be named with an `E` in front.
+- Repository : `IParameterRepository` -> `var parameterRepo`
+- The names of the collections must be plural.
+- Optional var must have optional in their names if their content is extracted in a variable.
+- If a variable contains an id then it has the name id at the end.
+- Recurrent variable naming convention 
+    - | Class               | Name  |
+      | :------------------ | :---- | 
+      | ParameterMetadata   | `pmd` |
+      | Parameter           | `p`   |
+      | SensorMetadata      | `smd` |
+      | Sensor              | `s`   |
+      | User                | `u`   |
+      | UserGroup           | `g`   |
+      | User                | `u`   |
+      | Role                | `r`   |
+      | Exception           | `e`   |
+      | DataFormat          | `df`  |
+      | DataParameter       | `dp`  |
+- Variables with a short name (less than 3 letters) must be added to the table above unless it's a unique name
 
 ## License
 
