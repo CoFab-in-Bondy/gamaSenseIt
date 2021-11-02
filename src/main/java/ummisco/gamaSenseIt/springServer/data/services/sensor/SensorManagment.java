@@ -21,7 +21,7 @@ public class SensorManagment implements ISensorManagment {
     @Autowired
     ISensorMetadataRepository sensorMetadataRepo;
     @Autowired
-    ISensorDataRepository analysedDataRepo;
+    IParameterRepository analysedDataRepo;
     @Autowired
     ISensorDataAnalyser dataAnalyser;
 
@@ -115,7 +115,7 @@ public class SensorManagment implements ISensorManagment {
 
         SensoredBulkData bulkData = new SensoredBulkData(selectedSensor, token, capturedate, date, contents);
         bulkDataRepo.save(bulkData);
-        List<SensorData> aData = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
+        List<Parameter> aData = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
         // System.out.println("*************************************************************************************");
 
         analysedDataRepo.saveAll(aData);
@@ -127,17 +127,17 @@ public class SensorManagment implements ISensorManagment {
     }
 
     @Override
-    public SensorMetadata addSensorMetadata(SensorMetadata s) {
+    public SensorMetadata addSensorMetadata(SensorMetadata smd) {
 
-        return sensorMetadataRepo.save(s);
+        return sensorMetadataRepo.save(smd);
     }
 
     @Override
-    public ParameterMetadata addParameterToSensorMetadata(SensorMetadata s, ParameterMetadata md) {
-        md.setSensorMetadata(s);
-        ParameterMetadata res = parameterSensorRepo.save(md);
-        s.addMeasuredData(res);
-        sensorMetadataRepo.save(s);
+    public ParameterMetadata addParameterToSensorMetadata(SensorMetadata smd, ParameterMetadata pmd) {
+        pmd.setSensorMetadata(smd);
+        ParameterMetadata res = parameterSensorRepo.save(pmd);
+        smd.addMeasuredData(res);
+        sensorMetadataRepo.save(smd);
         return res;
     }
 

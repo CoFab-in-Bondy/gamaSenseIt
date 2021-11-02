@@ -10,11 +10,9 @@ public class MqttTimePublisher implements IMqttTimePublisher{
 
 	@Autowired
 	TimeNotifier notifier;
-	
-	
+
 	String topic;
-	
-	
+
 	public void publishCurrentDate() {
 		notifier.sendToMqtt(Long.toString(System.currentTimeMillis() / 1000));	
 	}

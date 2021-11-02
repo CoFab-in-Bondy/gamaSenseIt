@@ -10,19 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.endpoint.MessageProducerSupport;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
-import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -32,19 +27,24 @@ import ummisco.gamaSenseIt.springServer.services.activation.IActivation;
 import java.util.Calendar;
 import java.util.Date;
 
-@SpringBootApplication(scanBasePackages = {"ummisco.gamaSenseIt.springServer.security","ummisco.gamaSenseIt.springServer.services",
-        "ummisco.gamaSenseIt.springServer.data.model", "ummisco.gamaSenseIt.springServer.data.repositories",
-        "ummisco.gamaSenseIt.springServer.data.services", "ummisco.gamaSenseIt.springServer.data.controller",
-        "ummisco.gamaSenseIt.springServer.qameleo"})
+@SpringBootApplication(scanBasePackages = {
+        "ummisco.gamaSenseIt.springServer.security",
+        "ummisco.gamaSenseIt.springServer.services",
+        "ummisco.gamaSenseIt.springServer.data.model",
+        "ummisco.gamaSenseIt.springServer.data.repositories",
+        "ummisco.gamaSenseIt.springServer.data.services",
+        "ummisco.gamaSenseIt.springServer.data.controller",
+        "ummisco.gamaSenseIt.springServer.qameleo"
+})
 @EnableAutoConfiguration
-//@EnableWebSecurity
+// @EnableWebSecurity
 
 @EnableTransactionManagement
 @ImportResource(value = "classpath:application-config.xml")
 public class Application {
 
     @Autowired
-    ISensorManagment sensorManager;
+    ISensorManagment sensorManagment;
     
     
     @Autowired 
@@ -115,7 +115,7 @@ public class Application {
 
             Date dte = Calendar.getInstance().getTime();
             System.out.println("Message recu : " + arg0.getPayload());
-            sensorManager.saveData(arg0.getPayload().toString(), dte);
+            sensorManagment.saveData(arg0.getPayload().toString(), dte);
         }
     }   
 

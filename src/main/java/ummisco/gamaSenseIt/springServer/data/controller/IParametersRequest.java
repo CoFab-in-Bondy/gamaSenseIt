@@ -1,10 +1,11 @@
 package ummisco.gamaSenseIt.springServer.data.controller;
 
-public interface Param {
+public interface IParametersRequest {
     String
-            METADATA_ID = "metadataId",
-            PARAMETER_ID = "parameterId",
+            SENSOR_METADATA_ID = "sensorMetadataId",
             SENSOR_ID = "sensorId",
+            PARAMETER_METADATA_ID = "parameterMetadataId",
+            PARAMETER_ID = "parameterId",
             START = "start",
             END = "end",
             DATA_FORMAT = "dataFormat",

@@ -5,41 +5,41 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 
 @Entity
-public class SensorData implements IConvertible<DisplayableData> {
+public class Parameter implements IConvertible<DisplayableParameter> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long parameterId;
     @Lob
     private byte[] data;
     private Date captureDate;
     @ManyToOne
     private Sensor sensor;
     @ManyToOne
-    private ParameterMetadata parameter;
+    private ParameterMetadata parameterMetadata;
 
-    public SensorData() {
+    public Parameter() {
     }
 
-    private SensorData(Date captureDate, ParameterMetadata metadata, Sensor s) {
+    private Parameter(Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
         super();
-        this.sensor = s;
+        this.sensor = sensor;
         this.captureDate = captureDate;
-        this.parameter = metadata;
+        this.parameterMetadata = parameterMetadata;
     }
 
-    public SensorData(double data, Date captureDate, ParameterMetadata metadata, Sensor s) {
-        this(captureDate, metadata, s);
+    public Parameter(double data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
+        this(captureDate, parameterMetadata, sensor);
         this.data = ByteBuffer.allocate(Double.BYTES).putDouble(data).array();
     }
 
-    public SensorData(long data, Date captureDate, ParameterMetadata metadata, Sensor s) {
-        this(captureDate, metadata, s);
+    public Parameter(long data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
+        this(captureDate, parameterMetadata, sensor);
         this.data = ByteBuffer.allocate(Integer.BYTES).putLong(data).array();
     }
 
-    public SensorData(String data, Date captureDate, ParameterMetadata metadata, Sensor s) {
-        this(captureDate, metadata, s);
+    public Parameter(String data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
+        this(captureDate, parameterMetadata, sensor);
         this.data = data.getBytes();
     }
 
@@ -52,7 +52,7 @@ public class SensorData implements IConvertible<DisplayableData> {
     }
 
     public Object getDataObject() {
-        return parameter.getDataFormat().convertToObject(data);
+        return parameterMetadata.getDataFormat().convertToObject(data);
     }
 
     public String toString() {
@@ -67,20 +67,20 @@ public class SensorData implements IConvertible<DisplayableData> {
         this.captureDate = captureDate;
     }
 
-    public ParameterMetadata getParameter() {
-        return parameter;
+    public ParameterMetadata getParameterMetadata() {
+        return parameterMetadata;
     }
 
-    public void setParameter(ParameterMetadata metadata) {
-        this.parameter = metadata;
+    public void setParameterMetadata(ParameterMetadata metadata) {
+        this.parameterMetadata = metadata;
     }
 
-    public long getId() {
-        return id;
+    public long getParameterId() {
+        return parameterId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setParameterId(long parameterId) {
+        this.parameterId = parameterId;
     }
 
     public Sensor getSensor() {
@@ -92,8 +92,8 @@ public class SensorData implements IConvertible<DisplayableData> {
     }
 
     @Override
-    public DisplayableData convert() {
-        return new DisplayableData(this);
+    public DisplayableParameter convert() {
+        return new DisplayableParameter(this);
     }
 
     /*

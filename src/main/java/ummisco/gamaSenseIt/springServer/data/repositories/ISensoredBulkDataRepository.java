@@ -12,5 +12,5 @@ import java.util.List;
 //@RepositoryRestResource(collectionResourceRel = "bulkData", path = "bulkData")
 @Repository
 public interface ISensoredBulkDataRepository extends CrudRepository<SensoredBulkData, Long> {
-    List<SensoredBulkData> findByCaptureDate(Date dte);
+    List<SensoredBulkData> findByCaptureDate(Date date);
 }

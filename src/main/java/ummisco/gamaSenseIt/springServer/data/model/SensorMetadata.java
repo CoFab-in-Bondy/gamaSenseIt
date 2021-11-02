@@ -7,24 +7,22 @@ import java.util.Set;
 
 @Entity
 public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
-    // TODO data with : inside ?
+
     public final static String MEASURE_ORDER_SEPARATOR = ":";
     public final static String DEFAULT_DATA_SEPARATOR = ":";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idType;
+    private Long sensorMetadataId;
+
     private String version;
     private String name;
     private String measuredDataOrder;
-
     private String dataSeparator;
-
+    private String description;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sensorMetadata")
     private Set<ParameterMetadata> parameterMetadata = new HashSet<>();
-
-    private String description;
 
     public SensorMetadata() {
         super();
@@ -70,15 +68,15 @@ public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
         this.name = typeName;
     }
 
-    public Long getIdType() {
-        return idType;
+    public Long getSensorMetadataId() {
+        return sensorMetadataId;
     }
 
-    public void setIdType(Long idType) {
-        this.idType = idType;
+    public void setSensorMetadataId(Long sensorMetadataId) {
+        this.sensorMetadataId = sensorMetadataId;
     }
 
-    public Set<ParameterMetadata> getParameterMetadata() {
+    public Set<ParameterMetadata> getParameterMetadataById() {
         return parameterMetadata;
     }
 
@@ -102,17 +100,17 @@ public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
         this.dataSeparator = dataSeparator;
     }
 
-    public void addMeasuredData(ParameterMetadata md) {
-        md.setSensorMetadata(this);
-        this.measuredDataOrder = this.measuredDataOrder + md.getId() + MEASURE_ORDER_SEPARATOR;
-        this.parameterMetadata.add(md);
+    public void addMeasuredData(ParameterMetadata pmd) {
+        pmd.setSensorMetadata(this);
+        this.measuredDataOrder = this.measuredDataOrder + pmd.getParameterMetadataId() + MEASURE_ORDER_SEPARATOR;
+        this.parameterMetadata.add(pmd);
     }
 
-    public Optional<ParameterMetadata> getParameterMetadata(long id) {
+    public Optional<ParameterMetadata> getParameterMetadataById(long id) {
         ParameterMetadata res = null;
-        for (ParameterMetadata md : this.parameterMetadata) {
-            if (md.getId() == id) {
-                res = md;
+        for (ParameterMetadata pmd : this.parameterMetadata) {
+            if (pmd.getParameterMetadataId() == id) {
+                res = pmd;
                 break;
             }
         }

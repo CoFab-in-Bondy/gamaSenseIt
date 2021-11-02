@@ -1,7 +1,7 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
 public class DisplayableSensor {
-    private long idSensor;
+    private long id;
     private String name;
     private String displayName;
     private String subDisplayName;
@@ -10,10 +10,10 @@ public class DisplayableSensor {
     private long sensorMetadata;
     private String sensorMetadataName;
 
-    public DisplayableSensor(long idSensor, String name, String displayName, String subDisplayName, double longitude,
+    public DisplayableSensor(long id, String name, String displayName, String subDisplayName, double longitude,
                              double latitude, long sensorMetadata, String sensorMetadataName) {
         super();
-        this.idSensor = idSensor;
+        this.id = id;
         this.name = name;
         this.displayName = displayName;
         this.subDisplayName = subDisplayName;
@@ -25,23 +25,23 @@ public class DisplayableSensor {
 
     public DisplayableSensor(Sensor s) {
         this(
-                s.getIdSensor(),
+                s.getSensorId(),
                 s.getName(),
                 s.getDisplayName(),
                 s.getSubDisplayName(),
                 s.getLongitude(),
                 s.getLatitude(),
-                s.getMetadata().getIdType(),
+                s.getMetadata().getSensorMetadataId(),
                 s.getMetadata().getName() + " -- " + s.getMetadata().getVersion()
         );
     }
 
-    public long getIdSensor() {
-        return idSensor;
+    public long getId() {
+        return id;
     }
 
-    public void setIdSensor(long idSensor) {
-        this.idSensor = idSensor;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

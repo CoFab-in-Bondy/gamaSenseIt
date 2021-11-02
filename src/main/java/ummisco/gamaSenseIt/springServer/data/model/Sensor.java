@@ -15,7 +15,7 @@ public class Sensor implements IConvertible<DisplayableSensor> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idSensor;
+    private long sensorId;
     private String name;
     private String displayName;
     private String subDisplayName;
@@ -31,27 +31,20 @@ public class Sensor implements IConvertible<DisplayableSensor> {
         name = "";
     }
 
-    public Sensor(String sensorName, String displayName, Point location, SensorMetadata sensorType) {
-        this(sensorName, displayName, location.getX(), location.getY(), sensorType);
+    public Sensor(String sensorName, String displayName, Point location, SensorMetadata sensorMetadata) {
+        this(sensorName, displayName, location.getX(), location.getY(), sensorMetadata);
     }
 
-    public Sensor(String sensorName, String displayName, String subDisplayName, Point location, SensorMetadata sensorType) {
-        this(sensorName, displayName, subDisplayName, location.getX(), location.getY(), sensorType);
+    public Sensor(String sensorName, String displayName, String subDisplayName, Point location, SensorMetadata sensorMetadata) {
+        this(sensorName, displayName, subDisplayName, location.getX(), location.getY(), sensorMetadata);
     }
 
-    public Sensor(String sensorName, String displayName, double locationX, double locationY, SensorMetadata sensorType) {
-        this();
-        this.longitude = locationX;
-        this.latitude = locationY;
-        this.name = sensorName;
-        this.displayName = displayName;
-        this.sensorType = sensorType;
-        this.isHidden = false;
+    public Sensor(String sensorName, String displayName, double locationX, double locationY, SensorMetadata sensorMetadata) {
+        this(sensorName, displayName, null, locationX, locationY, sensorMetadata);
     }
 
     public Sensor(String sensorName, String displayName, String subDisplayName, double locationX, double locationY,
                   SensorMetadata sensorType) {
-        this();
         this.name = sensorName;
         this.displayName = displayName;
         this.subDisplayName = subDisplayName;
@@ -61,12 +54,12 @@ public class Sensor implements IConvertible<DisplayableSensor> {
         this.isHidden = false;
     }
 
-    public Long getIdSensor() {
-        return idSensor;
+    public long getSensorId() {
+        return sensorId;
     }
 
-    public void setIdSensor(Long idSensor) {
-        this.idSensor = idSensor;
+    public void setSensorId(long sensorId) {
+        this.sensorId = sensorId;
     }
 
     public String getName() {
@@ -112,13 +105,13 @@ public class Sensor implements IConvertible<DisplayableSensor> {
     public Optional<Set<ParameterMetadata>> getParameters() {
         return sensorType == null ?
                 Optional.empty() :
-                Optional.of(this.sensorType.getParameterMetadata());
+                Optional.of(this.sensorType.getParameterMetadataById());
     }
 
     public Optional<ParameterMetadata> getParameterMetadata(long id) {
         if (this.sensorType == null)
             return Optional.empty();
-        return this.sensorType.getParameterMetadata(id);
+        return this.sensorType.getParameterMetadataById(id);
     }
 
     public String getSubDisplayName() {

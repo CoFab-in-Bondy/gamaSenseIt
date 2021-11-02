@@ -4,7 +4,7 @@ import com.opencsv.bean.CsvBindByPosition;
 
 import java.util.Date;
 
-public class DisplayableData {
+public class DisplayableParameter {
 
     @CsvBindByPosition(position = 0)
     public Object value;
@@ -27,7 +27,7 @@ public class DisplayableData {
     @CsvBindByPosition(position = 6)
     private String measuredParameter;
 
-    public DisplayableData(
+    public DisplayableParameter(
             Object value,
             Date date,
             String unit,
@@ -46,15 +46,15 @@ public class DisplayableData {
         this.measuredParameter = measuredParameter;
     }
 
-    public DisplayableData(SensorData data) {
+    public DisplayableParameter(Parameter p) {
         this(
-                data.getDataObject(),
-                data.getCaptureDate(),
-                data.getParameter().getUnit(),
-                data.getSensor().getName(),
-                data.getSensor().getLatitude(),
-                data.getSensor().getLongitude(),
-                data.getParameter().getParameter().toString()
+                p.getDataObject(),
+                p.getCaptureDate(),
+                p.getParameterMetadata().getUnit(),
+                p.getSensor().getName(),
+                p.getSensor().getLatitude(),
+                p.getSensor().getLongitude(),
+                p.getParameterMetadata().getDataParameter().toString()
         );
     }
 

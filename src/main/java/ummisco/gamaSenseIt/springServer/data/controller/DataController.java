@@ -3,7 +3,7 @@ package ummisco.gamaSenseIt.springServer.data.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import ummisco.gamaSenseIt.springServer.data.model.IConvertible;
 import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
+import ummisco.gamaSenseIt.springServer.data.repositories.IParameterRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
@@ -17,42 +17,42 @@ public abstract class DataController {
     final static String NIL = "nil";
 
     @Autowired
-    protected ISensorRepository sensors;
+    protected ISensorRepository sensorsRepo;
 
     @Autowired
-    protected ISensorMetadataRepository sensorsMetadata;
+    protected ISensorMetadataRepository sensorsMetadataRepo;
 
     @Autowired
-    protected ISensorManagment sensorsManagement;
+    protected ISensorManagment sensorsManagementRepo;
 
     @Autowired
-    protected ISensorDataRepository sensorsData;
+    protected IParameterRepository parametersRepo;
 
     @Autowired
-    protected IParameterMetadataRepository parametersMetadata;
+    protected IParameterMetadataRepository parametersMetadataRepo;
 
     @Autowired
-    protected FormattedResponseFactory formatter;
+    protected FormattedResponseFactory formattedResponseFactory;
 
-    public static <MT, D> ArrayList<D> display(Iterable<MT> list, PublicDataController.Converter<MT, D> caster) {
+    public static <M, D> ArrayList<D> display(Iterable<M> list, Converter<M, D> caster) {
         var result = new ArrayList<D>();
-        for (var data : list)
-            result.add(caster.cast(data));
+        for (var obj : list)
+            result.add(caster.cast(obj));
         return result;
     }
 
     public static <D> ArrayList<D> display(Iterable<? extends IConvertible<D>> list) {
         var result = new ArrayList<D>();
-        for (var data : list)
-            result.add(data.convert());
+        for (var convertible : list)
+            result.add(convertible.convert());
         return result;
     }
 
-    public static <D> D display(Optional<? extends IConvertible<D>> optional) {
-        return optional.isEmpty() ? null : optional.get().convert();
+    public static <D> D display(Optional<? extends IConvertible<D>> optionalConvertible) {
+        return optionalConvertible.isEmpty() ? null : optionalConvertible.get().convert();
     }
 
-    interface Converter<MT, D> {
-        D cast(MT mt);
+    interface Converter<M, D> {
+        D cast(M m);
     }
 }

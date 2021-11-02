@@ -4,18 +4,18 @@ import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParamet
 
 public class DisplayableParameterMetadata {
     private long id;
-    private String varName;
+    private String name;
     private String unit;
     private ParameterMetadata.DataFormat dataFormat;
     private DataParameter parameter;
     private long sensorMetadata;
     private String icon;
 
-    public DisplayableParameterMetadata(long id, String varName, String unit, ParameterMetadata.DataFormat dataFormat,
+    public DisplayableParameterMetadata(long id, String name, String unit, ParameterMetadata.DataFormat dataFormat,
                                         DataParameter parameter, long sensorMetadata, String icon) {
         super();
         this.id = id;
-        this.varName = varName;
+        this.name = name;
         this.unit = unit;
         this.dataFormat = dataFormat;
         this.parameter = parameter;
@@ -23,9 +23,9 @@ public class DisplayableParameterMetadata {
         this.icon = icon;
     }
 
-    public DisplayableParameterMetadata(ParameterMetadata mt) {
-        this(mt.getId(), mt.getVarName(), mt.getUnit(), mt.getDataFormat(), mt.getParameter(),
-                mt.getSensorMetadata().getIdType(), mt.getIcon());
+    public DisplayableParameterMetadata(ParameterMetadata pmd) {
+        this(pmd.getParameterMetadataId(), pmd.getName(), pmd.getUnit(), pmd.getDataFormat(), pmd.getDataParameter(),
+                pmd.getSensorMetadata().getSensorMetadataId(), pmd.getIcon());
     }
 
     public long getId() {
@@ -36,12 +36,12 @@ public class DisplayableParameterMetadata {
         this.id = id;
     }
 
-    public String getVarName() {
-        return varName;
+    public String getName() {
+        return name;
     }
 
-    public void setVarName(String varName) {
-        this.varName = varName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUnit() {

@@ -8,30 +8,27 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String varName;
+    private Long parameterMetadataId;
+    private String name;
     private String unit;
     @ManyToOne
     private SensorMetadata sensorMetadata;
     private DataFormat dataFormat;
-    private DataParameter parameter;
+    private DataParameter dataParameter;
     private String icon = "";
 
-    public ParameterMetadata(String varName, String unit, DataFormat typeOfData, DataParameter typeOfSensor) {
-        super();
-        this.varName = varName;
+    public ParameterMetadata(String name, String unit, DataFormat dataFormat, DataParameter dataParameter) {
+        this.name = name;
         this.unit = unit;
-        this.dataFormat = typeOfData;
-        this.parameter = typeOfSensor;
+        this.dataFormat = dataFormat;
+        this.dataParameter = dataParameter;
         this.setIconFromParameter();
     }
 
-    public ParameterMetadata() {
-        super();
-    }
+    public ParameterMetadata() {}
 
     private void setIconFromParameter() {
-        icon = switch (this.parameter) {
+        icon = switch (this.dataParameter) {
             case TEMPERATURE -> "fas fa-thermometer-three-quarters";
             case PM10, PM2_5, PM1 -> "fab fa-cloudversify";
             case HUMIDITY -> "fas fa-tint";
@@ -39,20 +36,20 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
         };
     }
 
-    public long getId() {
-        return id;
+    public Long getParameterMetadataId() {
+        return parameterMetadataId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setParameterMetadataId(Long parameterMetadataId) {
+        this.parameterMetadataId = parameterMetadataId;
     }
 
-    public String getVarName() {
-        return varName;
+    public String getName() {
+        return name;
     }
 
-    public void setVarName(String varName) {
-        this.varName = varName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUnit() {
@@ -71,12 +68,12 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
         this.dataFormat = typeOfData;
     }
 
-    public DataParameter getParameter() {
-        return parameter;
+    public DataParameter getDataParameter() {
+        return dataParameter;
     }
 
-    public void setParameter(DataParameter typeOfSensor) {
-        this.parameter = typeOfSensor;
+    public void setDataParameter(DataParameter typeOfSensor) {
+        this.dataParameter = typeOfSensor;
     }
 
     public SensorMetadata getSensorMetadata() {

@@ -1,10 +1,12 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
+import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
 
 import java.util.Date;
+
 
 public interface ISensorManagment {
     String DEFAULT_DESCRIPTION = "UNKNOWN_DESCRIPTION";
@@ -16,9 +18,9 @@ public interface ISensorManagment {
 
     Sensor updateSensorInformation(Sensor s);
 
-    ParameterMetadata addParameterToSensorMetadata(SensorMetadata s, ParameterMetadata md);
+    ParameterMetadata addParameterToSensorMetadata(SensorMetadata smd, ParameterMetadata pmd);
 
-    SensorMetadata addSensorMetadata(SensorMetadata s);
+    SensorMetadata addSensorMetadata(SensorMetadata smd);
 
     void saveDefaultSensorInit();
 

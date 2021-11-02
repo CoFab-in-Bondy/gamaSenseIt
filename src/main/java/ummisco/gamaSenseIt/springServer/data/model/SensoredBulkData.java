@@ -9,11 +9,13 @@ public class SensoredBulkData {
     // TODO why not private
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long idData;
-    long token;
-    Date captureDate;
-    Date receivingDate;
-    String contents;
+    private Long sensoredBulkDataId;
+
+    private long token;
+    private Date captureDate;
+    private Date receivingDate;
+    private String contents;
+
     @ManyToOne
     @JoinColumn(name = "sensor_id", nullable = false)
     private Sensor sensor;
@@ -31,12 +33,12 @@ public class SensoredBulkData {
         super();
     }
 
-    public Long getIdData() {
-        return idData;
+    public Long getSensoredBulkDataId() {
+        return sensoredBulkDataId;
     }
 
-    public void setIdData(Long idData) {
-        this.idData = idData;
+    public void setSensoredBulkDataId(Long sensoredBulkDataId) {
+        this.sensoredBulkDataId = sensoredBulkDataId;
     }
 
     public Sensor getSensor() {
@@ -51,8 +53,8 @@ public class SensoredBulkData {
         return token;
     }
 
-    public void setToken(long tocken) {
-        this.token = tocken;
+    public void setToken(long token) {
+        this.token = token;
     }
 
     public Date getCaptureDate() {

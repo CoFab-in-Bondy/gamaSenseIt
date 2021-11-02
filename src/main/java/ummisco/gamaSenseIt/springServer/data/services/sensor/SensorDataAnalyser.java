@@ -17,9 +17,9 @@ public class SensorDataAnalyser implements ISensorDataAnalyser {
 
     // TODO make it better
     @Override
-    public List<SensorData> analyseBulkData(String bulkData, Date captureDate, Sensor sensor) {
+    public List<Parameter> analyseBulkData(String bulkData, Date captureDate, Sensor sensor) {
         System.out.println("sensor " + sensor.getName() + " data " + bulkData);
-        var res = new ArrayList<SensorData>();
+        var res = new ArrayList<Parameter>();
         SensorMetadata metadata = sensor.getMetadata();
         String sep = metadata.getDataSeparator();
         System.out.println("separator " + sep);
@@ -38,17 +38,17 @@ public class SensorDataAnalyser implements ISensorDataAnalyser {
             long metaKey = Long.parseLong(sid);
             var optParams = sensor.getParameterMetadata(metaKey);
             if (optParams.isPresent()) {
-                SensorData data = null;
+                Parameter data = null;
                 ParameterMetadata params = optParams.get();
                 if (params.getDataFormat().equals(ParameterMetadata.DataFormat.DOUBLE)) {
                     double localData = Double.parseDouble(datas[i]);
-                    data = new SensorData(localData, captureDate, optParams.get(), sensor);
+                    data = new Parameter(localData, captureDate, optParams.get(), sensor);
                 } else if (params.getDataFormat().equals(ParameterMetadata.DataFormat.INTEGER)) {
                     long localData = Long.parseLong(datas[i]);
-                    data = new SensorData(localData, captureDate, optParams.get(), sensor);
+                    data = new Parameter(localData, captureDate, optParams.get(), sensor);
                 } else if (params.getDataFormat().equals(ParameterMetadata.DataFormat.STRING)) {
                     String localData = datas[i];
-                    data = new SensorData(localData, captureDate, optParams.get(), sensor);
+                    data = new Parameter(localData, captureDate, optParams.get(), sensor);
                 }
                 res.add(data);
             }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ummisco.gamaSenseIt.springServer.data.controller.PublicDataController;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
-import ummisco.gamaSenseIt.springServer.data.repositories.ISensorDataRepository;
+import ummisco.gamaSenseIt.springServer.data.repositories.IParameterRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 
 import java.util.*;
@@ -19,15 +19,15 @@ public class QameleoController {
     PublicDataController dataController;
 
     @Autowired
-    ISensorRepository sensors;
+    ISensorRepository sensorsRepo;
 
     @Autowired
-    ISensorDataRepository sensorData;
+    IParameterRepository parametersRepo;
 
     @CrossOrigin
     @RequestMapping(value = IQameleoController.AIR_QUALITY)
     public QameleoData getLastData(@RequestParam(value = IQameleoController.SENSOR_ID, required = true) long sensorID) {
-        var sensorFound = sensors.findById(sensorID);
+        var sensorFound = sensorsRepo.findById(sensorID);
         if (sensorFound.isEmpty())
             return null;
         var sensor = sensorFound.get();
@@ -50,27 +50,27 @@ public class QameleoController {
         startHour.add(Calendar.HOUR_OF_DAY, -1);
 
         for (var param : parameters) {
-            var relativeStart = switch (param.getParameter()) {
+            var relativeStart = switch (param.getDataParameter()) {
                 case TEMPERATURE, HUMIDITY -> startHour;
                 default -> start;
             };
-            if(!param.getVarName().equals("sensor_temperature"))
+            if(!param.getName().equals("sensor_temperature"))
             {
-                Double mean = getMeanValue(sensorID, param.getId(), relativeStart.getTime(), endDate.getTime());
-                qameleoData.put(param.getParameter(), mean == null ? 0.0 : mean);
+                Double mean = getMeanValue(sensorID, param.getParameterMetadataId(), relativeStart.getTime(), endDate.getTime());
+                qameleoData.put(param.getDataParameter(), mean == null ? 0.0 : mean);
             }
         }
         return new QameleoData(sensor.getName(), sensor.getDisplayName(), sensor.getSubDisplayName(), qameleoData);
     }
 
     private Double getMeanValue(long id, long idParam, Date start, Date endDate) {
-        var sensorData = this.sensorData.advancedFindAll(id, idParam, start, endDate);
-        if (sensorData.isEmpty())
+        var parameters = this.parametersRepo.advancedFindAll(id, idParam, start, endDate);
+        if (parameters.isEmpty())
             return null;
         double sum = 0.0;
         // FIXME unsafe cast, make generic for data
-        for (var dataFromSensor : sensorData)
-            sum += ((Double) dataFromSensor.getDataObject());
-        return sum / sensorData.size();
+        for (var p : parameters)
+            sum += ((Double) p.getDataObject());
+        return sum / parameters.size();
     }
 }

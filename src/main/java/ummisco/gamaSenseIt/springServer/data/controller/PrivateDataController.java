@@ -6,59 +6,93 @@ import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParamet
 
 @CrossOrigin
 @RestController
-@RequestMapping(Route.PRIVATE)
+@RequestMapping(IRoute.PRIVATE)
 public class PrivateDataController extends DataController {
 
-    /*-----------------------*
-     | Data                  |
-     *-----------------------*/
-
-    /*-----------------------*
-     | Sensors               |
-     *-----------------------*/
-
     public Sensor getSensorById(long id) {
-        var sensor = sensors.findById(id);
+        var sensor = sensorsRepo.findById(id);
         return sensor.isEmpty() ? null : sensor.get();
     }
 
-    @CrossOrigin
-    @RequestMapping(value = Route.SENSORS, method = RequestMethod.POST)
-    public DisplayableSensor addSensor(
-            @RequestParam(value = Param.NAME, defaultValue = NIL) String name,
-            @RequestParam(value = Param.DISPLAY_NAME, defaultValue = NIL) String displayName,
-            @RequestParam(value = Param.SUB_DISPLAY_NAME, defaultValue = NIL) String subDisplayName,
-            @RequestParam(value = Param.LONGITUDE, defaultValue = "0") double longitude,
-            @RequestParam(value = Param.LATITUDE, defaultValue = "0") double latitude,
-            @RequestParam(value = Param.SENSOR_METADATA) long idSensorType
-    ) {
-        var typeSensor = sensorsMetadata.findById(idSensorType);
+    /*------------------------------------*
+     | Server                             |
+     *------------------------------------*/
 
-        if (typeSensor.isEmpty())
+    /*------------------------------------*
+     | Parameters                         |
+     *------------------------------------*/
+
+    /*------------------------------------*
+     | Parameters metadata                |
+     *------------------------------------*/
+
+    @CrossOrigin
+    @RequestMapping(value = IRoute.PARAMETERS_METADATA, method = RequestMethod.POST)
+    public DisplayableParameterMetadata addParameter(
+            @RequestParam(value = IParametersRequest.SENSOR_METADATA_ID, defaultValue = NIL) long sensorMetadataId,
+            @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
+            @RequestParam(value = IParametersRequest.UNIT, defaultValue = NIL) String unit,
+            @RequestParam(value = IParametersRequest.DATA_FORMAT, defaultValue = NIL) String format,
+            @RequestParam(value = IParametersRequest.MEASURED_PARAMETER, defaultValue = NIL) String measuredParameter
+    ) {
+        var sensorMetadata = sensorsMetadataRepo.findById(sensorMetadataId);
+        if (sensorMetadata.isEmpty())
+            return null;
+
+        ParameterMetadata.DataFormat dataFormat;
+        DataParameter dataParameter;
+        try {
+            dataFormat = ParameterMetadata.DataFormat.valueOf(format);
+            dataParameter = DataParameter.valueOf(measuredParameter);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        var parameterMetadata = new ParameterMetadata(name, unit, dataFormat, dataParameter);
+        parameterMetadata = sensorsManagementRepo.addParameterToSensorMetadata(sensorMetadata.get(), parameterMetadata);
+        return new DisplayableParameterMetadata(parameterMetadata);
+    }
+
+    /*------------------------------------*
+     | Sensors                            |
+     *------------------------------------*/
+
+    @CrossOrigin
+    @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.POST)
+    public DisplayableSensor addSensor(
+            @RequestParam(value = IParametersRequest.SENSOR_METADATA_ID) long sensorMetadataId,
+            @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
+            @RequestParam(value = IParametersRequest.DISPLAY_NAME, defaultValue = NIL) String displayName,
+            @RequestParam(value = IParametersRequest.SUB_DISPLAY_NAME, defaultValue = NIL) String subDisplayName,
+            @RequestParam(value = IParametersRequest.LONGITUDE, defaultValue = "0") double longitude,
+            @RequestParam(value = IParametersRequest.LATITUDE, defaultValue = "0") double latitude
+    ) {
+        var sensorMetadata = sensorsMetadataRepo.findById(sensorMetadataId);
+
+        if (sensorMetadata.isEmpty())
             return null;
 
         // TODO raise an error this sensor already exist
-        var selectedSensors = sensors.findByName(name);
+        var selectedSensors = sensorsRepo.findByName(name);
         if (!selectedSensors.isEmpty())
             return selectedSensors.get(0).convert();
 
-        Sensor sensor = new Sensor(name, displayName, subDisplayName, longitude, latitude, typeSensor.get());
-        sensors.save(sensor);
+        Sensor sensor = new Sensor(name, displayName, subDisplayName, longitude, latitude, sensorMetadata.get());
+        sensorsRepo.save(sensor);
         return sensor.convert();
     }
 
     @CrossOrigin
-    @RequestMapping(value = Route.SENSORS, method = RequestMethod.PATCH)
+    @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.PATCH)
     public DisplayableSensor updateSensor(
-            @RequestParam(value = Param.SENSOR_ID) long id,
-            @RequestParam(value = Param.NAME, required = false) String name,
-            @RequestParam(value = Param.DISPLAY_NAME, required = false) String displayName,
-            @RequestParam(value = Param.SUB_DISPLAY_NAME, required = false) String subDisplayName,
-            @RequestParam(value = Param.LONGITUDE, required = false) Double longitude,
-            @RequestParam(value = Param.LATITUDE, required = false) Double latitude
+            @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
+            @RequestParam(value = IParametersRequest.NAME, required = false) String name,
+            @RequestParam(value = IParametersRequest.DISPLAY_NAME, required = false) String displayName,
+            @RequestParam(value = IParametersRequest.SUB_DISPLAY_NAME, required = false) String subDisplayName,
+            @RequestParam(value = IParametersRequest.LONGITUDE, required = false) Double longitude,
+            @RequestParam(value = IParametersRequest.LATITUDE, required = false) Double latitude
     ) {
 
-        Sensor sensor = getSensorById(id);
+        Sensor sensor = getSensorById(sensorId);
         if (sensor == null)
             return null;
 
@@ -77,63 +111,29 @@ public class PrivateDataController extends DataController {
         if (longitude != null)
             sensor.setLatitude(latitude);
 
-        sensors.save(sensor);
+        sensorsRepo.save(sensor);
         return sensor.convert();
     }
 
-    /*-----------------------*
-     | Types                 |
-     *-----------------------*/
+    /*------------------------------------*
+     | Sensors metadata                   |
+     *------------------------------------*/
 
     @CrossOrigin
-    @RequestMapping(value = Route.TYPES, method = RequestMethod.POST)
-    public DisplayableSensorMetadata addType(
-            @RequestParam(value = Param.NAME, defaultValue = NIL) String varName,
-            @RequestParam(value = Param.VERSION, defaultValue = NIL) String version,
-            @RequestParam(value = Param.DATA_SEPARATOR, defaultValue = SensorMetadata.DEFAULT_DATA_SEPARATOR) String sep,
-            @RequestParam(value = Param.MEASURED_DATA_ORDER, defaultValue = NIL) String measuredDataOrder,
-            @RequestParam(value = Param.DESCRIPTION, defaultValue = NIL) String description
+    @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.POST)
+    public DisplayableSensorMetadata addSensorMetadata(
+            @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
+            @RequestParam(value = IParametersRequest.VERSION, defaultValue = NIL) String version,
+            @RequestParam(value = IParametersRequest.DATA_SEPARATOR, defaultValue = SensorMetadata.DEFAULT_DATA_SEPARATOR) String sep,
+            @RequestParam(value = IParametersRequest.MEASURED_DATA_ORDER, defaultValue = NIL) String measuredDataOrder,
+            @RequestParam(value = IParametersRequest.DESCRIPTION, defaultValue = NIL) String description
     ) {
-        var sensorsMetadate = sensorsMetadata.findByNameAndVersion(varName, version);
-        if (!sensorsMetadate.isEmpty()) return null;
+        var sensorsMetadata = sensorsMetadataRepo.findByNameAndVersion(name, version);
+        if (!sensorsMetadata.isEmpty()) return null;
 
-        var st = new SensorMetadata(varName, version, sep, description);
-        st.setMeasuredDataOrder(measuredDataOrder);
-        st = this.sensorsMetadata.save(st);
-        return new DisplayableSensorMetadata(st);
+        var sensorMetadata = new SensorMetadata(name, version, sep, description);
+        sensorMetadata.setMeasuredDataOrder(measuredDataOrder);
+        sensorMetadata = this.sensorsMetadataRepo.save(sensorMetadata);
+        return new DisplayableSensorMetadata(sensorMetadata);
     }
-
-    /*-----------------------*
-     | Parameters            |
-     *-----------------------*/
-
-    @CrossOrigin
-    @RequestMapping(value = Route.PARAMETERS, method = RequestMethod.POST)
-    public DisplayableParameterMetadata addParameter(
-            @RequestParam(value = Param.METADATA_ID, defaultValue = NIL) long id,
-            @RequestParam(value = Param.NAME, defaultValue = NIL) String varName,
-            @RequestParam(value = Param.UNIT, defaultValue = NIL) String varUnit,
-            @RequestParam(value = Param.DATA_FORMAT, defaultValue = NIL) String varFormat,
-            @RequestParam(value = Param.MEASURED_PARAMETER, defaultValue = NIL) String measuredParameter
-    ) {
-        var md = sensorsMetadata.findById(id);
-        if (md.isEmpty())
-            return null;
-
-        ParameterMetadata.DataFormat df;
-        DataParameter dp;
-        try {
-            df = ParameterMetadata.DataFormat.valueOf(varFormat);
-            dp = DataParameter.valueOf(measuredParameter);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-        var params = new ParameterMetadata(varName, varUnit, df, dp);
-        params = sensorsManagement.addParameterToSensorMetadata(md.get(), params);
-        return new DisplayableParameterMetadata(params);
-    }
-
-    /*-----------------------*
-     | Server                |
-     *-----------------------*/
 }

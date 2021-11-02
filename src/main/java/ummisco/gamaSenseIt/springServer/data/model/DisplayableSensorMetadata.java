@@ -5,40 +5,47 @@ import java.util.List;
 import java.util.Set;
 
 public class DisplayableSensorMetadata {
-    private final List<String> parameterMetadata;
-    private Long idType;
+    private final List<String> parametersMetadata;
+    private Long id;
     private String name;
     private String version;
     private String dataSeparator;
     private String measuredDataOrder;
     private String description;
 
-    public DisplayableSensorMetadata(Long idType, String name, String version, String dataSeparator,
-                                     String measuredDataOrder, Set<ParameterMetadata> parameterMetadata, String description) {
+    public DisplayableSensorMetadata(Long id, String name, String version, String dataSeparator,
+                                     String measuredDataOrder, Set<ParameterMetadata> parametersMetadata, String description) {
         super();
-        this.idType = idType;
+        this.id = id;
         this.name = name;
         this.version = version;
         this.dataSeparator = dataSeparator;
         this.measuredDataOrder = measuredDataOrder;
-        this.parameterMetadata = new ArrayList<>();
-        for (ParameterMetadata pm : parameterMetadata) {
-            this.parameterMetadata.add(pm.getVarName());
+        this.parametersMetadata = new ArrayList<>();
+        for (ParameterMetadata pm : parametersMetadata) {
+            this.parametersMetadata.add(pm.getName());
         }
         this.description = description;
     }
 
-    public DisplayableSensorMetadata(SensorMetadata s) {
-        this(s.getIdType(), s.getName(), s.getVersion(), s.getDataSeparator(), s.getMeasuredDataOrder(),
-                s.getParameterMetadata(), s.getDescription());
+    public DisplayableSensorMetadata(SensorMetadata smd) {
+        this(
+                smd.getSensorMetadataId(),
+                smd.getName(),
+                smd.getVersion(),
+                smd.getDataSeparator(),
+                smd.getMeasuredDataOrder(),
+                smd.getParameterMetadataById(),
+                smd.getDescription()
+        );
     }
 
-    public Long getIdType() {
-        return idType;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdType(Long idType) {
-        this.idType = idType;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getVersion() {
