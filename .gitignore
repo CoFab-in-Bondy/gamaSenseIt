@@ -1,8 +1,8 @@
 # Out build and package
 target/
-.mvn/wrapper/maven-wrapper.jar
 *.class
 *.jar
+!/.mvn/wrapper/maven-wrapper.jar
 *.war
 *.ear
 *.iml

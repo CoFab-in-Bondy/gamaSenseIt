@@ -9,6 +9,27 @@ Application for sensors.
 5. [Convention](#convention)
 6. [License](#license)
 
+```
+add mvnw 
+
+sudo apt install git
+
+sudo apt -y update
+sudo apt -y upgrade
+sudo add-apt-repository ppa:linuxuprising/java
+sudo apt -y update
+sudo apt install oracle-java17-installer
+sudo update-alternatives --config java
+
+sudo vi /etc/profile
+JAVA_HOME="/usr/lib/jvm/java-17-oracle"
+source /etc/environment
+```
+
+```
+mvn -N io.takari:maven:wrapper -Dmaven=3.8.2
+```
+
 ## Setup MySQL
 
 Install for Manjaro
