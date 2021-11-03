@@ -2,65 +2,69 @@
 Application for sensors.
 
 ## Table of Contents
-1. [Setup MySQL](#setup-mysql)
-2. [Configure Mosquito](#configure-mosquito)
-3. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
-4. [Api](#api)
-5. [Convention](#convention)
-6. [License](#license)
+1. [Introduction](#introduction)
+2. [Install JDK 17](#install-jdk-17)
+3. [Setup MySQL](#setup-mysql)
+4. [Configure Mosquito](#configure-mosquito)
+5. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
+6. [Api](#api)
+7. [Convention](#convention)
+8. [License](#license)
 
+## Introduction
+
+This application runs with Java 17, mysql and mosquitto.
+You therefore need to install them yourself with the help below.
+Other dependencies are used, but they are installed and setup automatically.
+before doing the maneuvers below, please run the update commands for your systems.
+
+Update Ubuntu.
 ```
-add mvnw 
+sudo apt -y update; sudo apt -y upgrade
+```
 
-sudo apt install git
+Update Manjaro.
+```
+yay -Syyu
+```
+## Install JDK 17
 
-sudo apt -y update
-sudo apt -y upgrade
+Get installer for jdk 17.
+```
 sudo add-apt-repository ppa:linuxuprising/java
 sudo apt -y update
 sudo apt install oracle-java17-installer
+```
+
+Change the default java used.
+```
 sudo update-alternatives --config java
-
-sudo vi /etc/profile
-JAVA_HOME="/usr/lib/jvm/java-17-oracle"
-source /etc/environment
-```
-
-```
-mvn -N io.takari:maven:wrapper -Dmaven=3.8.2
 ```
 
 ## Setup MySQL
 
-Install for Manjaro
+Install for Manjaro.
 ```sh
-yay -Syyu
 yay -S mysql
 sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
-```
 
-Install for Ubuntu
-```sh
-sudo apt update
-sudo apt upgrade
-sudo apt install mysql-server
-```
-
-***
-Make MySQL a service
-```sh
 sudo systemctl enable mysqld
 sudo systemctl restart mysqld
 systemctl status mysqld
 ```
 
-Install and login as root
+Install for Ubuntu.
 ```sh
-sudo mysql_secure_installation
-mysql -u root -p
+sudo apt install mysql-server
 ```
 
-Create user and database for **GamaSenseIt**
+Install and login as root.
+```sh
+sudo mysql_secure_installation
+sudo mysql
+```
+
+Create user and database for **GamaSenseIt**.
 ```sql
 CREATE USER 'gamasenseit'@'localhost' IDENTIFIED BY 'gamasenseit';
 CREATE DATABASE gamasenseit;
@@ -69,62 +73,62 @@ FLUSH PRIVILEGES;
 \q
 ```
 
-Then try to connect to the database as gamasenseit
+Then try to connect to the database as gamasenseit.
 ```sh
-mysql -u gamasenseit -pgamasenseit -h 127.0.0.1 -P 3306 -D gamasenseit
+mysql -u gamasenseit -pgamasenseit -h localhost -P 3306 -D gamasenseit
 ```
-Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables
+Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables.
 
-This will create tables following the model below
+This will create tables following the model below.
 
 ![Model representing the schema](https://github.com/CoFab-in-Bondy/gamaSenseIt/blob/master/docs/images/model.png?raw=true)
 
 ## Configure Mosquito
 
-Install for Manjaro
+Install for Manjaro.
 ```sh
-yay -Syyu
 yay -S mosquitto
+
+sudo systemctl enable mosquitto
+sudo systemctl restart mosquitto
+systemctl status mosquitto
 ```
 
-Install for Ubuntu
+Install for Ubuntu.
 ```sh
-sudo apt update
-sudo apt upgrade
 sudo apt install mosquitto
-sudo apt install mosquitto-clients
+
+# you can also install mosquitto clients to test / develop
+# sudo apt install mosquitto-clients
 ```
 
 ***
 
-Make mosquitto a service
+Make mosquitto a service.
 ```sh
-sudo systemctl enable mosquitto
-sudo systemctl restart mosquitto
-systemctl status mosquitto
 # iptables -t filter -A INPUT -p tcp --dport 1883 -j LOGACCEPT
 ```
 
-Set up authentication
- * Make a password file with user gamaseniseit
+Set up authentication.
+ * Make a password file with user gamaseniseit.
     ```sh
-    sudo mosquitto_passwd -c /etc/mosquitto/passwd gamasenseiy
+    sudo mosquitto_passwd -c /etc/mosquitto/passwd gamasenseit
     ```
- * Create a configuration file for gamesenseit
+ * Create a configuration file for gamesenseit.
     ```sh
-    cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/gamasenseit.conf
+    sudo cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/gamasenseit.conf
     sudo nano /etc/mosquitto/gamasenseit.conf
     ```
- * Uncomment the lines below and put the values there
-   * `listeer 1883` for set the port on 183
-   * `password_file /etc/mosquitto/passswd` : path to passwords file
-   * `allow_anonymous false` allow only authenticated users
- * Assign configuration to mosquitto
+ * Uncomment the lines below / put the values there.
+   * `listener 1883` for set the port on 1883
+   * `password_file /etc/mosquitto/passswd` : path to passwords file.
+   * `allow_anonymous false` allow only authenticated users.
+ * Assign configuration to mosquitto.
     ```sh
     mosquitto -v -c '/etc/mosquitto/gamasenseit.conf'
     ```
    
-For subscribe and publish (_see more with `man mosquitto_sub` and `man mosquitto_pub`_)
+For subscribe and publish (_see more with `man mosquitto_sub` and `man mosquitto_pub`_).
 ```sh
 mosquitto_sub [-h host] [-u user] [-P password] [-t topic]
 mosquitto_pub [-h host] [-u user] [-P password] [-t topic] -m [message]
@@ -136,7 +140,7 @@ Build standalone JAR package
 ```sh
 git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
 cd gamaSenseIt
-mvn clean package
+./mvnw clean package
 ```
 
 Run the server
@@ -144,7 +148,15 @@ Run the server
 java -jar target/gamasenseit-0.0.1-SNAPSHOT.jar
 ```
 
+go on http://localhost:8080/index.html
+
 And that's all !
+
+
+If you want rebuild the maven wrapper use the command bellow.
+```
+mvn -N io.takari:maven:wrapper -Dmaven=3.8.2
+```
 
 ## API
 
