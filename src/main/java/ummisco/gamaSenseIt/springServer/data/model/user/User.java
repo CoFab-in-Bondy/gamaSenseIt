@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 
 @Entity
 public class User {
 	@Id
-	long idUser;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long idUser;
+
 	@Column(length = 60)
 	String firstname;
 	@Column(length = 60)
@@ -38,10 +37,10 @@ public class User {
 		this.privilege = priv;
 	}
 	
-	public long getIdUser() {
+	public Long getIdUser() {
 		return idUser;
 	}
-	public void setIdUser(long idUser) {
+	public void setIdUser(Long idUser) {
 		this.idUser = idUser;
 	}
 	public String getFirstname() {

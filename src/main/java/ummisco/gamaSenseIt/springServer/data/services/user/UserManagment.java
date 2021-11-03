@@ -12,6 +12,7 @@ public class UserManagment implements IUserManagment{
 
 	@Autowired
 	IUserRepository repo;
+
 	@Override
 	public void createUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
 		
