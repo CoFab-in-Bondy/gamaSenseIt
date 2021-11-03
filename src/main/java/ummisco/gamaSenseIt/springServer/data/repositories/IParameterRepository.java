@@ -21,7 +21,7 @@ public interface IParameterRepository extends CrudRepository<Parameter, Long> {
     @Query("""
     SELECT p FROM Parameter p
         WHERE p.sensor.sensorId = :sensorId""")
-    List<Parameter> findAllBySensorId(long idSensor);
+    List<Parameter> findAllBySensorId(long sensorId);
     List<Parameter> findAllBySensor(Sensor s);
 
     @Query("""
@@ -30,11 +30,5 @@ public interface IParameterRepository extends CrudRepository<Parameter, Long> {
             AND (:parameterMetadataId IS NULL OR p.parameterMetadata.parameterMetadataId = :parameterMetadataId)
             AND (:start IS NULL OR p.captureDate >= :start)
             AND (:end IS NULL OR p.captureDate <= :end)""")
-    List<Parameter> advancedFindAll(
-            @Param("sensorId") Long idSensor,
-            @Param("parameterMetadataId") Long parameter,
-            @Param("start") Date start,
-            @Param("end") Date end
-    );
-
+    List<Parameter> advancedFindAll(long sensorId, Long parameterMetadataId, Date start, Date end);
 }
