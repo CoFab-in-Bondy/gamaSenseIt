@@ -18,6 +18,6 @@ public class BaseActivation implements IActivation {
 		userM.createUser("luis","bondel","nmarilleau@gmail.com",password,UserPrivilege.ADMIN);
 
 		String passwordEmpty = new BCryptPasswordEncoder().encode(" ");
-		userM.createUser(" "," "," ",password,UserPrivilege.ADMIN);
+		userM.createUser(" "," "," ",passwordEmpty,UserPrivilege.ADMIN);
 	}
 }

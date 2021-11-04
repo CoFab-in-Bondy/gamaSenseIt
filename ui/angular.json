@@ -122,7 +122,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+                "node_modules/bootstrap/dit/css/bootstrap.min.css",
+                "src/styles.scss"
             ],
             "scripts": []
           }
