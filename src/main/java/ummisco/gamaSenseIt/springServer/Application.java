@@ -27,7 +27,8 @@ import ummisco.gamaSenseIt.springServer.services.activation.IActivation;
 import java.util.Calendar;
 import java.util.Date;
 
-@SpringBootApplication(scanBasePackages = {
+/*@SpringBootApplication(scanBasePackages = {
+        "ummisco.gamaSenseIt.springServer",
         "ummisco.gamaSenseIt.springServer.security",
         "ummisco.gamaSenseIt.springServer.services",
         "ummisco.gamaSenseIt.springServer.data.model",
@@ -35,10 +36,11 @@ import java.util.Date;
         "ummisco.gamaSenseIt.springServer.data.services",
         "ummisco.gamaSenseIt.springServer.data.controller",
         "ummisco.gamaSenseIt.springServer.qameleo"
-})
-@EnableAutoConfiguration
+})*/
+// @EnableAutoConfiguration already in SpringBootApplication
 // @EnableWebSecurity
 
+@SpringBootApplication
 @EnableTransactionManagement
 @ImportResource(value = "classpath:application-config.xml")
 public class Application {
