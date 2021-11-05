@@ -10,17 +10,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SensorsListComponent } from './sensors-list/sensors-list.component';
 import { SensorsItemComponent } from './sensors-item/sensors-item.component';
-import { RouterModule, Routes } from '@angular/router';
 import { Error404Component } from './error404/error404.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SensorSingleComponent } from './sensor-single/sensor-single.component';
-
-const appRoutes: Routes = [
-    {path: "sensors", component: SensorsListComponent},
-    {path: "", component: SensorsListComponent},
-    {path: "error404", component: Error404Component},
-    {path: "**", redirectTo: '/error404'}
-]
+import { AppRoutingModule } from './app-routing.modules';
+import { Error500Component } from './error500/error500.component';
 
 
 @NgModule({
@@ -29,14 +23,15 @@ const appRoutes: Routes = [
     SensorsListComponent,
     SensorsItemComponent,
     Error404Component,
-    SensorSingleComponent
+    SensorSingleComponent,
+    Error500Component
   ],
   imports: [
     FormsModule,
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes),
+    AppRoutingModule
   ],
   providers: [
       ParameterMetadataService,

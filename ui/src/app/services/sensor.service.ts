@@ -7,7 +7,7 @@ export interface Sensor {}
 @Injectable()
 export class SensorService {
   sensorSubject = new Subject<any[]>();
-  private _sensors: Array<any[]> = [];
+  private _sensors: any[] = [];
 
   constructor(private httpClient: HttpClient) {}
 
@@ -28,9 +28,13 @@ export class SensorService {
     );
   }
 
-  get sensors(): any[] {
-    return this._sensors;
+  getSensorsById(id: number): any {
+    this.loadSensorsToServer();
+    for (let sensor of this._sensors) {
+      if (sensor['id'] == id) {
+        return sensor
+      }
+    }
+    
   }
-
-  
 }

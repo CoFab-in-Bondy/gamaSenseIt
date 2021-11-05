@@ -1,9 +1,19 @@
-<div
-  class="
-    list-group-item list-group-item-action
-    flex-column
-    align-items-start
-  "
+<a
+  [routerLink]="[id]"
+  class="list-group-item list-group-item-action flex-column align-items-start"
 >
-  {{displayName}} {{ sensorMetadataName }} {{ latitule }} {{ longitude }}
-</div>
+  <div class="row">
+    <div class="col-sm nobr">
+      {{ sensorMetadataName }}
+    </div>
+    <div class="col-sm nobr">
+      {{ displayName }}
+    </div>
+    <div class="col-sm nobr">
+      {{ latitule }}
+    </div>
+    <div class="col-sm nobr">
+      {{ longitude }}
+    </div>
+  </div>
+</a>

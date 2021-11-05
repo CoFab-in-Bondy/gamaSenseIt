@@ -14,6 +14,7 @@ public class MysqlSecurityConfig extends WebSecurityConfigurerAdapter {
 	UserDetailService userDetailsService;
 	
 	protected void configure(HttpSecurity http) throws Exception {
+        // FIXME issue with / redirecting to index.html
         http.authorizeRequests().antMatchers("/", "/public/**", "/qameleo/**" /*,"/private/**"*/).permitAll().anyRequest()
                 .authenticated().and().formLogin().and().logout().permitAll();
 
