@@ -19,6 +19,7 @@ export class SensorService {
     this.httpClient.get<any[]>("/public/sensors").subscribe(
       (res) => {
         this._sensors = res;
+        console.log(this._sensors);
         this.emitSensorSubject();
       },
       (err) => {

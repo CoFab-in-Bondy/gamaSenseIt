@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sensors-item',
@@ -6,6 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sensors-item.component.scss']
 })
 export class SensorsItemComponent implements OnInit {
+
+
+  @Input() displayName: string;
+  @Input() id: number;
+  @Input() latitule: number;
+  @Input() longitude: number;
+  @Input() sensorMetadataName: string;
 
   constructor() { }
 

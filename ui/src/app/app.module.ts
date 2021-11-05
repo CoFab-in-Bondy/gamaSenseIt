@@ -13,6 +13,7 @@ import { SensorsItemComponent } from './sensors-item/sensors-item.component';
 import { RouterModule, Routes } from '@angular/router';
 import { Error404Component } from './error404/error404.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SensorSingleComponent } from './sensor-single/sensor-single.component';
 
 const appRoutes: Routes = [
     {path: "sensors", component: SensorsListComponent},
@@ -27,7 +28,8 @@ const appRoutes: Routes = [
     AppComponent,
     SensorsListComponent,
     SensorsItemComponent,
-    Error404Component
+    Error404Component,
+    SensorSingleComponent
   ],
   imports: [
     FormsModule,
