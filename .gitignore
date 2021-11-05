@@ -2,6 +2,7 @@
 target/
 *.class
 *.jar
+bin/
 !/.mvn/wrapper/maven-wrapper.jar
 *.war
 *.ear
@@ -11,6 +12,7 @@ target/
 /.idea
 .project
 .classpath
+.factorypath
 .c9/
 *.launch
 .settings/
