@@ -1,12 +1,9 @@
-<p>Simple list</p>
-<div>
-    <ul *ngFor="let sensor of sensors">
-        <app-sensors-item 
-            [id]="sensor.sensorId"
-            [latitule]="sensor.latitude"
-            [longitude]="sensor.longitude"
-            [displayName]="sensor.displayName"
-            [sensorMetadataName]="sensor.sensorMetadataName"
-        ></app-sensors-item>
-    </ul>
+<div class="list-group list-group-flush" *ngFor="let sensor of sensors">
+  <app-sensors-item
+    [id]="sensor.sensorId"
+    [latitule]="sensor.latitude"
+    [longitude]="sensor.longitude"
+    [displayName]="sensor.displayName"
+    [sensorMetadataName]="sensor.sensorMetadataName"
+  ></app-sensors-item>
 </div>
