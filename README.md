@@ -6,10 +6,11 @@ Application for sensors.
 2. [Install JDK 17](#install-jdk-17)
 3. [Setup MySQL](#setup-mysql)
 4. [Configure Mosquito](#configure-mosquito)
-5. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
-6. [Api](#api)
-7. [Convention](#convention)
-8. [License](#license)
+5. [Generate SSL for localhost](#generate-ssl-for-localhost)
+6. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
+7. [Api](#api)
+8. [Convention](#convention)
+9. [License](#license)
 
 ## Introduction
 
@@ -134,13 +135,34 @@ mosquitto_sub [-h host] [-u user] [-P password] [-t topic]
 mosquitto_pub [-h host] [-u user] [-P password] [-t topic] -m [message]
 ```
 
+## Generate SSL Certificates for localhost
+### Generate Self-signed Certificate
+```
+keytool -genkeypair -alias gamasenseit -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore gamasenseit.p12 -validity 3650
+cp gamasenseit src/main/resources/gamasenseit.p12
+```
+
+- genkeypair: generates a key pair
+- alias: the alias name for the item we are generating
+- keyalg: the cryptographic algorithm to generate the key pair
+- keysize: the size of the key
+- storetype: the type of keystore
+- keystore: the name of the keystore
+- validity: validity number of days
+
+### See content of PKCS12 files
+```
+keytool -list -v -keystore gamasenseit.p12
+```
+
+
 ## Install and run GamaSenseIt
 
 Build standalone JAR package
 ```sh
 git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
 cd gamaSenseIt
-./mvnw clean package
+./mvnw -T 1C clean package
 ```
 
 Run the server
@@ -155,7 +177,7 @@ And that's all !
 
 If you want rebuild the maven wrapper use the command bellow.
 ```
-mvn -N io.takari:maven:wrapper -Dmaven=3.8.2
+mvn -N io.takari:maven:wrapper -Dmaven=3.8.1
 ```
 
 ## API
