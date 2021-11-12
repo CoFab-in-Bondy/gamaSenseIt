@@ -47,7 +47,21 @@ public class PublicDataController extends DataController {
             @RequestParam(value = IParametersRequest.TYPE, defaultValue = "json") String type
     ) {
         var parameters = parametersRepo.advancedFindAll(sensorId, parameterMetadataId, start, end);
-        return formattedResponseFactory.format(type, display(parameters));
+        return formattedResponseFactory.format(
+                type,
+                display(parameters),
+                buildFilename(sensorId, parameterMetadataId, start, end, type)
+        );
+    }
+
+    private String buildFilename(long sensorId, Long parameterMetadataId, Date start, Date end, String type) {
+        return (parameterMetadataId == null? "parameters" : parametersMetadataById(parameterMetadataId).getName()) + "-"
+                + (sensorById(sensorId).getName() + "-")
+                + (start != null || end != null
+                    ? (start == null? "X" : dateFormat.format(start)) + "-" + (end == null? "X" : dateFormat.format(end))
+                    : "")
+                + "."
+                + type;
     }
 
     /*------------------------------------*

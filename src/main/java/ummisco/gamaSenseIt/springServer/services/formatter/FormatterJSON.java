@@ -17,11 +17,12 @@ public class FormatterJSON extends Formatter {
         super("json");
     }
 
-    public <T> ResponseEntity<Resource> build(Iterable<T> list) throws Exception  {
+    @Override
+    public <T> ResponseEntity<Resource> build(Iterable<T> list, String filename) throws Exception  {
         var out = new ByteArrayOutputStream();
         var mapper = new ObjectMapper();
         mapper.writeValue(out, list);
         var in = new ByteArrayResource(out.toByteArray());
-        return new ResponseEntity<>(in, header(MediaType.APPLICATION_JSON), HttpStatus.OK);
+        return new ResponseEntity<>(in, header(MediaType.APPLICATION_JSON, filename), HttpStatus.OK);
     }
 }

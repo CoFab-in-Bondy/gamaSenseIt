@@ -19,13 +19,14 @@ public class FormatterCSV extends Formatter {
         super("csv");
     }
 
-    public <T> ResponseEntity<Resource> build(Iterable<T> list) throws Exception{
+    @Override
+    public <T> ResponseEntity<Resource> build(Iterable<T> list, String filename) throws Exception{
         var writer = new StringWriter();
         var beanToCsv = new StatefulBeanToCsvBuilder<T>(writer)
                 .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                 .build();
         beanToCsv.write(list.iterator());
         var in = new ByteArrayResource(writer.toString().getBytes());
-        return new ResponseEntity<>(in, header(new MediaType("application", "csv")), HttpStatus.OK);
+        return new ResponseEntity<>(in, header(new MediaType("text", "csv"), filename), HttpStatus.OK);
     }
 }

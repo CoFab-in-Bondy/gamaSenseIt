@@ -25,7 +25,7 @@ public class FormattedResponseFactory {
         return formatDefault;
     }
 
-    public <T> ResponseEntity<Resource> format(String name, Iterable<T> list) {
-        return resolve(name).format(list);
+    public <T> ResponseEntity<Resource> format(String name, Iterable<T> list, String filename) {
+        return resolve(name).format(list, filename);
     }
 }
