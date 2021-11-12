@@ -26,7 +26,7 @@ public interface IParameterRepository extends CrudRepository<Parameter, Long> {
 
     @Query("""
     SELECT p FROM Parameter p
-        WHERE (:sensorId IS NULL OR p.sensor.sensorId = :sensorId)
+        WHERE p.sensor.sensorId = :sensorId
             AND (:parameterMetadataId IS NULL OR p.parameterMetadata.parameterMetadataId = :parameterMetadataId)
             AND (:start IS NULL OR p.captureDate >= :start)
             AND (:end IS NULL OR p.captureDate <= :end)""")
