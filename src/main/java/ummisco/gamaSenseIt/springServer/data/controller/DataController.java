@@ -9,12 +9,15 @@ import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 import ummisco.gamaSenseIt.springServer.services.formatter.FormattedResponseFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Optional;
 
 
 public abstract class DataController {
     final static String NIL = "nil";
+
+    final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 
     @Autowired
     protected ISensorRepository sensorsRepo;
