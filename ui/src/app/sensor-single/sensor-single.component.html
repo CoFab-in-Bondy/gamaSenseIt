@@ -1,1 +1,19 @@
-<p>Sensor single : {{name}}</p>
+<p>Sensor name : {{name}}</p>
+<p>parameters : total of {{ parameters.length }} </p>
+
+<button class="btn btn-success" (click)="onDownloadCSV()">CSV</button>
+<button class="btn btn-success" (click)="onDownloadJSON()">JSON</button>
+
+<div class="list-group list-group-flush" *ngFor="let parameter of parameters">
+  <div class="row">
+    <div class="col-sm nobr">
+      {{ parameter.date | date: 'yyyy-MM-dd HH:mm:SS' }}
+    </div>
+    <div class="col-sm nobr">
+      <strong>{{ parameter.sensorName }}</strong> at {{ parameter.latitude }} {{ parameter.longitude }}
+    </div>
+    <div class="col-sm nobr">
+      <strong>{{ parameter.measuredParameter }}</strong> : {{ parameter.value }} {{ parameter.unit }}
+    </div>
+  </div>
+</div>

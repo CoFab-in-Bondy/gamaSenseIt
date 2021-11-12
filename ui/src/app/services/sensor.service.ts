@@ -35,6 +35,5 @@ export class SensorService {
         return sensor
       }
     }
-    
   }
 }
