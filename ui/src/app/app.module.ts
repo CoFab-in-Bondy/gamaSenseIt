@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SensorSingleComponent } from './sensor-single/sensor-single.component';
 import { AppRoutingModule } from './app-routing.modules';
 import { Error500Component } from './error500/error500.component';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { Error500Component } from './error500/error500.component';
     SensorsItemComponent,
     Error404Component,
     SensorSingleComponent,
-    Error500Component
+    Error500Component,
+    HeaderComponent
   ],
   imports: [
     FormsModule,

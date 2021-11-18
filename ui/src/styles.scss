@@ -1,3 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/dist/css/bootstrap.css"
+// @import "~bootstrap/dist/css/bootstrap.css"
 
+
+// Default variable overrides=
+
+$primary: #2FBF71;
+$secondary: #CEF3E0;
+$danger: #ff4136;
+$warning: #ED7D3A;
+$info: #8CD867;
+$ligth: #FFFFFF;
+$dark: #101A10;
+
+$body-bg: $ligth;
+$body-color: $dark;
+
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+.list-group-item-action:hover {
+  background-color: $secondary;
+}
