@@ -82,7 +82,7 @@ Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for creat
 
 This will create tables following the model below.
 
-![Model representing the schema](https://github.com/CoFab-in-Bondy/gamaSenseIt/blob/master/docs/images/model.png?raw=true)
+![Model representing the schema](https://github.com/CoFab-in-Bondy/gamaSenseIt/blob/master/docs/images/model.svg?raw=true)
 
 ## Configure Mosquito
 
