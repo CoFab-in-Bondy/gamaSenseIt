@@ -127,7 +127,6 @@ public class SensorMetadata {
     @JsonProperty("parametersMetadata")
     public List<ParameterMetadata> getParametersMetadata() {
         List<ParameterMetadata> pmds = new ArrayList<>(parametersMetadata);
-        System.out.println("PARAMS " + pmds);
         pmds.sort((pmd1, pmd2) -> {
             long o1 = pmd1.getIdx() == null ? Long.MAX_VALUE : pmd1.getIdx();
             long o2 = pmd2.getIdx() == null ? Long.MAX_VALUE : pmd2.getIdx();
