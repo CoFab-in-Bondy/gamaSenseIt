@@ -2,7 +2,7 @@
 ## Generate Self-signed Certificate
 ```
 keytool -genkeypair -alias gamasenseit -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore gamasenseit.p12 -validity 3650
-cp gamasenseit src/main/resources/gamasenseit.p12
+mv gamasenseit.p12 src/main/resources/gamasenseit.p12
 ```
 
 - genkeypair: generates a key pair
