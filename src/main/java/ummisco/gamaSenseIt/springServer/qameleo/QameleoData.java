@@ -6,24 +6,24 @@ import java.util.Map;
 
 // TODO why not private ?
 public class QameleoData {
-    String sensorName;
-    double pm1;
-    double pm25;
-    double pm10;
-    double temperature;
-    double humidity;
-    String displayName;
-    String subDisplayName;
-    boolean hidden;
-    String hiddenMessage;
+    private String sensorName;
+    private double pm1;
+    private double pm25;
+    private double pm10;
+    private double temperature;
+    private double humidity;
+    private String displayName;
+    private String subDisplayName;
+    private boolean hidden;
+    private String hiddenMessage;
 
     public QameleoData(String sensorName, String dname, String sdname, String hidden) {
         this(sensorName, 0, 0, 0, 0, 0, dname, sdname, true, hidden);
     }
 
-    public QameleoData(String sensorName, String dname, String sdname, Map<DataParameter, Double> data) {
-        this(sensorName, data.get(DataParameter.PM1), data.get(DataParameter.PM2_5), data.get(DataParameter.PM10),
-                data.get(DataParameter.TEMPERATURE), data.get(DataParameter.HUMIDITY), dname, sdname, false, "");
+    public QameleoData(String sensorName, String dname, String sdname, Map<String, Double> data) {
+        this(sensorName, data.get("pm1"), data.get("pm2.5"), data.get("pm10"),
+                data.get("temperature"), data.get("humidity"), dname, sdname, false, "");
     }
 
     public QameleoData(String sensorName, double pm1, double pm25, double pm10, double temperature, double humidity, String name, String sName, boolean hidden, String hiddenMessage) {

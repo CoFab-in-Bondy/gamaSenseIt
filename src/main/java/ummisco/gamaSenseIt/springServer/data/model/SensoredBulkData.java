@@ -6,7 +6,6 @@ import java.util.Date;
 @Entity
 public class SensoredBulkData {
 
-    // TODO why not private
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sensoredBulkDataId;

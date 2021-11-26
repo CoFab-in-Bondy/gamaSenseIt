@@ -6,7 +6,7 @@ Application for sensors.
 2. [Install JDK 17](#install-jdk-17)
 3. [Setup MySQL](#setup-mysql)
 4. [Configure Mosquito](#configure-mosquito)
-5. [Generate SSL for localhost](#generate-ssl-for-localhost)
+5. [Generate SSL Certificates for localhost](#generate-ssl-certificates-for-localhost)
 6. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
 7. [Api](#api)
 8. [Convention](#convention)
@@ -68,7 +68,7 @@ sudo mysql
 Create user and database for **GamaSenseIt**.
 ```sql
 CREATE USER 'gamasenseit'@'localhost' IDENTIFIED BY 'gamasenseit';
-CREATE DATABASE gamasenseit;
+CREATE OR REPLACE DATABASE gamasenseit;
 GRANT ALL PRIVILEGES ON gamasenseit.* TO 'gamasenseit'@'localhost';
 FLUSH PRIVILEGES;
 \q
@@ -76,7 +76,7 @@ FLUSH PRIVILEGES;
 
 Then try to connect to the database as gamasenseit.
 ```sh
-mysql -u gamasenseit -pgamasenseit -h localhost -P 3306 -D gamasenseit
+mysql -u gamasenseit -pgamasenseit -h localhost -P 3306 -D gamasenseit [--skip-ssl]
 ```
 Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables.
 

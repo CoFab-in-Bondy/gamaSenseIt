@@ -1,39 +1,57 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import { Observable, Subject, timer } from "rxjs";
+import { filter, map } from "rxjs/operators";
+import { ApiService } from "./api.service";
 
-export interface Sensor {}
 
 @Injectable()
 export class SensorService {
-  sensorSubject = new Subject<any[]>();
-  private _sensors: any[] = [];
 
-  constructor(private httpClient: HttpClient) {}
+  private subject = new Subject<Map<number, SensorCyclic>>();
+  private _sensors = new Map<number, SensorCyclic>();
+  private _lastLoad = new Date(2000);
 
-  emitSensorSubject() {
-    this.sensorSubject.next(this._sensors);
+  constructor(private api: ApiService) {}
+
+  emit(): void {
+    this.subject.next(this._sensors);
   }
 
-  loadSensorsToServer() {
-    this.httpClient.get<any[]>("/public/sensors").subscribe(
-      (res) => {
-        this._sensors = res;
-        console.log(this._sensors);
-        this.emitSensorSubject();
-      },
-      (err) => {
-        console.error(err);
+  observeAll(): Observable<SensorCyclic[]> {
+    return this.subject.pipe(map(sensors=>[...sensors.values()]));
+  }
+
+  observeBySensorId(id: number): Observable<SensorCyclic | undefined> {
+    return this.subject.pipe(
+      map(sensors => sensors.get(id))
+    );
+  }
+
+  lazyLoad(): void {
+    console.log(`Last load of sensors ${this._lastLoad} => (${new Date().getTime() - this._lastLoad.getTime()}`);
+    if (new Date().getTime() - this._lastLoad.getTime() > 60000)
+      this.load();
+    else
+      this.emit();
+  }
+
+  load(): void {
+    this._lastLoad = new Date();
+    this.api.getSensorsCyclic().subscribe(
+      sensors => {
+        this._sensors = new Map<number, SensorCyclic>();
+        for (let s of sensors)
+          this._sensors.set(s.id, s);
+        this.emit();
       }
     );
   }
 
-  getSensorsById(id: number): any {
-    this.loadSensorsToServer();
-    for (let sensor of this._sensors) {
-      if (sensor['id'] == id) {
-        return sensor
-      }
-    }
+  getAll(): SensorCyclic[] {
+    return [...this._sensors.values()];
+  }
+
+  getOne(id: number): SensorCyclic | undefined {
+    return this._sensors.get(id);
   }
 }

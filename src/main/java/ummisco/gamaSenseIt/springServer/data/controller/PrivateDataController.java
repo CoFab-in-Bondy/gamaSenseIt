@@ -28,7 +28,7 @@ public class PrivateDataController extends DataController {
 
     @CrossOrigin
     @RequestMapping(value = IRoute.PARAMETERS_METADATA, method = RequestMethod.POST)
-    public DisplayableParameterMetadata addParameter(
+    public ParameterMetadata addParameter(
             @RequestParam(value = IParametersRequest.SENSOR_METADATA_ID, defaultValue = NIL) long sensorMetadataId,
             @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
             @RequestParam(value = IParametersRequest.UNIT, defaultValue = NIL) String unit,
@@ -49,7 +49,7 @@ public class PrivateDataController extends DataController {
         }
         var parameterMetadata = new ParameterMetadata(name, unit, dataFormat, dataParameter);
         parameterMetadata = sensorsManagementRepo.addParameterToSensorMetadata(sensorMetadata.get(), parameterMetadata);
-        return new DisplayableParameterMetadata(parameterMetadata);
+        return parameterMetadata;
     }
 
     /*------------------------------------*
@@ -58,7 +58,7 @@ public class PrivateDataController extends DataController {
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.POST)
-    public DisplayableSensor addSensor(
+    public Sensor addSensor(
             @RequestParam(value = IParametersRequest.SENSOR_METADATA_ID) long sensorMetadataId,
             @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
             @RequestParam(value = IParametersRequest.DISPLAY_NAME, defaultValue = NIL) String displayName,
@@ -74,16 +74,15 @@ public class PrivateDataController extends DataController {
         // TODO raise an error this sensor already exist
         var selectedSensors = sensorsRepo.findByName(name);
         if (!selectedSensors.isEmpty())
-            return selectedSensors.get(0).convert();
+            return selectedSensors.get(0);
 
         Sensor sensor = new Sensor(name, displayName, subDisplayName, longitude, latitude, sensorMetadata.get());
-        sensorsRepo.save(sensor);
-        return sensor.convert();
+        return sensorsRepo.save(sensor);
     }
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.PATCH)
-    public DisplayableSensor updateSensor(
+    public Sensor updateSensor(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
             @RequestParam(value = IParametersRequest.NAME, required = false) String name,
             @RequestParam(value = IParametersRequest.DISPLAY_NAME, required = false) String displayName,
@@ -111,8 +110,7 @@ public class PrivateDataController extends DataController {
         if (longitude != null)
             sensor.setLatitude(latitude);
 
-        sensorsRepo.save(sensor);
-        return sensor.convert();
+        return sensorsRepo.save(sensor);
     }
 
     /*------------------------------------*
@@ -121,19 +119,14 @@ public class PrivateDataController extends DataController {
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.POST)
-    public DisplayableSensorMetadata addSensorMetadata(
+    public SensorMetadata addSensorMetadata(
             @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
             @RequestParam(value = IParametersRequest.VERSION, defaultValue = NIL) String version,
             @RequestParam(value = IParametersRequest.DATA_SEPARATOR, defaultValue = SensorMetadata.DEFAULT_DATA_SEPARATOR) String sep,
-            @RequestParam(value = IParametersRequest.MEASURED_DATA_ORDER, defaultValue = NIL) String measuredDataOrder,
             @RequestParam(value = IParametersRequest.DESCRIPTION, defaultValue = NIL) String description
     ) {
         var sensorsMetadata = sensorsMetadataRepo.findByNameAndVersion(name, version);
         if (!sensorsMetadata.isEmpty()) return null;
-
-        var sensorMetadata = new SensorMetadata(name, version, sep, description);
-        sensorMetadata.setMeasuredDataOrder(measuredDataOrder);
-        sensorMetadata = this.sensorsMetadataRepo.save(sensorMetadata);
-        return new DisplayableSensorMetadata(sensorMetadata);
+        return this.sensorsMetadataRepo.save(new SensorMetadata(name, version, sep, description));
     }
 }

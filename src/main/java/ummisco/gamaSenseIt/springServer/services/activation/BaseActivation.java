@@ -12,12 +12,14 @@ public class BaseActivation implements IActivation {
 
 	@Autowired
 	IUserManagment userM;
+
+
 	@Override
 	public void activate() {
 		String password = new BCryptPasswordEncoder().encode("123456");
-		userM.createUser("luis","bondel","nmarilleau@gmail.com",password,UserPrivilege.ADMIN);
+		userM.createIfNotExistUser("luis","bondel","nmarilleau@gmail.com",password,UserPrivilege.ADMIN);
 
 		String passwordEmpty = new BCryptPasswordEncoder().encode(" ");
-		userM.createUser(" "," "," ",passwordEmpty,UserPrivilege.ADMIN);
+		userM.createIfNotExistUser(" "," "," ",passwordEmpty,UserPrivilege.ADMIN);
 	}
 }

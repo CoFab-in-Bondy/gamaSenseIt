@@ -21,4 +21,10 @@ public class UserManagment implements IUserManagment{
 		
 	}
 
+	@Override
+	public void createIfNotExistUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
+		if (repo.findByMail(mail) == null)
+			createUser(firstname,  lastName,  mail,  password, privilege);
+	}
+
 }

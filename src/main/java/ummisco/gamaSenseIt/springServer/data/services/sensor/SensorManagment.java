@@ -14,14 +14,19 @@ public class SensorManagment implements ISensorManagment {
 
     @Autowired
     IParameterMetadataRepository parameterSensorRepo;
+
     @Autowired
     ISensorRepository sensorRepo;
+
     @Autowired
     ISensoredBulkDataRepository bulkDataRepo;
+
     @Autowired
     ISensorMetadataRepository sensorMetadataRepo;
+
     @Autowired
     IParameterRepository analysedDataRepo;
+
     @Autowired
     ISensorDataAnalyser dataAnalyser;
 
@@ -86,12 +91,11 @@ public class SensorManagment implements ISensorManagment {
 
         String contents = data[3];
         List<Sensor> foundSensors = sensorRepo.findByName(sensorName);
-        Sensor selectedSensor = null;
         if (foundSensors.isEmpty())
             return;
 
         
-        selectedSensor = foundSensors.get(0);
+        Sensor selectedSensor = foundSensors.get(0);
         // }
 
         Date capturedate = new Date(capturedateS * 1000);
@@ -115,10 +119,10 @@ public class SensorManagment implements ISensorManagment {
 
         SensoredBulkData bulkData = new SensoredBulkData(selectedSensor, token, capturedate, date, contents);
         bulkDataRepo.save(bulkData);
-        List<Parameter> aData = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
+        List<Parameter> parameters = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
         // System.out.println("*************************************************************************************");
 
-        analysedDataRepo.saveAll(aData);
+        analysedDataRepo.saveAll(parameters);
     }
 
     @Override
@@ -135,10 +139,8 @@ public class SensorManagment implements ISensorManagment {
     @Override
     public ParameterMetadata addParameterToSensorMetadata(SensorMetadata smd, ParameterMetadata pmd) {
         pmd.setSensorMetadata(smd);
-        ParameterMetadata res = parameterSensorRepo.save(pmd);
-        smd.addMeasuredData(res);
         sensorMetadataRepo.save(smd);
-        return res;
+        return parameterSensorRepo.save(pmd);
     }
 
 }

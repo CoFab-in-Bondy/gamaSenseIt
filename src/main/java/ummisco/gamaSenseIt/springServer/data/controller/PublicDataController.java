@@ -1,5 +1,7 @@
 package ummisco.gamaSenseIt.springServer.data.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import ummisco.gamaSenseIt.springServer.data.model.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -36,32 +39,32 @@ public class PublicDataController extends DataController {
      *------------------------------------*/
 
     @CrossOrigin
+    @JsonView(IView.Public.class)
     @RequestMapping(value = IRoute.PARAMETERS, method = RequestMethod.GET)
-    public ResponseEntity<Resource> parametersMetadata(
+    public Iterable<Parameter> parameters(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
             @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) Long parameterMetadataId,
             @RequestParam(value = IParametersRequest.START, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
             @RequestParam(value = IParametersRequest.END, required = false)
-            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end,
-            @RequestParam(value = IParametersRequest.TYPE, defaultValue = "json") String type
+            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end
     ) {
-        var parameters = parametersRepo.advancedFindAll(sensorId, parameterMetadataId, start, end);
-        return formattedResponseFactory.format(
-                type,
-                display(parameters),
-                buildFilename(sensorId, parameterMetadataId, start, end, type)
-        );
+        return parametersRepo.advancedFindAll(sensorId, parameterMetadataId, start, end);
     }
 
-    private String buildFilename(long sensorId, Long parameterMetadataId, Date start, Date end, String type) {
-        return (parameterMetadataId == null? "parameters" : parametersMetadataById(parameterMetadataId).getName()) + "-"
-                + (sensorById(sensorId).getName() + "-")
-                + (start != null || end != null
-                    ? (start == null? "X" : dateFormat.format(start)) + "-" + (end == null? "X" : dateFormat.format(end))
-                    : "")
-                + "."
-                + type;
+    @CrossOrigin
+    @JsonView(IView.Public.class)
+    @RequestMapping(value = IRoute.PARAMETERS + IRoute.DOWNLOAD, method = RequestMethod.GET)
+    public ResponseEntity<Resource> downloadParameters(
+            @RequestParam(value = IParametersRequest.SENSOR_ID) Sensor sensor,
+            @RequestParam(value = IParametersRequest.TYPE) String type,
+            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) ParameterMetadata parameterMetadata,
+            @RequestParam(value = IParametersRequest.START, required = false)
+            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
+            @RequestParam(value = IParametersRequest.END, required = false)
+            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end
+    ) {
+        return export.format(type, sensor, parameterMetadata, start, end);
     }
 
     /*------------------------------------*
@@ -70,14 +73,14 @@ public class PublicDataController extends DataController {
 
     @CrossOrigin
     @RequestMapping(value = IRoute.PARAMETERS_METADATA, method = RequestMethod.GET)
-    public List<DisplayableParameterMetadata> parametersMetadata() {
-        return display(parametersMetadataRepo.findAll());
+    public Iterable<ParameterMetadata> parametersMetadata() {
+        return parametersMetadataRepo.findAll();
     }
 
     @CrossOrigin
     @RequestMapping(value = IRoute.PARAMETERS_METADATA + IRoute.ID, method = RequestMethod.GET)
-    public DisplayableParameterMetadata parametersMetadataById(@PathVariable long id) {
-        return display(parametersMetadataRepo.findById(id));
+    public ParameterMetadata parametersMetadataById(@PathVariable long id) {
+        return parametersMetadataRepo.findById(id).orElse(null);
     }
 
     /*------------------------------------*
@@ -86,20 +89,20 @@ public class PublicDataController extends DataController {
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.GET)
-    public List<DisplayableSensor> sensors() {
-        return display(sensorsRepo.findAll());
+    public Iterable<Sensor> sensors() {
+        return sensorsRepo.findAll();
     }
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS + IRoute.ID, method = RequestMethod.GET)
-    public DisplayableSensor sensorById(@PathVariable long id) {
-        return display(sensorsRepo.findById(id));
+    public Sensor sensorById(@PathVariable long id) {
+        return sensorsRepo.findById(id).orElse(null);
     }
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS + IRoute.NAMES, method = RequestMethod.GET)
-    public List<String> sensorsNames() {
-        return display(sensorsRepo.findAll(), Sensor::getName);
+    public Iterable<String> sensorsNames() {
+        return IterableUtils.toList(sensorsRepo.findAll()).stream().map(Sensor::getName).collect(Collectors.toList());
     }
 
     /*------------------------------------*
@@ -108,24 +111,44 @@ public class PublicDataController extends DataController {
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.GET)
-    public List<DisplayableSensorMetadata> sensorsMetadata() {
-        return display(sensorsMetadataRepo.findAll());
+    public Iterable<SensorMetadata> sensorsMetadata() {
+        return sensorsMetadataRepo.findAll();
+    }
+
+
+    @CrossOrigin
+    @RequestMapping(value = IRoute.SENSORS_METADATA + IRoute.ID + IRoute.SENSORS, method = RequestMethod.GET)
+    public Iterable<Sensor> getSensorBySensorMetadataId(@PathVariable long id) {
+        var smd = sensorsMetadataRepo.findById(id);
+        return smd.isEmpty()? null : smd.get().getSensors();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = IRoute.SENSORS_METADATA + IRoute.ID, method = RequestMethod.GET)
+    public SensorMetadata sensorMetadataById(@PathVariable long id) {
+        return sensorsMetadataRepo.findById(id).orElse(null);
     }
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS_METADATA + IRoute.NAMES, method = RequestMethod.GET)
-    public List<String> sensorMetadataById() {
-        return display(sensorsMetadataRepo.findAll(),
-                smd -> smd.getName() + " -- " + smd.getVersion());
+    public Iterable<String> sensorMetadataNames() {
+        return apply(sensorsMetadataRepo.findAll(), smd -> smd.getName() + " -- " + smd.getVersion());
     }
 
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS_METADATA + IRoute.ID + IRoute.PARAMETERS_METADATA, method = RequestMethod.GET)
-    public List<DisplayableParameterMetadata> parameterMetadataOfSensorMetatdataById(
+    public Iterable<ParameterMetadata> getParametersMetadataBySensorMetadataId(
             @PathVariable long id) {
         var smd = sensorsMetadataRepo.findById(id);
         if (smd.isEmpty()) return null;
         var sensor = smd.get();
-        return display(sensor.getParameterMetadataById());
+        return sensor.getParametersMetadata();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = IRoute.SENSORS_METADATA + IRoute.EXTENDED, method = RequestMethod.GET)
+    @JsonView(IView.SensorMetadataExtended.class)
+    public Iterable<SensorMetadata> getAllSensorMetadataExtended() {
+        return this.sensorsMetadataRepo.findAll();
     }
 }

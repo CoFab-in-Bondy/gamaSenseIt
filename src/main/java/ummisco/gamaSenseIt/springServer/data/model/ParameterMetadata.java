@@ -1,34 +1,107 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-public class ParameterMetadata implements IConvertible<DisplayableParameterMetadata> {
+@Table(name = "parameter_metadata",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"sensor_metadata_id", "idx"})})
+public class ParameterMetadata {
+
+    private static final Logger logger = LoggerFactory.getLogger(ParameterMetadata.class);
+
+    // ----- parameter_metadata_id ----- //
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long parameterMetadataId;
+    @Column(name = "id")
+    @JsonProperty("id")
+    @JsonView(IView.Public.class)
+    private Long id;
+
+    // ----- name ----- //
+
+    @Column(name = "name")
+    @JsonProperty("name")
+    @JsonView(IView.Public.class)
     private String name;
+
+    // ----- unit ----- //
+
+    @Column(name = "unit")
+    @JsonProperty("unit")
+    @JsonView(IView.Public.class)
     private String unit;
-    @ManyToOne
+
+    // ----- sensor_metadata ----- //
+
+    @JoinColumn(name = "sensor_metadata_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private SensorMetadata sensorMetadata;
-    private DataFormat dataFormat;
-    private DataParameter dataParameter;
+
+    @Column(name = "sensor_metadata_id", nullable = false, insertable = false, updatable = false)
+    @JsonProperty("sensorMetadataId")
+    @JsonView(IView.Public.class)
+    private Long sensorMetadataId;
+
+    // ----- type ----- //
+
+    @Column(name = "data_type")
+    @JsonProperty("dataType")
+    @JsonView(IView.Public.class)
+    private DataFormat dataType;
+
+    // ----- data_parameter ----- //
+
+    @Column(name = "depreciated_parameter")
+    @JsonProperty("depreciatedParameter")
+    @JsonView(IView.Public.class)
+    private DataParameter depreciatedParameter;
+
+    // ----- icon ----- //
+
+    @Column(name = "icon")
+    @JsonProperty("icon")
+    @JsonView(IView.Public.class)
     private String icon = "";
 
-    public ParameterMetadata(String name, String unit, DataFormat dataFormat, DataParameter dataParameter) {
+    // ----- idx ----- //
+
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idx")
+    @JsonProperty("idx")
+    @JsonView(IView.Public.class)
+    private Integer idx;
+
+    // ----- parameters ----- //
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parameterMetadata")
+    @JsonIgnore
+    private Set<Parameter> parameters = new HashSet<>();
+
+    public ParameterMetadata() {
+    } // for JSON compatibility
+
+    public ParameterMetadata(String name, String unit, DataFormat type, DataParameter dataParameter) {
         this.name = name;
         this.unit = unit;
-        this.dataFormat = dataFormat;
-        this.dataParameter = dataParameter;
+        this.dataType = type;
+        this.depreciatedParameter = dataParameter;
         this.setIconFromParameter();
     }
 
-    public ParameterMetadata() {}
-
     private void setIconFromParameter() {
-        icon = switch (this.dataParameter) {
+        icon = switch (this.depreciatedParameter) {
             case TEMPERATURE -> "fas fa-thermometer-three-quarters";
             case PM10, PM2_5, PM1 -> "fab fa-cloudversify";
             case HUMIDITY -> "fas fa-tint";
@@ -36,12 +109,20 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
         };
     }
 
-    public Long getParameterMetadataId() {
-        return parameterMetadataId;
+    public Integer getIdx() {
+        return idx;
     }
 
-    public void setParameterMetadataId(Long parameterMetadataId) {
-        this.parameterMetadataId = parameterMetadataId;
+    public void setIdx(Integer idx) {
+        this.idx = idx;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -60,28 +141,39 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
         this.unit = unit;
     }
 
-    public DataFormat getDataFormat() {
-        return dataFormat;
-    }
 
-    public void setTypeOfData(DataFormat typeOfData) {
-        this.dataFormat = typeOfData;
-    }
-
-    public DataParameter getDataParameter() {
-        return dataParameter;
-    }
-
-    public void setDataParameter(DataParameter typeOfSensor) {
-        this.dataParameter = typeOfSensor;
-    }
-
+    @JsonView(IView.SensorMetadataOfParameterMetadata.class)
+    @JsonProperty("sensorMetadata")
     public SensorMetadata getSensorMetadata() {
         return sensorMetadata;
     }
 
     public void setSensorMetadata(SensorMetadata sensorMetadata) {
         this.sensorMetadata = sensorMetadata;
+    }
+
+    public Long getSensorMetadataId() {
+        return sensorMetadataId;
+    }
+
+    public void setSensorMetadataId(Long sensorMetadataId) {
+        this.sensorMetadataId = sensorMetadataId;
+    }
+
+    public DataFormat getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(DataFormat dataType) {
+        this.dataType = dataType;
+    }
+
+    public DataParameter getDepreciatedParameter() {
+        return depreciatedParameter;
+    }
+
+    public void setDepreciatedParameter(DataParameter depreciatedParameter) {
+        this.depreciatedParameter = depreciatedParameter;
     }
 
     public String getIcon() {
@@ -92,10 +184,20 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
         this.icon = icon;
     }
 
-    @Override
-    public DisplayableParameterMetadata convert() {
-        return new DisplayableParameterMetadata(this);
+    @JsonView(IView.ParametersOfParameterMetadata.class)
+    @JsonProperty("parameters")
+    public Set<Parameter> getParameters() {
+        return parameters;
     }
+
+    public void setParameters(Set<Parameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    public Parameter createParameter(String message, Date captureDate, Sensor s) {
+        return getDataType() == null ? null : getDataType().createParameterFromMorsel(message, captureDate, this, s);
+    }
+
 
     public enum DataParameter {
         TEMPERATURE,
@@ -108,22 +210,32 @@ public class ParameterMetadata implements IConvertible<DisplayableParameterMetad
     }
 
     public enum DataFormat {
-        INTEGER(0),
-        DOUBLE(1),
-        STRING(2);
-
-        private final int type;
-
-        DataFormat(int abbreviation) {
-            this.type = abbreviation;
-        }
+        // abbreviation <=> ordinal()
+        INTEGER, DOUBLE, STRING;
 
         public Object convertToObject(byte[] data) {
             ByteBuffer buffer = ByteBuffer.wrap(data);
-            return switch (type) {
+            Object obj = switch (ordinal()) {
                 case 0 -> buffer.getInt();
                 case 1 -> buffer.getDouble();
                 case 2 -> new String(data);
+                default -> null;
+            };
+            if (buffer.hasRemaining() && ordinal() != 2)
+                logger.warn("Cast an object who could not use all these bytes");
+            return obj;
+        }
+
+        public String convertToString(byte[] data) {
+            var obj = convertToObject(data);
+            return obj == null? "" : obj.toString();
+        }
+
+        public Parameter createParameterFromMorsel(String morsel, Date captureDate, ParameterMetadata pmd, Sensor s) {
+            return switch (ordinal()) {
+                case 0 -> new Parameter(Double.parseDouble(morsel), captureDate, pmd, s);
+                case 1 -> new Parameter(Long.parseLong(morsel), captureDate, pmd, s);
+                case 2 -> new Parameter(morsel, captureDate, pmd, s);
                 default -> null;
             };
         }

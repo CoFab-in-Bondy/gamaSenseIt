@@ -18,6 +18,8 @@ public interface IRoute {
             SERVER = "/server",
             PARAMETERS = "/parameters",
             SENSORS = "/sensors",
+            EXTENDED = "/extended",
+            DOWNLOAD = "/download",
             SENSORS_METADATA = SENSORS + METADATA,
             PARAMETERS_METADATA = PARAMETERS + METADATA;
 

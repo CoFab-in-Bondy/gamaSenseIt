@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ummisco.gamaSenseIt.springServer.data.controller.PublicDataController;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
 import ummisco.gamaSenseIt.springServer.data.repositories.IParameterRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 
@@ -26,22 +25,20 @@ public class QameleoController {
 
     @CrossOrigin
     @RequestMapping(value = IQameleoController.AIR_QUALITY)
-    public QameleoData getLastData(@RequestParam(value = IQameleoController.SENSOR_ID, required = true) long sensorID) {
+    public QameleoData getLastData(@RequestParam(value = IQameleoController.SENSOR_ID) long sensorID) {
         var sensorFound = sensorsRepo.findById(sensorID);
         if (sensorFound.isEmpty())
             return null;
         var sensor = sensorFound.get();
+
         if (sensor.isHidden()) {
             return new QameleoData(sensor.getName(), sensor.getDisplayName(),
                     sensor.getSubDisplayName(), sensor.getHiddenMessage());
         }
 
-        var parametersFound = sensor.getParameters();
-        if (parametersFound.isEmpty())
-            return null;
-        var parameters = parametersFound.get();
+        var pmds = sensor.getSensorMetadata().getParametersMetadata();
 
-        var qameleoData = new HashMap<DataParameter, Double>();
+        var qameleoData = new HashMap<String, Double>();
         Calendar start = Calendar.getInstance();
         Calendar startHour = Calendar.getInstance();
         Calendar endDate = Calendar.getInstance();
@@ -49,16 +46,14 @@ public class QameleoController {
         start.add(Calendar.DAY_OF_MONTH, -1);
         startHour.add(Calendar.HOUR_OF_DAY, -1);
 
-        for (var param : parameters) {
-            var relativeStart = switch (param.getDataParameter()) {
-                case TEMPERATURE, HUMIDITY -> startHour;
+        for (var pmd : pmds) {
+            var relativeStart = switch (pmd.getName()) {
+                case "temperature", "humidity" -> startHour;
                 default -> start;
             };
-            if(!param.getName().equals("sensor_temperature"))
-            {
-                Double mean = getMeanValue(sensorID, param.getParameterMetadataId(), relativeStart.getTime(), endDate.getTime());
-                qameleoData.put(param.getDataParameter(), mean == null ? 0.0 : mean);
-            }
+            Double mean = getMeanValue(sensorID, pmd.getId(), relativeStart.getTime(), endDate.getTime());
+            qameleoData.put(pmd.getName(), mean == null ? 0.0 : mean);
+
         }
         return new QameleoData(sensor.getName(), sensor.getDisplayName(), sensor.getSubDisplayName(), qameleoData);
     }
@@ -70,7 +65,7 @@ public class QameleoController {
         double sum = 0.0;
         // FIXME unsafe cast, make generic for data
         for (var p : parameters)
-            sum += ((Double) p.getDataObject());
+            sum += ((Double) p.value());
         return sum / parameters.size();
     }
 }

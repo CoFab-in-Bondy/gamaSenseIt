@@ -7,7 +7,6 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SensorsItemComponent implements OnInit {
 
-
   @Input() displayName: string;
   @Input() id: number;
   @Input() latitule: number;

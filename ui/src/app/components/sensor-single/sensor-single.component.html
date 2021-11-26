@@ -1,5 +1,6 @@
 <div>
-  <h1>{{name}}</h1>
+  <h1> {{sensor?.name}} </h1>
+  <p> {{sensor?.latitude}} | {{sensor?.longitude}}</p>
   <h2>Download</h2>
   <div class="btn-group">
     <button class="btn btn-secondary border-primary btn-sm option-button" (click)="onDownloadCSV()">CSV</button>
@@ -10,13 +11,10 @@
   <div class="list-group list-group-flush" *ngFor="let parameter of parameters">
     <div class="row">
       <div class="col-sm nobr">
-        {{ parameter.date | date: 'yyyy-MM-dd HH:mm:SS' }}
+        {{ parameter.captureDate | date: 'yyyy-MM-dd HH:mm:SS' }}
       </div>
       <div class="col-sm nobr">
-        {{ parameter.latitude }} {{ parameter.longitude }}
-      </div>
-      <div class="col-sm nobr">
-        <strong>{{ parameter.measuredParameter }}</strong> : {{ parameter.value }} {{ parameter.unit }}
+        <strong>{{ metadataOf(parameter)?.name }}</strong> : {{ parameter.value }} {{ metadataOf(parameter)?.unit }}
       </div>
     </div>
   </div>

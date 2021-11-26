@@ -42,7 +42,6 @@ public class HTTPSConfig {
      * Gets a http connector on port 8080 that redirects to https 8443.
      */
     private Connector getHttpConnector() {
-        System.out.println("HELLO THERE " + portToRedirect + " to " + portServer);
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         connector.setPort(portToRedirect);

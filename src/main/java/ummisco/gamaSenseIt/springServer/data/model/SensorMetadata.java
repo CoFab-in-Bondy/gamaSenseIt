@@ -1,55 +1,93 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
+public class SensorMetadata {
 
-    public final static String MEASURE_ORDER_SEPARATOR = ":";
     public final static String DEFAULT_DATA_SEPARATOR = ":";
+
+    // ----- sensor_metadata_id ----- //
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long sensorMetadataId;
+    @Column(name = "id")
+    @JsonProperty("id")
+    @JsonView(IView.Public.class)
+    private Long id;
 
+    // ----- version ----- //
+
+    @Column(name = "version")
+    @JsonProperty("version")
+    @JsonView(IView.Public.class)
     private String version;
+
+    // ----- name ----- //
+
+    @Column(name = "name")
+    @JsonProperty("name")
+    @JsonView(IView.Public.class)
     private String name;
-    private String measuredDataOrder;
+
+    // ----- data_separator ----- //
+
+    @Column(name = "data_separator")
+    @JsonProperty("dataSeparator")
+    @JsonView(IView.Public.class)
     private String dataSeparator;
+
+    // ----- description ----- //
+
+    @Column(name = "description")
+    @JsonProperty("description")
+    @JsonView(IView.Public.class)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sensorMetadata")
-    private Set<ParameterMetadata> parameterMetadata = new HashSet<>();
+    // ----- parameterMetadata ----- //
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensorMetadata")
+    @JsonIgnore
+    private Set<ParameterMetadata> parametersMetadata = new HashSet<>();
+
+    // ----- parameterMetadata ----- //
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensorMetadata")
+    @JsonIgnore
+    private Set<Sensor> sensors = new HashSet<>();
 
     public SensorMetadata() {
-        super();
-        measuredDataOrder = "";
-        this.dataSeparator = DEFAULT_DATA_SEPARATOR;
-
-    }
+    } // for JSON compatibility
 
     public SensorMetadata(String name, String version) {
-        this();
-        this.version = version;
-        this.name = name;
+        this(name, version, DEFAULT_DATA_SEPARATOR);
     }
 
     public SensorMetadata(String name, String version, String sep) {
-        this();
-        this.version = version;
-        this.name = name;
-        this.dataSeparator = sep;
+        this(name, version, sep, "");
     }
 
     public SensorMetadata(String name, String version, String sep, String description) {
-        this();
         this.version = version;
         this.name = name;
         this.dataSeparator = sep;
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getVersion() {
@@ -64,32 +102,8 @@ public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
         return name;
     }
 
-    public void setName(String typeName) {
-        this.name = typeName;
-    }
-
-    public Long getSensorMetadataId() {
-        return sensorMetadataId;
-    }
-
-    public void setSensorMetadataId(Long sensorMetadataId) {
-        this.sensorMetadataId = sensorMetadataId;
-    }
-
-    public Set<ParameterMetadata> getParameterMetadataById() {
-        return parameterMetadata;
-    }
-
-    public void setParameterMetadata(Set<ParameterMetadata> parameterMetadata) {
-        this.parameterMetadata = parameterMetadata;
-    }
-
-    public String getMeasuredDataOrder() {
-        return measuredDataOrder;
-    }
-
-    public void setMeasuredDataOrder(String measuredDataOrder) {
-        this.measuredDataOrder = measuredDataOrder;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDataSeparator() {
@@ -100,23 +114,6 @@ public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
         this.dataSeparator = dataSeparator;
     }
 
-    public void addMeasuredData(ParameterMetadata pmd) {
-        pmd.setSensorMetadata(this);
-        this.measuredDataOrder = this.measuredDataOrder + pmd.getParameterMetadataId() + MEASURE_ORDER_SEPARATOR;
-        this.parameterMetadata.add(pmd);
-    }
-
-    public Optional<ParameterMetadata> getParameterMetadataById(long id) {
-        ParameterMetadata res = null;
-        for (ParameterMetadata pmd : this.parameterMetadata) {
-            if (pmd.getParameterMetadataId() == id) {
-                res = pmd;
-                break;
-            }
-        }
-        return Optional.ofNullable(res);
-    }
-
     public String getDescription() {
         return description;
     }
@@ -125,8 +122,31 @@ public class SensorMetadata implements IConvertible<DisplayableSensorMetadata> {
         this.description = description;
     }
 
-    @Override
-    public DisplayableSensorMetadata convert() {
-        return new DisplayableSensorMetadata(this);
+
+    @JsonView(IView.ParametersMetadataOfSensorMetadata.class)
+    @JsonProperty("parametersMetadata")
+    public List<ParameterMetadata> getParametersMetadata() {
+        List<ParameterMetadata> pmds = new ArrayList<>(parametersMetadata);
+        System.out.println("PARAMS " + pmds);
+        pmds.sort((pmd1, pmd2) -> {
+            long o1 = pmd1.getIdx() == null ? Long.MAX_VALUE : pmd1.getIdx();
+            long o2 = pmd2.getIdx() == null ? Long.MAX_VALUE : pmd2.getIdx();
+            return Long.compare(o1, o2);
+        });
+        return pmds;
+    }
+
+    public void setParametersMetadata(Set<ParameterMetadata> parameterMetadata) {
+        this.parametersMetadata = parameterMetadata;
+    }
+
+    @JsonView(IView.SensorsOfSensorMetadata.class)
+    @JsonProperty("sensors")
+    public Set<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(Set<Sensor> sensors) {
+        this.sensors = sensors;
     }
 }

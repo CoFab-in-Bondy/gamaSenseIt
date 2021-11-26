@@ -1,9 +1,9 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.*;
-import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,46 +12,32 @@ import java.util.List;
 @Service
 public class SensorDataAnalyser implements ISensorDataAnalyser {
 
-    @Autowired
-    IParameterMetadataRepository metadataRepo;
+    private static final Logger logger = LoggerFactory.getLogger(ISensorDataAnalyser.class);
 
-    // TODO make it better
     @Override
     public List<Parameter> analyseBulkData(String bulkData, Date captureDate, Sensor sensor) {
-        System.out.println("sensor " + sensor.getName() + " data " + bulkData);
+        logger.info("Analysing : sensor " + sensor.getName() + " data " + bulkData);
+
+        SensorMetadata smd = sensor.getSensorMetadata();
+        String sep = smd.getDataSeparator();
+        logger.debug("separator " + sep);
+        String[] morsels = bulkData.split(sep);
+
+        var pmds = smd.getParametersMetadata();
+
+        if (logger.isDebugEnabled())
+            for (var pmd : pmds)
+                logger.debug("meta_" + pmd.getId() + "_");
+
         var res = new ArrayList<Parameter>();
-        SensorMetadata metadata = sensor.getMetadata();
-        String sep = metadata.getDataSeparator();
-        System.out.println("separator " + sep);
         int i = 0;
-        String[] datas = bulkData.split(sep);
-
-        System.out.println("order_" + metadata.getMeasuredDataOrder() + "_");
-        String[] measure = metadata.getMeasuredDataOrder().split(SensorMetadata.MEASURE_ORDER_SEPARATOR);
-
-        for (String xx : measure) {
-            System.out.println("meta_" + xx + "_");
-        }
-
-        for (String sid : measure) {
-            System.out.println("SID/" + sid + "/");
-            long metaKey = Long.parseLong(sid);
-            var optParams = sensor.getParameterMetadata(metaKey);
-            if (optParams.isPresent()) {
-                Parameter data = null;
-                ParameterMetadata params = optParams.get();
-                if (params.getDataFormat().equals(ParameterMetadata.DataFormat.DOUBLE)) {
-                    double localData = Double.parseDouble(datas[i]);
-                    data = new Parameter(localData, captureDate, optParams.get(), sensor);
-                } else if (params.getDataFormat().equals(ParameterMetadata.DataFormat.INTEGER)) {
-                    long localData = Long.parseLong(datas[i]);
-                    data = new Parameter(localData, captureDate, optParams.get(), sensor);
-                } else if (params.getDataFormat().equals(ParameterMetadata.DataFormat.STRING)) {
-                    String localData = datas[i];
-                    data = new Parameter(localData, captureDate, optParams.get(), sensor);
-                }
-                res.add(data);
-            }
+        for (var pmd : pmds) {
+            logger.debug("SID/" + pmd.getId() + "/");
+            var p = pmd.createParameter(morsels[i], captureDate, sensor);
+            if (p != null)
+                res.add(p);
+            else
+                logger.warn("Invalid message " + sensor + " data " + bulkData);
             i++;
         }
         return res;

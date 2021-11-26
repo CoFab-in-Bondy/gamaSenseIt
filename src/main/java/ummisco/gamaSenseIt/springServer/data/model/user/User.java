@@ -1,5 +1,7 @@
 package ummisco.gamaSenseIt.springServer.data.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +17,14 @@ public class User {
 
 	@Column(length = 60)
 	String firstname;
+
 	@Column(length = 60)
 	String lastName;
+
 	@Column(length = 200, unique = true)
 	String mail;
+
+	@JsonIgnore
 	String password;
 	
 	UserPrivilege privilege;
@@ -78,7 +84,7 @@ public class User {
 		return myRoleInGroups;
 	}
 	public HashMap<UserGroup,Role> getRoleInGroups(){
-		HashMap<UserGroup,Role> res=new HashMap<UserGroup, Role>();
+		HashMap<UserGroup,Role> res=new HashMap<>();
 		for(var i:this.myRoleInGroups){
 			res.put(i.userGroup, i);
 		}
@@ -86,7 +92,7 @@ public class User {
 	}
 	public void joinToGroup(UserGroup g, ERole rle)
 	{
-		if(this.myRoleInGroups==null) this.myRoleInGroups = new ArrayList<Role>();
+		if(this.myRoleInGroups==null) this.myRoleInGroups = new ArrayList<>();
 		this.myRoleInGroups.add(new Role(g,this,rle));
 	}
 	

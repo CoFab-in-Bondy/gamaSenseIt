@@ -1,35 +1,88 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.vividsolutions.jts.geom.Point;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Sensor implements IConvertible<DisplayableSensor> {
+public class Sensor {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
+    @JsonIgnore
     private final Set<SensoredBulkData> bulkData = new HashSet<>();
 
+    // ----- name ----- //
+    // ----- sensor_id ----- //
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long sensorId;
-    private String name;
-    private String displayName;
-    private String subDisplayName;
-    private double longitude;
-    private double latitude;
-    private boolean isHidden;
-    private String hiddenMessage;
+    @Column(name = "id")
+    @JsonProperty("id")
+    @JsonView(IView.Public.class)
+    private Long id;
 
-    @ManyToOne
-    private SensorMetadata sensorType;
+
+    // ----- displayName ----- //
+    @Column(name = "name")
+    @JsonProperty("name")
+    @JsonView(IView.Public.class)
+    private String name;
+
+    // ----- name ----- //
+    @Column(name = "display_name")
+    @JsonProperty("displayName")
+    @JsonView(IView.Public.class)
+    private String displayName;
+
+    // ----- longitude ----- //
+    @Column(name = "sub_display_name")
+    @JsonProperty("subDisplayName")
+    @JsonView(IView.Public.class)
+    private String subDisplayName;
+
+    // ----- longitude ----- //
+    @Column(name = "longitude")
+    @JsonProperty("longitude")
+    @JsonView(IView.Public.class)
+    private double longitude;
+
+    // ----- longitude ----- //
+    @Column(name = "latitude")
+    @JsonProperty("latitude")
+    @JsonView(IView.Public.class)
+    private double latitude;
+    @Column(name = "is_hidden")
+    @JsonProperty("isHidden")
+    @JsonView(IView.Public.class)
+    private boolean isHidden;
+
+    // ----- sensorMetadata ---- //
+    @Column(name = "hidden_message")
+    @JsonProperty("hiddenMessage")
+    @JsonView(IView.Public.class)
+    private String hiddenMessage;
+    @JoinColumn(name = "sensor_metadata_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private SensorMetadata sensorMetadata;
+
+    // ----- parameters ----- //
+    @Column(name = "sensor_metadata_id", nullable = false, insertable = false, updatable = false)
+    @JsonProperty("sensorMetadataId")
+    @JsonView(IView.Public.class)
+    private Long sensorMetadataId;
+
+    // ----- bulk_data ----- //
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
+    @JsonIgnore
+    private Set<Parameter> parameters = new HashSet<>();
 
     public Sensor() {
-        name = "";
-    }
+    } // for JSON compatibility
 
     public Sensor(String sensorName, String displayName, Point location, SensorMetadata sensorMetadata) {
         this(sensorName, displayName, location.getX(), location.getY(), sensorMetadata);
@@ -50,24 +103,24 @@ public class Sensor implements IConvertible<DisplayableSensor> {
         this.subDisplayName = subDisplayName;
         this.longitude = locationX;
         this.latitude = locationY;
-        this.sensorType = sensorType;
+        this.sensorMetadata = sensorType;
         this.isHidden = false;
     }
 
-    public long getSensorId() {
-        return sensorId;
+    public Long getId() {
+        return id;
     }
 
-    public void setSensorId(long sensorId) {
-        this.sensorId = sensorId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String sensorName) {
-        this.name = sensorName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDisplayName() {
@@ -78,12 +131,12 @@ public class Sensor implements IConvertible<DisplayableSensor> {
         this.displayName = displayName;
     }
 
-    public SensorMetadata getMetadata() {
-        return sensorType;
+    public String getSubDisplayName() {
+        return subDisplayName;
     }
 
-    public void setMetadata(SensorMetadata sensorType) {
-        this.sensorType = sensorType;
+    public void setSubDisplayName(String subDisplayName) {
+        this.subDisplayName = subDisplayName;
     }
 
     public double getLongitude() {
@@ -102,32 +155,12 @@ public class Sensor implements IConvertible<DisplayableSensor> {
         this.latitude = latitude;
     }
 
-    public Optional<Set<ParameterMetadata>> getParameters() {
-        return sensorType == null ?
-                Optional.empty() :
-                Optional.of(this.sensorType.getParameterMetadataById());
-    }
-
-    public Optional<ParameterMetadata> getParameterMetadata(long id) {
-        if (this.sensorType == null)
-            return Optional.empty();
-        return this.sensorType.getParameterMetadataById(id);
-    }
-
-    public String getSubDisplayName() {
-        return subDisplayName;
-    }
-
-    public void setSubDisplayName(String subDisplayName) {
-        this.subDisplayName = subDisplayName;
-    }
-
     public boolean isHidden() {
         return isHidden;
     }
 
-    public void setHidden(boolean isHidden) {
-        this.isHidden = isHidden;
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public String getHiddenMessage() {
@@ -138,8 +171,36 @@ public class Sensor implements IConvertible<DisplayableSensor> {
         this.hiddenMessage = hiddenMessage;
     }
 
-    @Override
-    public DisplayableSensor convert() {
-        return new DisplayableSensor(this);
+
+    @JsonView(IView.SensorMetadataOfSensor.class)
+    @JsonProperty("sensorMetadata")
+    public SensorMetadata getSensorMetadata() {
+        return sensorMetadata;
+    }
+
+    public void setSensorMetadata(SensorMetadata sensorMetadata) {
+        this.sensorMetadata = sensorMetadata;
+    }
+
+    public Long getSensorMetadataId() {
+        return sensorMetadataId;
+    }
+
+    public void setSensorMetadataId(Long sensorMetadataId) {
+        this.sensorMetadataId = sensorMetadataId;
+    }
+
+    @JsonView(IView.ParametersOfSensor.class)
+    @JsonProperty("parameters")
+    public Set<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Set<Parameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    public Set<SensoredBulkData> getBulkData() {
+        return bulkData;
     }
 }
