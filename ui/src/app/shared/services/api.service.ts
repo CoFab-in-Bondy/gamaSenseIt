@@ -1,4 +1,3 @@
-import { query } from "@angular/animations";
 import { DatePipe } from "@angular/common";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -20,10 +19,8 @@ export class ApiService {
       http = http.set("parameterMetadataId", params.parameterMetadataId);
     if (params.start !== undefined)
       http = http.set("start", this.date(params.start));
-    if (params.end !== undefined)
-      http = http.set("end", this.date(params.end));
-    if (params.type !== undefined)
-      http = http.set("type", params.type);
+    if (params.end !== undefined) http = http.set("end", this.date(params.end));
+    if (params.type !== undefined) http = http.set("type", params.type);
     console.log("queryToHttpParams return " + http.toString());
     return http;
   }
@@ -37,14 +34,16 @@ export class ApiService {
   }
 
   downloadSensorParameters(params: QueryParameters): void {
-    window.open("/public/parameters/download?" + this.queryToHttpParams(params), "_blank");
+    window.open(
+      "/public/parameters/download?" + this.queryToHttpParams(params),
+      "_blank"
+    );
   }
 
   getParameters(params: QueryParameters): Observable<Parameter[]> {
-    return this.http.get<Parameter[]>(
-      "/public/parameters",
-      {params: this.queryToHttpParams(params)}
-    );
+    return this.http.get<Parameter[]>("/public/parameters", {
+      params: this.queryToHttpParams(params),
+    });
   }
 
   getSensors(): Observable<Sensor[]> {
@@ -72,7 +71,6 @@ export class ApiService {
   getSensorsMetadataExtended(): Observable<SensorMetadata[]> {
     return this.http.get<SensorMetadata[]>(`/public/sensors/metadata/extended`);
   }
-
 
   /**
    * Inject all cyclic dependency

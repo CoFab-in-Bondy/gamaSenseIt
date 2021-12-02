@@ -1,4 +1,4 @@
-import { SensorService } from "../../services/sensor.service";
+import { SensorService } from "../../../../shared/services/sensor.service";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 
@@ -15,10 +15,10 @@ export class SensorsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sensorsSubscription = this.sensorService.observeAll().subscribe(
-      sensors => {
+      (sensors) => {
         this.sensors = sensors;
       },
-      err=>console.error(err)
+      (err) => console.error(err)
     );
     this.sensorService.lazyLoad();
   }

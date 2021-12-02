@@ -1,12 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject, timer } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
 import { ApiService } from "./api.service";
-
 
 @Injectable()
 export class SensorService {
-
   private subject = new Subject<Map<number, SensorCyclic>>();
   private _sensors = new Map<number, SensorCyclic>();
   private _lastLoad = new Date(2000);
@@ -18,33 +16,30 @@ export class SensorService {
   }
 
   observeAll(): Observable<SensorCyclic[]> {
-    return this.subject.pipe(map(sensors=>[...sensors.values()]));
+    return this.subject.pipe(map((sensors) => [...sensors.values()]));
   }
 
   observeBySensorId(id: number): Observable<SensorCyclic | undefined> {
-    return this.subject.pipe(
-      map(sensors => sensors.get(id))
-    );
+    return this.subject.pipe(map((sensors) => sensors.get(id)));
   }
 
   lazyLoad(): void {
-    console.log(`Last load of sensors ${this._lastLoad} => (${new Date().getTime() - this._lastLoad.getTime()}`);
-    if (new Date().getTime() - this._lastLoad.getTime() > 60000)
-      this.load();
-    else
-      this.emit();
+    console.log(
+      `Last load of sensors ${this._lastLoad} => (${
+        new Date().getTime() - this._lastLoad.getTime()
+      }`
+    );
+    if (new Date().getTime() - this._lastLoad.getTime() > 60000) this.load();
+    else this.emit();
   }
 
   load(): void {
     this._lastLoad = new Date();
-    this.api.getSensorsCyclic().subscribe(
-      sensors => {
-        this._sensors = new Map<number, SensorCyclic>();
-        for (let s of sensors)
-          this._sensors.set(s.id, s);
-        this.emit();
-      }
-    );
+    this.api.getSensorsCyclic().subscribe((sensors) => {
+      this._sensors = new Map<number, SensorCyclic>();
+      for (let s of sensors) this._sensors.set(s.id, s);
+      this.emit();
+    });
   }
 
   getAll(): SensorCyclic[] {
