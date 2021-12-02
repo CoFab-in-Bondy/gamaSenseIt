@@ -3,10 +3,9 @@ import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-detail",
-  templateUrl: "./detail.component.html",
-  styleUrls: ["./detail.component.scss"],
+  template: '<app-sensor-single [id]="id"></app-sensor-single>'
 })
-export class DetailComponent implements OnInit {
+export class DetailPage implements OnInit {
   public id: number;
   constructor(private route: ActivatedRoute) {}
 

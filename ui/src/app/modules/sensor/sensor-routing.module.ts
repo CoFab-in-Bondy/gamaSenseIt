@@ -1,16 +1,16 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { DetailComponent } from "./pages/detail/detail.component";
-import { SensorComponent } from "./pages/sensor/sensor.component";
+import { DetailPage } from "./pages/detail.page";
+import { SensorPage } from "./pages/sensor.page";
 
 const routes: Routes = [
   {
     path: "",
-    component: SensorComponent,
+    component: SensorPage,
   },
   {
     path: ":id",
-    component: DetailComponent,
+    component: DetailPage,
   },
 ];
 
