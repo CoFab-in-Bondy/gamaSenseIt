@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-  selector: "app-sensors-item",
-  templateUrl: "./sensors-item.component.html",
-  styleUrls: ["./sensors-item.component.scss"],
+  selector: "app-sensor-item",
+  templateUrl: "./sensor-item.component.html",
+  styleUrls: ["./sensor-item.component.scss"],
 })
-export class SensorsItemComponent implements OnInit {
+export class SensorItemComponent implements OnInit {
   @Input() displayName: string;
   @Input() id: number;
   @Input() latitule: number;

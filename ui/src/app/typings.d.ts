@@ -2,7 +2,7 @@ declare interface Parameter {
   readonly id: number,
   readonly value: number | string,
   readonly captureDate: number,
-  readonly sensorId: number, 
+  readonly sensorId: number,
   readonly sensor: Sensor,
   readonly parameterMetadataId: number,
   readonly parameterMetadata: ParameterMetadata
@@ -17,7 +17,14 @@ declare interface ParameterMetadata {
   readonly sensorMetadata: SensorMetadata,
   readonly parameters: Parameter[],
   readonly dataType: string,
-  readonly depreciatedParameter: string, 
+  readonly depreciatedParameter: string,
+}
+
+
+declare interface AuthMe {
+  readonly roles: string[],
+  readonly name: string,
+  readonly auth: boolean
 }
 
 
@@ -46,7 +53,7 @@ declare interface SensorMetadata {
 }
 
 type Mutable<E> = {
-  -readonly [K in keyof E]: E[K] 
+  -readonly [K in keyof E]: E[K]
 }
 
 

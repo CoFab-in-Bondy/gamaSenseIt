@@ -19,7 +19,7 @@ export class ParameterService {
   lazyLoadBySensorId(id: number): void {
     let lastLoad = this._lastLoadBySensorId.get(id);
     console.log(
-      `Last load of parameters ${lastLoad} => (${
+      `Last load of parameters ${lastLoad} => ${
         new Date().getTime() - (lastLoad ? lastLoad.getTime() : 0)
       }`
     );

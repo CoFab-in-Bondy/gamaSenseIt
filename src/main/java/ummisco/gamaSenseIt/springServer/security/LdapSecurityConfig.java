@@ -12,23 +12,14 @@ import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import java.util.List;
 
 
-public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/public/**", "/qameleo/**" /*,"/private/**"*/).permitAll().anyRequest()
-                .authenticated().and().formLogin().and().logout().permitAll();
-
-//	http
-//			.authorizeRequests()
-//				.anyRequest().fullyAuthenticated()
-//				.and()
-//			.formLogin();
-    }
+public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.ldapAuthentication().userDnPatterns("uid={0},ou=people").groupSearchBase("ou=groups")
+        auth
+                .ldapAuthentication()
+                .userDnPatterns("uid={0},ou=people")
+                .groupSearchBase("ou=groups")
                 .contextSource(contextSource()).passwordCompare().passwordEncoder(getPasswordEncoder()) //new LdapShaPasswordEncoder())
                 .passwordAttribute("userPassword");
     }

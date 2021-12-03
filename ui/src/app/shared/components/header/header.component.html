@@ -13,8 +13,10 @@
     </button>
     <div id="navbarSupportedContent" [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
       <div class="navbar-nav">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/sensor']">Sensors</a>
-        <a class="nav-link" href="/logout">Logout</a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['qameleo']">Qameleo</a>
+        <a *ngIf="isAuth" class="nav-link" routerLinkActive="active" [routerLink]="['sensors']">Sensors</a>
+        <a *ngIf="isAuth" class="nav-link" href="/logout">Logout</a>
+        <a *ngIf="!isAuth" class="nav-link" href="/login">Login</a>
       </div>
     </div>
   </div>

@@ -29,6 +29,10 @@ export class ApiService {
     return this.http.get<Date>("/public/server/date");
   }
 
+  getAuthMe(): Observable<AuthMe> {
+    return this.http.get<AuthMe>("/auth/me");
+  }
+
   getServerSeparator(): Observable<string> {
     return this.http.get<string>("/public/server/separator");
   }

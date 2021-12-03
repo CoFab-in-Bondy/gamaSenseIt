@@ -13,6 +13,7 @@ public interface IRoute {
             // First level
             PUBLIC = "/public",
             PRIVATE = "/private",
+            AUTH = "/auth",
 
             // Second level
             SERVER = "/server",
@@ -20,6 +21,7 @@ public interface IRoute {
             SENSORS = "/sensors",
             EXTENDED = "/extended",
             DOWNLOAD = "/download",
+            ME = "/me",
             SENSORS_METADATA = SENSORS + METADATA,
             PARAMETERS_METADATA = PARAMETERS + METADATA;
 

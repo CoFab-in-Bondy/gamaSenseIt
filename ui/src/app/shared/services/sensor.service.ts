@@ -35,11 +35,12 @@ export class SensorService {
 
   load(): void {
     this._lastLoad = new Date();
-    this.api.getSensorsCyclic().subscribe((sensors) => {
-      this._sensors = new Map<number, SensorCyclic>();
-      for (let s of sensors) this._sensors.set(s.id, s);
-      this.emit();
-    });
+    this.api.getSensorsCyclic().subscribe(
+      (sensors) => {
+        this._sensors = new Map<number, SensorCyclic>();
+        for (let s of sensors) this._sensors.set(s.id, s);
+        this.emit();
+      });
   }
 
   getAll(): SensorCyclic[] {

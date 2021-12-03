@@ -12,7 +12,7 @@ import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import java.util.*;
 
 @RestController
-@RequestMapping("/qameleo/")
+@RequestMapping("/api-qameleo/")
 public class QameleoController {
     @Autowired
     PublicDataController dataController;

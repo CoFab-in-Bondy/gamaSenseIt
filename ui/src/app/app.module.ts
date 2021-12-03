@@ -7,18 +7,23 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { SharedModule } from "./shared/shared.module";
+import { QameleoComponent } from './modules/qameleo/qameleo.component';
+import { HomeComponent } from './modules/home/home.component';
+import { SensorsComponent } from "./modules/sensors/sensors.component";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, QameleoComponent, HomeComponent, SensorsComponent],
   imports: [
     SharedModule.forRoot(),
     FormsModule,
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule,
+    AppRoutingModule
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
