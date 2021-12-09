@@ -3,7 +3,6 @@ package ummisco.gamaSenseIt.springServer.data.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.opencsv.bean.CsvBindByPosition;
 
 import javax.persistence.*;
 import java.nio.ByteBuffer;
@@ -48,7 +47,7 @@ public class Parameter {
     // ----- parameter_metadata_id ----- //
 
     @JoinColumn(name = "parameter_metadata_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private ParameterMetadata parameterMetadata;
 

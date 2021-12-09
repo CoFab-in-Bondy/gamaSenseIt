@@ -14,9 +14,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -64,41 +61,6 @@ public abstract class Export {
         zipOut.closeEntry();
         zipOut.close();
         return out.toByteArray();
-    }
-
-    protected CaptureMap getCaptures(
-            @NotNull Sensor sensor,
-            @Nullable ParameterMetadata parameterMetadata,
-            @Nullable Date start,
-            @Nullable Date end
-    ) {
-        var captures = new HashMap<Date, Map<Long, byte[]>>();
-        jdbc.query("""
-                        SELECT p.parameter_metadata_id, p.capture_date, p.data FROM parameter p
-                        	WHERE p.sensor_id = :sensor_id
-                        	    AND (:parameter_metadata_id IS NULL OR :parameter_metadata_id = p.parameter_metadata_id)
-                        		AND (:start IS NULL OR p.capture_date >= :start)
-                        		AND (:end IS NULL OR p.capture_date <= :end)
-                        """,
-                new HashMap<>() {{
-                    put("parameter_metadata_id", parameterMetadata != null ? parameterMetadata.getId() : null);
-                    put("sensor_id", sensor.getId());
-                    put("start", start);
-                    put("end", end);
-                }},
-                rs -> {
-                    var pmdId = rs.getLong(1);
-                    var captureDate = rs.getDate(2);
-                    var value = rs.getBytes(3);
-                    var capture = captures.computeIfAbsent(captureDate, date -> new HashMap<>());
-                    capture.put(pmdId, value);
-                }
-        );
-        var pmds = parameterMetadata == null
-                ? sensor.getSensorMetadata().getParametersMetadata()
-                : List.of(parameterMetadata);
-
-        return new CaptureMap(sensor, pmds, captures);
     }
 
     public String getExt() {
