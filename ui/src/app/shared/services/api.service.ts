@@ -2,10 +2,11 @@ import { DatePipe } from "@angular/common";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { API } from "src/app/constantes";
 
 @Injectable()
 export class ApiService {
+
   constructor(private http: HttpClient, public datepipe: DatePipe) {}
 
   date(date: Date): string {
@@ -26,20 +27,25 @@ export class ApiService {
   }
 
   getServerDate(): Observable<Date> {
-    return this.http.get<Date>("/public/server/date");
+    return this.http.get<Date>(API + "/public/server/date");
   }
 
   getAuthMe(): Observable<AuthMe> {
-    return this.http.get<AuthMe>("/auth/me");
+    return new Observable(o=>{o.next({
+      roles: ["ADMIN"],
+      name: "***REMOVED***",
+      auth: true
+    }); o.complete()})
+    // return this.http.get<AuthMe>(API + "/auth/me");
   }
 
   getServerSeparator(): Observable<string> {
-    return this.http.get<string>("/public/server/separator");
+    return this.http.get<string>(API + "/public/server/separator");
   }
 
   downloadSensorParameters(params: QueryParameters): void {
     window.open(
-      "/public/parameters/download?" + this.queryToHttpParams(params),
+      API + "/public/parameters/download?" + this.queryToHttpParams(params),
       "_blank"
     );
   }
@@ -74,11 +80,15 @@ export class ApiService {
   }*/
 
   getSensorsMetadataExtended(): Observable<SensorMetadataExtended[]> {
-    return this.http.get<SensorMetadataExtended[]>(`/public/sensors/metadata/extended`);
+    return this.http.get<SensorMetadataExtended[]>(API + `/public/sensors/metadata/extended`);
   }
 
   getSensorByIdExtended(id: number): Observable<SensorExtended> {
-    return this.http.get<SensorExtended>(`/public/sensors/${id}/extended`);
+    return this.http.get<SensorExtended>(API + `/public/sensors/${id}/extended`);
+  }
+
+  goToginPage(): void {
+    window.location.href = 'https://localhost:8443/login';
   }
 
   /**

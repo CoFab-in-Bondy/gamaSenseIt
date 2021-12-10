@@ -7,10 +7,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./sensors.component.scss']
 })
 export class SensorsComponent implements OnInit {
-  id = -1;
+  id: number = NaN;
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.id = +this.route.snapshot.params["id"];
+  }
+
+  hasId() {
+    return !Number.isNaN(this.id);
   }
 }

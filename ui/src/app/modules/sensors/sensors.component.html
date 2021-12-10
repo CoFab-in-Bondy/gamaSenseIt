@@ -1,5 +1,9 @@
-<app-sensor-list></app-sensor-list>
-<div *ngIf="id !== -1">
+<app-sensor-list
+  (selected)="id = $event"
+></app-sensor-list>
+<div *ngIf="hasId()">
   <app-sensor-single [id]="id"></app-sensor-single>
 </div>
-
+<div *ngIf="!hasId()">
+  <p>Selectionnez un capteur</p>
+</div>

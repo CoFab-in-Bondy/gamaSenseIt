@@ -108,8 +108,8 @@ public class PublicDataController extends DataController {
         return sensorsRepo.findById(id).orElse(null);
     }
 
+    @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.EXTENDED, method = RequestMethod.GET)
-    @JsonView(IView.Public.class)
     public Node sensorByIdExtended(
             @PathVariable long id
     ) {

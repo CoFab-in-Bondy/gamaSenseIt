@@ -1,5 +1,5 @@
 import { SensorMetadataService } from "../../services/sensorMetadata.service";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -9,7 +9,8 @@ import { Subscription } from "rxjs";
 })
 export class SensorListComponent implements OnInit, OnDestroy {
   private sensorsSubscription: Subscription;
-  sensorsMetadata: SensorMetadataExtended[] = [];
+  private sensorsMetadata: SensorMetadataExtended[] = [];
+  @Output() selected = new EventEmitter<number>();
 
   constructor(private sensorMetadataService: SensorMetadataService) {}
 
@@ -25,5 +26,13 @@ export class SensorListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sensorsSubscription?.unsubscribe();
+  }
+
+  zipSensorsWithSensorsMetadata(): [Sensor, SensorMetadataExtended][] {
+    let zipped: [Sensor, SensorMetadataExtended][] = [];
+    for (let sensorMetadata of this.sensorsMetadata)
+      for (let sensor of sensorMetadata.sensors)
+        zipped.push([sensor, sensorMetadata]);
+    return zipped;
   }
 }

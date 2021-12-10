@@ -16,8 +16,11 @@ public class MysqlSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/public/**").authenticated()
+                /* TODO FOR PROD uncomment and remove permitAll on /** */
+                /*.antMatchers("/public/**").authenticated()
                 .antMatchers("/", "/api-qameleo/airQualityIndicator", "/auth/me")
+                .permitAll()*/
+                .antMatchers("/**")
                 .permitAll()
                 .and()
             .formLogin()

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
-    <!-- TODO make maven repo -->
+
     <groupId>org.springframework.samples</groupId>
     <artifactId>gamasenseit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -187,6 +186,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
+                            <!-- TODO FOR PROD : run prodbuild -->
                             <arguments>run devbuild</arguments>
                         </configuration>
                     </execution>

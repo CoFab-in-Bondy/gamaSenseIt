@@ -15,8 +15,8 @@
       <div class="navbar-nav">
         <a class="nav-link" routerLinkActive="active" [routerLink]="['qameleo']">Qameleo</a>
         <a *ngIf="isAuth" class="nav-link" routerLinkActive="active" [routerLink]="['sensors']">Sensors</a>
-        <a *ngIf="isAuth" class="nav-link" href="/logout">Logout</a>
-        <a *ngIf="!isAuth" class="nav-link" href="/login">Login</a>
+        <a *ngIf="isAuth" class="nav-link" [href]="API + '/logout'">Logout</a>
+        <a *ngIf="!isAuth" class="nav-link" [href]="API + '/login'">Login</a>
       </div>
     </div>
   </div>

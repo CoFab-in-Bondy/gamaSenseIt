@@ -1,10 +1,7 @@
 package ummisco.gamaSenseIt.springServer.qameleo;
 
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata.DataParameter;
-
 import java.util.Map;
 
-// TODO why not private ?
 public class QameleoData {
     private String sensorName;
     private double pm1;

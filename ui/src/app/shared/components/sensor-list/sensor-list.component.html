@@ -1,10 +1,35 @@
-<div *ngFor="let sensorMetadata of sensorsMetadata">
-  <div class="list-group list-group-flush" *ngFor="let sensor of sensorMetadata.sensors">
-  <app-sensor-item
-    [id]="sensor.id"
-    [latitule]="sensor.latitude"
-    [longitude]="sensor.longitude"
-    [displayName]="sensor.displayName"
-    [sensorMetadataName]="sensorMetadata.name"
-  ></app-sensor-item>
+<div class="sensors-all">
+  <div class="sensors-heading">
+    <h1>Liste des capteurs</h1>
+    <div class="buttons">
+      <button>Carte</button>
+      <button>Liste</button>
+    </div>
+  </div>
+  <div class="wrapper-table">
+    <table cellSpacing="0">
+      <thead>
+        <tr>
+          <th class="sensorMetadataVersion col-sm nobr">Version</th>
+          <th class="sensorMetadataName col-sm nobr">Capteur</th>
+          <th class="sensorDisplayName col-sm nobr">Nom</th>
+          <th class="sensorLatitude col-sm nobr">Longitude</th>
+          <th class="sensorLongitude col-sm nobr">Latidtude</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let sensor of zipSensorsWithSensorsMetadata()"
+          (click)="selected.emit(sensor[0].id)"
+          [routerLink]="['/sensors', sensor[0].id]"
+        >
+          <td class="sensorMetadataVersion">{{ sensor[1].version }}</td>
+          <td class="sensorMetadataName">{{ sensor[1].name }}</td>
+          <td class="sensorDisplayName">{{ sensor[0].displayName }}</td>
+          <td class="sensorLatitude">{{ sensor[0].latitude }}</td>
+          <td class="sensorLongitude">{{ sensor[0].longitude }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

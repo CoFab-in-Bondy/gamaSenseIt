@@ -71,7 +71,6 @@ public class PrivateDataController extends DataController {
         if (sensorMetadata.isEmpty())
             return null;
 
-        // TODO raise an error this sensor already exist
         var selectedSensors = sensorsRepo.findByName(name);
         if (!selectedSensors.isEmpty())
             return selectedSensors.get(0);

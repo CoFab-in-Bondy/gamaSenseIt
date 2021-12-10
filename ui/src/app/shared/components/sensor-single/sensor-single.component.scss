@@ -1,3 +1,115 @@
+table {
+  border-collapse: separate;
+  width: 100%;
+  border-right: 1px solid black;
+}
+
+.wrapper-table {
+  overflow: auto;
+  height: 300px;
+  border: 1px solid black;
+}
+
+th,
+td {
+  padding: 8px 16px;
+}
+
+thead {
+  .sensorMetadataVersion,
+  .sensorMetadataName,
+  .sensorDisplayName,
+  .sensorLatitude
+  {
+    border-right: 1px solid black;
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #dddddd;
+    margin: 0px;
+    border-bottom: 1px solid black;
+  }
+}
+
+tbody {
+
+  > tr:nth-child(even) {
+    background: rgb(240, 240, 240);
+  }
+
+  > tr:nth-child(odd) {
+    background: rgb(248, 248, 248);
+  }
+
+  > tr:hover {
+    background: rgb(198, 206, 195);
+  }
+
+  .sensorMetadataVersion,
+  .sensorMetadataName,
+  .sensorDisplayName,
+  .sensorLatitude
+  {
+    border-right: 1px solid black;
+  }
+}
+
+.sensorMetadataVersion {
+  width: 10%;
+}
+
+.sensorMetadataName {
+  width: 35%;
+}
+
+
+.sensorDisplayName {
+  width: 35%;
+}
+
+.sensorLatitude {
+  width: 10%;
+}
+
+.sensorLongitude {
+  width: 10%;
+}
+
+
+.sensors-heading {
+  > h1 {
+    display: inline-block;
+    width: 45%;
+  }
+
+  > .buttons {
+    display: block;
+    width: 45%;
+    float: right;
+    text-align: right;
+
+    button {
+      width: 100px;
+      margin-left: 10px;
+      border: 1px solid black;
+    }
+  }
+}
+
 .option-button {
-  width: 100px !important;
+  width: 100px;
+}
+
+.sensor-info {
+  width: 48%;
+  display: inline-block;
+}
+
+.sensor-metadata-info {
+  width: 48%;
+  display: block;
+  float: right;
 }
