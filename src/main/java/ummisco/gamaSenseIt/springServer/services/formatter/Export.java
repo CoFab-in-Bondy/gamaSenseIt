@@ -22,6 +22,7 @@ public abstract class Export {
     protected final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private final String ext;
     private final MediaType media;
+
     @Autowired
     protected NamedParameterJdbcTemplate jdbc;
 

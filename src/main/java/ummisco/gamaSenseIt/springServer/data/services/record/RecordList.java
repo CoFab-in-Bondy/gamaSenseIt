@@ -1,6 +1,7 @@
-package ummisco.gamaSenseIt.springServer.data.classes;
+package ummisco.gamaSenseIt.springServer.data.services.record;
 
 
+import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 
 import java.lang.reflect.Array;
@@ -15,6 +16,7 @@ public class RecordList extends ArrayList<Record> {
         super(captured.size());
         this.parameterMetadata = parameterMetadata;
 
+
         for (var e : captured.entrySet()) {
             var values = new ArrayList<Object>();
             parameterMetadata.forEach(pmd ->
@@ -22,7 +24,6 @@ public class RecordList extends ArrayList<Record> {
             );
             super.add(new Record(e.getKey(), values));
         }
-        Collections.sort(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -47,8 +48,11 @@ public class RecordList extends ArrayList<Record> {
         return metadata(Long.class, -1L, ParameterMetadata::getId);
     }
 
+    public long width() {
+        return ids().length;
+    }
 
-    public Map<String, Object> toMap() {
+    public Node toNode() {
         return new Node() {{
             put("metadata", new Node() {{
                 put("headers", headers());
@@ -57,5 +61,20 @@ public class RecordList extends ArrayList<Record> {
             }});
             put("values", RecordList.this);
         }};
+    }
+
+    public RecordList sortByDate() {
+        sort(Record::compareTo);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public RecordList sortBy(final int index) {
+        if (0 > index || index <= width())
+            return this;
+        try {
+            sort(Comparator.comparing(r -> ((Comparable<Object>)r.get(index))));
+        } catch (ClassCastException ignored) {}
+        return this;
     }
 }

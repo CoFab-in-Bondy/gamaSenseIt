@@ -1,4 +1,4 @@
-package ummisco.gamaSenseIt.springServer.data.classes;
+package ummisco.gamaSenseIt.springServer.data.services.record;
 
 import com.sun.istack.NotNull;
 
@@ -33,5 +33,10 @@ public class Record extends ArrayList<Object> implements Comparable<Record> {
     @Override
     public int compareTo(Record o) {
         return date.compareTo(o.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(date);
     }
 }

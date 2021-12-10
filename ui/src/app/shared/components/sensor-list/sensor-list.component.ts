@@ -1,4 +1,4 @@
-import { SensorService } from "../../services/sensor.service";
+import { SensorMetadataService } from "../../services/sensorMetadata.service";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 
@@ -9,18 +9,18 @@ import { Subscription } from "rxjs";
 })
 export class SensorListComponent implements OnInit, OnDestroy {
   private sensorsSubscription: Subscription;
-  sensors: SensorCyclic[] = [];
+  sensorsMetadata: SensorMetadataExtended[] = [];
 
-  constructor(private sensorService: SensorService) {}
+  constructor(private sensorMetadataService: SensorMetadataService) {}
 
   ngOnInit(): void {
-    this.sensorsSubscription = this.sensorService.observeAll().subscribe(
-      (sensors) => {
-        this.sensors = sensors;
+    this.sensorsSubscription = this.sensorMetadataService.observeAll().subscribe(
+      sensors => {
+        this.sensorsMetadata = sensors;
       },
-      (err) => console.error("An error occured " + err)
+      err => console.error(err)
     );
-    this.sensorService.lazyLoad();
+    this.sensorMetadataService.lazyLoad();
   }
 
   ngOnDestroy(): void {

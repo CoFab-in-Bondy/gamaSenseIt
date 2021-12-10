@@ -5,6 +5,7 @@ import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepo
 import ummisco.gamaSenseIt.springServer.data.repositories.IParameterRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
+import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 import ummisco.gamaSenseIt.springServer.services.formatter.ExportResolver;
 
@@ -29,6 +30,9 @@ public abstract class DataController {
 
     @Autowired
     protected IParameterMetadataRepository parametersMetadataRepo;
+
+    @Autowired
+    protected RecordManager recordManager;
 
     @Autowired
     protected ExportResolver export;

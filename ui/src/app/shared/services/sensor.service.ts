@@ -1,53 +1,58 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { Subject } from "rxjs";
 import { ApiService } from "./api.service";
 
 @Injectable()
 export class SensorService {
-  private subject = new Subject<Map<number, SensorCyclic>>();
-  private _sensors = new Map<number, SensorCyclic>();
-  private _lastLoad = new Date(2000);
+  private _subject = new Map<number, Subject<SensorExtended>>();
+  private _sensors = new Map<number, SensorExtended>();
+  private _lastLoadBySensorId = new Map<number, Date>();
+  private static EMPTY_SUBJECT = new Subject<SensorExtended>();
 
   constructor(private api: ApiService) {}
 
-  emit(): void {
-    this.subject.next(this._sensors);
+  emitBySensorId(id: number): void {
+    let sensor = this.getBySensorId(id);
+    let subject = this.observeById(id);
+    if (subject && sensor)
+      subject.next(sensor);
   }
 
-  observeAll(): Observable<SensorCyclic[]> {
-    return this.subject.pipe(map((sensors) => [...sensors.values()]));
-  }
-
-  observeBySensorId(id: number): Observable<SensorCyclic | undefined> {
-    return this.subject.pipe(map((sensors) => sensors.get(id)));
-  }
-
-  lazyLoad(): void {
+  lazyLoadById(id: number): void {
+    let lastLoad = this._lastLoadBySensorId.get(id);
     console.log(
-      `Last load of sensors ${this._lastLoad} => (${
-        new Date().getTime() - this._lastLoad.getTime()
+      `Last load of parameters ${lastLoad} => ${
+        new Date().getTime() - (lastLoad ? lastLoad.getTime() : 0)
       }`
     );
-    if (new Date().getTime() - this._lastLoad.getTime() > 60000) this.load();
-    else this.emit();
+    if (
+      lastLoad === undefined ||
+      new Date().getTime() - lastLoad.getTime() > 60000
+    )
+      this.loadBySensorId(id);
+    else this.emitBySensorId(id);
   }
 
-  load(): void {
-    this._lastLoad = new Date();
-    this.api.getSensorsCyclic().subscribe(
-      (sensors) => {
-        this._sensors = new Map<number, SensorCyclic>();
-        for (let s of sensors) this._sensors.set(s.id, s);
-        this.emit();
-      });
+  loadBySensorId(id: number): void {
+    this._lastLoadBySensorId.set(id, new Date());
+    this.api.getSensorByIdExtended(id).subscribe(
+      sensor => {
+        this._sensors.set(id, sensor);
+        this.emitBySensorId(id);
+      },
+      (err) => console.error(err)
+    );
   }
 
-  getAll(): SensorCyclic[] {
-    return [...this._sensors.values()];
+  getBySensorId(id: number): SensorExtended|null {
+    return this._sensors.get(id) || null;
   }
 
-  getOne(id: number): SensorCyclic | undefined {
-    return this._sensors.get(id);
+  observeById(id: number): Subject<SensorExtended> {
+    return this._subject.get(id) || SensorService.EMPTY_SUBJECT;
+  }
+
+  download(params: QueryParameters): void {
+    this.api.downloadSensorParameters(params);
   }
 }

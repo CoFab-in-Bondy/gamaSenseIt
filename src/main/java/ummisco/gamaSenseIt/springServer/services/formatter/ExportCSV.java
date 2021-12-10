@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.Sensor;
 import ummisco.gamaSenseIt.springServer.data.repositories.IParameterRepository;
+import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.Objects;
 public class ExportCSV extends Export {
 
     @Autowired
-    private IParameterRepository parameterRepo;
+    private RecordManager recordManager;
 
 
     public ExportCSV() {
@@ -36,7 +37,7 @@ public class ExportCSV extends Export {
         var out = new StringWriter();
         var writer = new CSVWriter(out);
 
-        var records = parameterRepo.getRecords(sensor, parameterMetadata, start, end);
+        var records = recordManager.getRecords(sensor, parameterMetadata, start, end);
         writer.writeNext(records.headers());
         writer.writeNext(Arrays.stream(records.ids()).map(Objects::toString).toArray(String[]::new));
         writer.writeNext(records.units());

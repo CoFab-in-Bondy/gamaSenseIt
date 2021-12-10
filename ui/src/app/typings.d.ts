@@ -1,74 +1,83 @@
 declare interface Parameter {
-  readonly id: number,
-  readonly value: number | string,
-  readonly captureDate: number,
-  readonly sensorId: number,
-  readonly sensor: Sensor,
-  readonly parameterMetadataId: number,
-  readonly parameterMetadata: ParameterMetadata
+  id: number,
+  value: number | string,
+  captureDate: number,
+  sensorId: number,
+  // sensor: Sensor,
+  parameterMetadataId: number,
+  // parameterMetadata: ParameterMetadata
 }
 
 
 declare interface ParameterMetadata {
-  readonly id: number,
-  readonly name: string,
-  readonly unit: string,
-  readonly sensorMetadataId: number,
-  readonly sensorMetadata: SensorMetadata,
-  readonly parameters: Parameter[],
-  readonly dataType: string,
-  readonly depreciatedParameter: string,
+  id: number,
+  name: string,
+  unit: string,
+  sensorMetadataId: number,
+  // sensorMetadata: SensorMetadata,
+  // parameters: Parameter[],
+  dataType: string,
+  depreciatedParameter: string,
 }
 
 
 declare interface AuthMe {
-  readonly roles: string[],
-  readonly name: string,
-  readonly auth: boolean
+  roles: string[],
+  name: string,
+  auth: boolean
 }
 
 
 declare interface Sensor {
-  readonly id: number,
-  readonly name: string,
-  readonly displayName: string,
-  readonly subDisplayName: string,
-  readonly longitude: number,
-  readonly latitude: number,
-  readonly isHidden: boolean,
-  readonly hiddenMessage: string,
-  readonly sensorMetadataId: number,
+  id: number,
+  name: string,
+  displayName: string,
+  subDisplayName: string,
+  longitude: number,
+  latitude: number,
+  isHidden: boolean,
+  hiddenMessage: string,
+  sensorMetadataId: number,
 }
 
 
 declare interface SensorMetadata {
-  readonly id: number,
-  readonly version: string,
-  readonly name: string,
-  readonly measuredDataOrder: string,
-  readonly dataSeparator: string,
-  readonly description: string,
-  readonly sensors: Sensor[],
-  readonly parametersMetadata: ParameterMetadata[]
+  id: number,
+  version: string,
+  name: string,
+  measuredDataOrder: string,
+  dataSeparator: string,
+  description: string,
+  // sensors: Sensor[],
+  // parametersMetadata: ParameterMetadata[]
 }
 
-type Mutable<E> = {
-  -readonly [K in keyof E]: E[K]
+declare interface SensorExtended {
+  id: number,
+  name: string,
+  displayName: string,
+  subDisplayName: string,
+  latitude: number,
+  longitude: number,
+  metadata: {
+    id: number,
+    description: string,
+    name: string,
+    version: string,
+  },
+  parameters: {
+    metadata: {
+      headers : string[]
+      ids : string[],
+      units : string[]
+    },
+    values : (string|number)[][]
+  }
 }
 
-
-
-declare interface SensorMetadataCyclic extends SensorMetadata{
-  sensors: SensorCyclic[],
-  parametersMetadata: ParameterMetadataCyclic[]
-}
-
-declare interface SensorCyclic extends Sensor {
-  sensorMetadata: SensorMetadataCyclic,
-}
-
-declare interface ParameterMetadataCyclic extends ParameterMetadata {
-  sensorMetadata: SensorMetadataCyclic,
+declare interface SensorMetadataExtended extends SensorMetadata {
+  sensors: Sensor[],
+  parametersMetadata: ParameterMetadata[]
 }
 
 declare interface QueryParameters {
@@ -78,3 +87,5 @@ declare interface QueryParameters {
   end?: Date,
   type?: "csv" | "json"
 }
+
+

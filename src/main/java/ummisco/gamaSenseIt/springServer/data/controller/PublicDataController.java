@@ -2,21 +2,27 @@ package ummisco.gamaSenseIt.springServer.data.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.collections4.IterableUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ummisco.gamaSenseIt.springServer.data.classes.Node;
+import ummisco.gamaSenseIt.springServer.data.services.record.RecordList;
 import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.services.formatter.ExportJSON;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping(IRoute.PUBLIC)
 public class PublicDataController extends DataController {
+
+    @Autowired
+    private ExportJSON exportJSON;
 
     /*------------------------------------*
      | Server                             |
@@ -41,15 +47,17 @@ public class PublicDataController extends DataController {
     @CrossOrigin
     @JsonView(IView.Public.class)
     @RequestMapping(value = IRoute.PARAMETERS, method = RequestMethod.GET)
-    public Iterable<Parameter> parameters(
-            @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
-            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) Long parameterMetadataId,
+    public RecordList parameters(
+            @RequestParam(value = IParametersRequest.SENSOR_ID) Sensor sensor,
+            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) ParameterMetadata parameterMetadata,
             @RequestParam(value = IParametersRequest.START, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
             @RequestParam(value = IParametersRequest.END, required = false)
-            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end
+            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end,
+            @RequestParam(value = IParametersRequest.SORT, defaultValue = "0") Integer index
+
     ) {
-        return parametersRepo.advancedFindAll(sensorId, parameterMetadataId, start, end);
+        return recordManager.getRecords(sensor, parameterMetadata, start, end).sortBy(index);
     }
 
     @CrossOrigin
@@ -93,10 +101,19 @@ public class PublicDataController extends DataController {
         return sensorsRepo.findAll();
     }
 
+
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS + IRoute.ID, method = RequestMethod.GET)
     public Sensor sensorById(@PathVariable long id) {
         return sensorsRepo.findById(id).orElse(null);
+    }
+
+    @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.EXTENDED, method = RequestMethod.GET)
+    @JsonView(IView.Public.class)
+    public Node sensorByIdExtended(
+            @PathVariable long id
+    ) {
+        return sensorsRepo.findById(id).map(s-> exportJSON.toNode(s, null, null, null)).orElse(null);
     }
 
     @CrossOrigin

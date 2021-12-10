@@ -22,6 +22,7 @@ public interface IParametersRequest {
             UNIT = "unit",
             VERSION = "version",
             TYPE = "type",
+            SORT = "sort",
             DATE_PATTERN = "MMddyyyy";
 
 }

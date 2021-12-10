@@ -17,15 +17,18 @@
     </button>
   </div>
   <h2>Parameters</h2>
-  <p>parameters : total of {{ parameters.length }}</p>
-  <div class="list-group list-group-flush" *ngFor="let parameter of parameters">
+  <p>parameters : total of {{ sensor?.parameters?.values?.length }}</p>
+
+
+  <div class="list-group list-group-flush">
     <div class="row">
-      <div class="col-sm nobr">
-        {{ parameter.captureDate | date: "yyyy-MM-dd HH:mm:SS" }}
+      <div class="col-sm nobr" *ngFor="let name of sensor?.parameters?.metadata?.headers">
+        {{ name }}
       </div>
-      <div class="col-sm nobr">
-        <strong>{{ metadataOf(parameter)?.name }}</strong> :
-        {{ parameter.value }} {{ metadataOf(parameter)?.unit }}
+    </div>
+    <div class="row" *ngFor="let record of sensor?.parameters?.values">
+      <div class="col-sm nobr" *ngFor="let value of record">
+        {{ value }}
       </div>
     </div>
   </div>

@@ -43,6 +43,7 @@ export class ApiService {
       "_blank"
     );
   }
+  /*
 
   getParameters(params: QueryParameters): Observable<Parameter[]> {
     return this.http.get<Parameter[]>("/public/parameters", {
@@ -70,10 +71,14 @@ export class ApiService {
     return this.http.get<ParameterMetadata[]>(
       `/public/sensors/metadata/${sensorMetadataId}/parameters/metadata`
     );
+  }*/
+
+  getSensorsMetadataExtended(): Observable<SensorMetadataExtended[]> {
+    return this.http.get<SensorMetadataExtended[]>(`/public/sensors/metadata/extended`);
   }
 
-  getSensorsMetadataExtended(): Observable<SensorMetadata[]> {
-    return this.http.get<SensorMetadata[]>(`/public/sensors/metadata/extended`);
+  getSensorByIdExtended(id: number): Observable<SensorExtended> {
+    return this.http.get<SensorExtended>(`/public/sensors/${id}/extended`);
   }
 
   /**
@@ -81,6 +86,7 @@ export class ApiService {
    *
    * @returns Array<SensorCyclic>
    */
+  /*
   getSensorsCyclic(): Observable<SensorCyclic[]> {
     return this.getSensorsMetadataExtended().pipe(
       map((smds) => {
@@ -96,5 +102,5 @@ export class ApiService {
         return sensors;
       })
     );
-  }
+  }*/
 }
