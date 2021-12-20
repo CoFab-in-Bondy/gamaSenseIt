@@ -31,6 +31,7 @@ export class ApiService {
   }
 
   getAuthMe(): Observable<AuthMe> {
+    /* TODO change this for production */
     return new Observable(o=>{o.next({
       roles: ["ADMIN"],
       name: "***REMOVED***",

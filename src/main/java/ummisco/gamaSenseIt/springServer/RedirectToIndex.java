@@ -15,7 +15,7 @@ public class RedirectToIndex implements WebMvcConfigurer {
     /* replace the basic recourse handler*/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**/*") /* for all resources */
+        registry.addResourceHandler("/**") /* for all resources */
                 .addResourceLocations("classpath:/static/") /* search in static */
                 .resourceChain(true) /* or in cache resources*/
                 .addResolver(new PathResourceResolver() {
