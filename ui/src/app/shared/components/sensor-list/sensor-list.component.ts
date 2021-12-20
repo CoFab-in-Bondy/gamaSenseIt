@@ -1,6 +1,7 @@
 import { SensorMetadataService } from "../../services/sensorMetadata.service";
-import { Component, OnDestroy, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnDestroy, OnInit, Output, EventEmitter, ElementRef } from "@angular/core";
 import { Subscription } from "rxjs";
+import { HumanService } from "../../services/human.service";
 
 @Component({
   selector: "app-sensor-list",
@@ -10,9 +11,13 @@ import { Subscription } from "rxjs";
 export class SensorListComponent implements OnInit, OnDestroy {
   private sensorsSubscription: Subscription;
   private sensorsMetadata: SensorMetadataExtended[] = [];
+
   @Output() selected = new EventEmitter<number>();
 
-  constructor(private sensorMetadataService: SensorMetadataService) {}
+  constructor(
+    private sensorMetadataService: SensorMetadataService,
+    public humanService: HumanService
+  ) {}
 
   ngOnInit(): void {
     this.sensorsSubscription = this.sensorMetadataService.observeAll().subscribe(

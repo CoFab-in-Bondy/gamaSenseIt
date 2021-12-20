@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
-import { DatePipe } from "@angular/common";
+import { DatePipe, DecimalPipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { AppComponent } from "./app.component";
@@ -22,7 +22,8 @@ import { SensorsComponent } from "./modules/sensors/sensors.component";
     AppRoutingModule
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    DecimalPipe
   ],
   bootstrap: [AppComponent],
 })

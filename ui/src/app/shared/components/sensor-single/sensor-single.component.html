@@ -1,54 +1,62 @@
-<div>
-  <div class="sensor-info">
-    <h2>{{ sensor?.displayName }}</h2>
-    <h3>{{ sensor?.subDisplayName }}</h3>
-    <div class="position">
-      <div class="longitude">
-        {{ sensor?.longitude }}
+<div *ngIf="sensor" class="container-fluid p-0">
+  <div class="row m-0">
+    <div class="sensor-info col-sm-6 p-0">
+      <h2>{{ sensor?.displayName }}</h2>
+      <h3>{{ sensor?.subDisplayName }}</h3>
+      <div>
+        <a class="coords" [href]="'https://www.google.com/maps/search/?api=1&query=' + sensor.latitude + ',' + sensor.longitude" target="_blank">
+          {{ sensor? humanService.coordsToHumain(sensor.latitude, sensor.longitude): "" }}
+        </a>
       </div>
-      <div class="latitude">
-        {{ sensor?.latitude }}
+      <div class="buttons btn-group row m-0 py-2">
+        <button
+          class="btn btn-secondary border-primary btn-sm option-button"
+          (click)="onDownloadCSV()"
+        >
+          CSV
+        </button>
+        <button
+          class="btn btn-secondary border-primary btn-sm option-button"
+          (click)="onDownloadJSON()"
+        >
+          JSON
+        </button>
       </div>
     </div>
-    <div class="buttons btn-group">
-      <button
-        class="btn btn-secondary border-primary btn-sm option-button"
-        (click)="onDownloadCSV()"
-      >
-        CSV
-      </button>
-      <button
-        class="btn btn-secondary border-primary btn-sm option-button"
-        (click)="onDownloadJSON()"
-      >
-        JSON
-      </button>
+    <div class="sensor-metadata-info col-sm-6 p-0">
+      <div>
+        {{ sensor?.metadata?.name}}
+      </div>
+      <div>
+        {{ sensor?.metadata?.version}}
+      </div>
+      <p>{{ sensor?.metadata?.description }}</p>
     </div>
   </div>
-  <div class="sensor-metadata-info">
-    <div>
-      {{ sensor?.metadata?.name}}
+  <div class="row m-0">
+    <div class="wrapper-table p-0">
+      <table cellspacing="0" class="col-12 p-0">
+        <thead>
+          <tr>
+            <th
+              *ngFor="
+                let name of sensor.parameters.metadata.headers;
+                let i = index;"
+              [ngClass]="'col-sm-' + sizeNeeded(i)"
+            >
+              {{ name }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of sensor?.parameters?.values">
+            <td *ngFor="let value of record; let i = index">
+              {{ format(i, value) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div>
-      {{ sensor?.metadata?.version}}
-    </div>
-    <p>{{ sensor?.metadata?.description }}</p>
-  </div>
-  <p>parameters : total of {{ sensor?.parameters?.values?.length }} record of </p>
-  <div class="wrapper-table">
-    <table cellspacing="0">
-      <thead>
-        <tr>
-          <th *ngFor="let name of sensor?.parameters?.metadata?.headers">
-            {{ name }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let record of sensor?.parameters?.values">
-          <td *ngFor="let value of record">{{ value }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <p class="m-0">{{ sensor?.parameters?.values?.length }} captures</p>
   </div>
 </div>

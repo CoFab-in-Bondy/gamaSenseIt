@@ -1,9 +1,16 @@
-<app-sensor-list
-  (selected)="id = $event"
-></app-sensor-list>
-<div *ngIf="hasId()">
-  <app-sensor-single [id]="id"></app-sensor-single>
-</div>
-<div *ngIf="!hasId()">
-  <p>Selectionnez un capteur</p>
+<div class="container-fluid">
+  <div class="row">
+    <app-sensor-list
+      (selected)="id = $event; sensorSingleRef.scrollIntoView()"
+      class="p-0"
+    ></app-sensor-list>
+  </div>
+  <div class="row">
+    <div #sensorSingleRef></div>
+    <app-sensor-single
+    *ngIf="hasId()" [id]="id"
+    class="p-0"
+    ></app-sensor-single>
+    <p *ngIf="!hasId()">Selectionnez un capteur</p>
+  </div>
 </div>

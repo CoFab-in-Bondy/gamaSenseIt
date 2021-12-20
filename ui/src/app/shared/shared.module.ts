@@ -11,6 +11,7 @@ import { RouterModule } from "@angular/router";
 import { AuthService } from "./services/auth.service";
 import { SensorService } from "./services/sensor.service";
 import { SensorMetadataService } from "./services/sensorMetadata.service";
+import { HumanService } from "./services/human.service";
 
 @NgModule({
   imports: [CommonModule, RouterModule],
@@ -19,7 +20,7 @@ import { SensorMetadataService } from "./services/sensorMetadata.service";
     Error404Component,
     Error500Component,
     SensorListComponent,
-    SensorSingleComponent
+    SensorSingleComponent,
   ],
   declarations: [
     HeaderComponent,
@@ -34,7 +35,13 @@ export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
-      providers: [SensorMetadataService, SensorService, AuthGuard, AuthService],
+      providers: [
+        SensorMetadataService,
+        SensorService,
+        AuthGuard,
+        AuthService,
+        HumanService
+      ],
     };
   }
 }

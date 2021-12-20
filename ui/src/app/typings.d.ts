@@ -69,7 +69,10 @@ declare interface SensorExtended {
     metadata: {
       headers : string[]
       ids : string[],
-      units : string[]
+      units : string[],
+      formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
+      width : number,
+      length : number,
     },
     values : (string|number)[][]
   }

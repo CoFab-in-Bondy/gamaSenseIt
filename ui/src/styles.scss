@@ -24,3 +24,61 @@ $body-color: $dark;
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+table {
+  border-collapse: separate;
+  width: 100%;
+  border-right: 1px solid black;
+}
+
+.wrapper-table {
+  overflow-y: scroll;
+  overflow-x: auto;
+  height: 300px;
+  border: 1px solid black;
+}
+
+th,
+td {
+  padding: 8px 16px;
+}
+
+thead {
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #dddddd;
+    margin: 0px;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+  }
+
+  th:last-child {
+    border-right: 0px;
+  }
+}
+
+tbody {
+
+  > tr:nth-child(even) {
+    background: rgb(240, 240, 240);
+  }
+
+  > tr:nth-child(odd) {
+    background: rgb(248, 248, 248);
+  }
+
+  > tr:hover {
+    background: rgb(198, 206, 195);
+  }
+
+  td{
+    border-right: 1px solid black;
+  }
+
+  td:last-child {
+    border-right: 0px;
+  }
+}

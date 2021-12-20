@@ -10,11 +10,11 @@ import java.util.function.Function;
 
 public class RecordList extends ArrayList<Record> {
 
-    private final List<ParameterMetadata> parameterMetadata;
+    private final List<ParameterMetadata> parametersMetadata;
 
     public RecordList(List<ParameterMetadata> parameterMetadata, Map<Date, Map<Long, byte[]>> captured) {
         super(captured.size());
-        this.parameterMetadata = parameterMetadata;
+        this.parametersMetadata = parameterMetadata;
 
 
         for (var e : captured.entrySet()) {
@@ -28,11 +28,11 @@ public class RecordList extends ArrayList<Record> {
 
     @SuppressWarnings("unchecked")
     private <T> T[] metadata(Class<T> klass, T dateCase, Function<ParameterMetadata, T> extractor) {
-        int size = parameterMetadata.size() + 1;
+        int size = parametersMetadata.size() + 1;
         var headers = (T[]) Array.newInstance(klass, size);
         headers[0] = dateCase;
         for (int i = 1; i < size; i++)
-            headers[i] = extractor.apply(parameterMetadata.get(i - 1));
+            headers[i] = extractor.apply(parametersMetadata.get(i - 1));
         return headers;
     }
 
@@ -48,6 +48,10 @@ public class RecordList extends ArrayList<Record> {
         return metadata(Long.class, -1L, ParameterMetadata::getId);
     }
 
+    public String[] formats() {
+        return metadata(String.class, "DATE", p-> p.getDataType().toString());
+    }
+
     public long width() {
         return ids().length;
     }
@@ -58,6 +62,9 @@ public class RecordList extends ArrayList<Record> {
                 put("headers", headers());
                 put("ids", ids());
                 put("units", units());
+                put("formats", formats());
+                put("width", parametersMetadata.size());
+                put("length", size());
             }});
             put("values", RecordList.this);
         }};
