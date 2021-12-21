@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import { HumanService } from "../../services/human.service";
 import { SensorService } from "../../services/sensor.service";
@@ -9,34 +10,38 @@ import { SensorService } from "../../services/sensor.service";
   templateUrl: "./sensor-single.component.html",
   styleUrls: ["./sensor-single.component.scss"],
 })
-export class SensorSingleComponent implements OnDestroy, OnChanges, OnInit {
-  @Input() id: number;
-  private parametersSub: Subscription;
+export class SensorSingleComponent implements OnDestroy, OnInit {
+  id: number;
+  private routeSub: Subscription;
   private sensorSub: Subscription;
   sensor: SensorExtended|null = null;
 
   constructor(
     private sensorService: SensorService,
-    public humanService: HumanService
+    public humanService: HumanService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.ngOnChanges();
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.sensorSub?.unsubscribe();
+      this.sensorSub = this.sensorService.observeById(this.id).subscribe(
+        sensor => {
+          this.sensor = sensor;
+        },
+        err => {
+          console.error(err);
+        }
+      );
+
+      this.sensorService.lazyLoadById(this.id);
+    });
   }
 
-
-  ngOnChanges(): void {
-    this.ngOnDestroy();
-    this.sensorSub = this.sensorService.observeById(this.id).subscribe(
-      sensor => {
-        this.sensor = sensor;
-      },
-      err => {
-        console.error(err);
-      }
-    );
-
-    this.sensorService.lazyLoadById(this.id);
+  ngOnDestroy(): void {
+    this.sensorSub?.unsubscribe();
+    this.routeSub?.unsubscribe();
   }
 
   onDownloadCSV() {
@@ -47,11 +52,6 @@ export class SensorSingleComponent implements OnDestroy, OnChanges, OnInit {
   onDownloadJSON() {
     if (!this.sensor) return;
     this.sensorService.download({ sensorId: this.sensor.id, type: "json" });
-  }
-
-  ngOnDestroy(): void {
-    this.sensorSub?.unsubscribe();
-    this.parametersSub?.unsubscribe();
   }
 
   format(index: number, value: string|number): string {

@@ -60,3 +60,6 @@
     <p class="m-0">{{ sensor?.parameters?.values?.length }} captures</p>
   </div>
 </div>
+<div *ngIf="!sensor">
+  <p>Pas de capteur trouvé</p>
+</div>

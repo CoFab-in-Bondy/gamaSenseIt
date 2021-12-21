@@ -1,16 +1,15 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row h-25">
     <app-sensor-list
       (selected)="id = $event; sensorSingleRef.scrollIntoView()"
       class="p-0"
     ></app-sensor-list>
   </div>
-  <div class="row">
+  <div class="row h-25">
     <div #sensorSingleRef></div>
-    <app-sensor-single
-    *ngIf="hasId()" [id]="id"
-    class="p-0"
-    ></app-sensor-single>
+    <router-outlet
+      class="p-0">
+    </router-outlet>
     <p *ngIf="!hasId()">Selectionnez un capteur</p>
   </div>
 </div>

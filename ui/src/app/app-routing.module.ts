@@ -5,13 +5,14 @@ import { QameleoComponent } from "./modules/qameleo/qameleo.component";
 import { SensorsComponent } from "./modules/sensors/sensors.component";
 
 import { Error404Component } from "./shared/components/error404/error404.component";
+import { SensorSingleComponent } from "./shared/components/sensor-single/sensor-single.component";
 import { AuthGuard } from "./shared/guards/auth.guard";
 
 const routes: Routes = [
   {
     path: "",
-    redirectTo: "/home",
     pathMatch: "full",
+    component: HomeComponent,
   },/*
   {
     path: "sensors",
@@ -27,12 +28,13 @@ const routes: Routes = [
   {
     path: "sensors",
     component: SensorsComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "sensors/:id",
-    component: SensorsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: ":id",
+        component: SensorSingleComponent
+      }
+    ]
   },
   {
     path: "qameleo",
@@ -41,10 +43,6 @@ const routes: Routes = [
   {
     path: "qameleo/:id",
     component: QameleoComponent,
-  },
-  {
-    path: "home",
-    component: HomeComponent,
   },
   {
     path: "error404",
