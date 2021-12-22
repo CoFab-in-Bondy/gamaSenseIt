@@ -22,13 +22,14 @@
               <th class="col-sm-4 col-md-3 nobr">Capteur</th>
               <th class="col-sm-4 col-md-3 nobr">Nom</th>
               <th class="col-sm-3 col-md-4 nobr">DMS</th>
+              <th class="col-sm-3 col-md-4 nobr">State</th>
             </tr>
           </thead>
           <tbody>
             <tr
               *ngFor="let sensor of zipSensorsWithSensorsMetadata()"
               (click)="selected.emit(sensor[0].id)"
-              [routerLink]="['/sensors', sensor[0].id]"
+              [routerLink]="[sensor[0].id]"
             >
               <td>{{ sensor[1].version }}</td>
               <td>{{ sensor[1].name }}</td>
@@ -39,6 +40,8 @@
 
               <!-- lg < -->
               <td class="last d-md-none">{{ humanService.coordsToHumain(sensor[0].latitude, sensor[0].longitude, 1) }}</td>
+
+              <td>{{sensor[0].state}}</td>
             </tr>
           </tbody>
         </table>

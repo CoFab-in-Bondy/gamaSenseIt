@@ -7,7 +7,7 @@ Generator of random data to test gamasensit.
 __author__ = "***REMOVED*** ***REMOVED***"
 __copyright__ = "Copyright (C) 2017-2021  UMMISCO - IRD"
 __license__ = "GPL"
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 from random import choice, choices, randint, random, randbytes
 from typing import Union
@@ -19,7 +19,7 @@ import argparse
 import lorem
 
 
-SEP = "".join(set(punctuation) - set("'\""))
+SEP = punctuation.replace("'", "").replace("\\", "")
 START_ID = 1042
 
 
@@ -39,18 +39,18 @@ def randblob(data_format: int) -> bytes:
     if data_format == 1:
         return randbytes(8)
     if data_format == 2:
-        return bytes(lorem.sentence(), "utf8")
+        return bytes(choice(ascii_letters) + lorem.sentence(), "utf8")
     raise TypeError("Invalid data_format")
 
 
-def randdatetime(delta: int = 300000000) -> datetime:
+def randdatetime(delta: int = 3000000) -> datetime:
     """Return a random datetime with a given delta."""
     return datetime.fromtimestamp(
         datetime.now().timestamp() - delta + randint(0, delta)
     )
 
 
-def randrange(bot: int, top: int, w: float = 1.0) -> range:
+def randrange(bot: float, top: float, w: float = 1.0) -> range:
     """Create a range start at 0 and end between bot * w and top * w."""
     return range(randint(floor(bot * w), ceil(top * w)))
 
@@ -86,7 +86,7 @@ def insert_unsafe(
 def generate_data(w: float = 1.0) -> str:
     """Generate random sql script of data."""
     stm = ""
-    for sm in randrange(5, 8, w):
+    for sm in randrange(3, 5, w):
         sm_id = dbid()
         stm += insert_unsafe("sensor_metadata", (
             sm_id,
@@ -97,7 +97,7 @@ def generate_data(w: float = 1.0) -> str:
         ))
 
         pms = []
-        for pm in randrange(3, 8, w):
+        for pm in randrange(3, 8):
             pm_id = dbid()
             pm_record = (
                 pm_id,
@@ -112,7 +112,7 @@ def generate_data(w: float = 1.0) -> str:
             pms.append(pm_record)
             stm += insert_unsafe("parameter_metadata", pm_record)
 
-        for s in randrange(15, 25, w):
+        for s in randrange(8, 12, w):
             s_id = dbid()
             stm += insert_unsafe("sensor", (
                 s_id,
@@ -126,7 +126,7 @@ def generate_data(w: float = 1.0) -> str:
                 lorem.sentence()
             ))
 
-            for _ in randrange(30, 200, w):
+            for _ in randrange(50, 2000, w):
                 capture_date = randdatetime()
                 for pm_record in pms:
                     p_id = dbid()

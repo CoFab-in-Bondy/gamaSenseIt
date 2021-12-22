@@ -39,6 +39,7 @@ export class SensorService {
       sensor => {
         this._sensors.set(id, sensor);
         this.emitBySensorId(id);
+        console.log(sensor);
       },
       (err) => console.error(err)
     );
@@ -52,7 +53,7 @@ export class SensorService {
     return this._subject.get(id) || SensorService.EMPTY_SUBJECT;
   }
 
-  download(params: QueryParameters): void {
+  download(params: QueryParams): void {
     this.api.downloadSensorParameters(params);
   }
 }

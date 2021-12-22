@@ -7,7 +7,9 @@ import ummisco.gamaSenseIt.springServer.data.model.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("SensorManagment")
 public class SensorManagment implements ISensorManagment {
@@ -29,6 +31,8 @@ public class SensorManagment implements ISensorManagment {
 
     @Autowired
     ISensorDataAnalyser dataAnalyser;
+
+    private Map<Long, Date> cacheLastRecvSensor = new HashMap<>();
 
     @Override
     public void saveDefaultSensorInit() {
@@ -142,5 +146,4 @@ public class SensorManagment implements ISensorManagment {
         sensorMetadataRepo.save(smd);
         return parameterSensorRepo.save(pmd);
     }
-
 }

@@ -1,10 +1,10 @@
-<div *ngIf="sensor" class="container-fluid p-0">
+<div class="container-fluid p-0">
   <div class="row m-0">
     <div class="sensor-info col-sm-6 p-0">
       <h2>{{ sensor?.displayName }}</h2>
       <h3>{{ sensor?.subDisplayName }}</h3>
       <div>
-        <a class="coords" [href]="'https://www.google.com/maps/search/?api=1&query=' + sensor.latitude + ',' + sensor.longitude" target="_blank">
+        <a class="coords" [href]="'https://www.google.com/maps/search/?api=1&query=' + sensor?.latitude + ',' + sensor?.longitude" target="_blank">
           {{ sensor? humanService.coordsToHumain(sensor.latitude, sensor.longitude): "" }}
         </a>
       </div>
@@ -34,32 +34,42 @@
     </div>
   </div>
   <div class="row m-0">
-    <div class="wrapper-table p-0">
-      <table cellspacing="0" class="col-12 p-0">
-        <thead>
-          <tr>
-            <th
-              *ngFor="
-                let name of sensor.parameters.metadata.headers;
-                let i = index;"
-              [ngClass]="'col-sm-' + sizeNeeded(i)"
-            >
-              {{ name }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let record of sensor?.parameters?.values">
-            <td *ngFor="let value of record; let i = index">
-              {{ format(i, value) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="ex-container mat-elevation-z8 p-0">
+      <div class="loading-shade" *ngIf="loading || failed">
+        <mat-progress-bar *ngIf="loading && !failed" class="mt-auto" mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar *ngIf="failed" class="mt-auto" mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <mat-table  #table [dataSource]="dataSource" cellspacing="0" class="col-12 p-0" matSort>
+
+        <ng-container *ngFor="let name of displayedColumns; let i = index" [matColumnDef]="name">
+          <mat-header-cell [ngClass]="{
+            'data-sm': type(i) == 'INTEGER' || type(i) == 'DOUBLE',
+            'data-md': type(i) == 'DATE',
+            'data-lg': type(i) == 'STRING'
+          }" *matHeaderCellDef mat-sort-header> {{ name }} </mat-header-cell>
+          <mat-cell [ngClass]="{
+            'data-sm': type(i) == 'INTEGER' || type(i) == 'DOUBLE',
+            'data-md': type(i) == 'DATE',
+            'data-lg': type(i) == 'STRING'
+          }" *matCellDef="let element">
+            <span [title]="element[name]">
+              {{format(i, element[name])}}
+            </span>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></mat-row>
+
+      </mat-table>
+
+      <mat-paginator #paginator
+        [length]="length"
+        [pageSize]="25"
+        [pageSizeOptions]="[25, 50, 100]"
+        [showFirstLastButtons]="true">
+      </mat-paginator>
     </div>
-    <p class="m-0">{{ sensor?.parameters?.values?.length }} captures</p>
   </div>
-</div>
-<div *ngIf="!sensor">
-  <p>Pas de capteur trouvé</p>
 </div>

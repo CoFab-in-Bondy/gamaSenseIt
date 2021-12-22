@@ -1,20 +1,13 @@
 package ummisco.gamaSenseIt.springServer.data.repositories;
 
-import com.sun.istack.NotNull;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import ummisco.gamaSenseIt.springServer.data.services.record.RecordList;
 import ummisco.gamaSenseIt.springServer.data.model.Parameter;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 //@RepositoryRestResource(collectionResourceRel = "sensorData", path = "sensorData")

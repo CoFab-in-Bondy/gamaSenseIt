@@ -23,6 +23,9 @@ public interface IParametersRequest {
             VERSION = "version",
             TYPE = "type",
             SORT = "sort",
-            DATE_PATTERN = "MMddyyyy";
+            DATE_PATTERN = "MMddyyyy",
+            ASC = "asc",
+            PAGE = "page",
+            COUNT = "count";
 
 }

@@ -38,6 +38,7 @@ declare interface Sensor {
   isHidden: boolean,
   hiddenMessage: string,
   sensorMetadataId: number,
+  state: "ACTIVE" | "NO_SIGNAL" | "DEAD",
 }
 
 
@@ -59,6 +60,7 @@ declare interface SensorExtended {
   subDisplayName: string,
   latitude: number,
   longitude: number,
+  state: "ACTIVE" | "NO_SIGNAL" | "DEAD",
   metadata: {
     id: number,
     description: string,
@@ -68,13 +70,13 @@ declare interface SensorExtended {
   parameters: {
     metadata: {
       headers : string[]
-      ids : string[],
+      ids : number[],
       units : string[],
       formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
-      width : number,
-      length : number,
+      width : number
     },
-    values : (string|number)[][]
+    values : (string|number)[][],
+    total : number,
   }
 }
 
@@ -83,7 +85,12 @@ declare interface SensorMetadataExtended extends SensorMetadata {
   parametersMetadata: ParameterMetadata[]
 }
 
-declare interface QueryParameters {
+
+declare interface Params {
+  [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+}
+
+declare interface QueryParams {
   sensorId: number,
   parameterMetadataId?: number,
   start?: Date,
@@ -91,4 +98,11 @@ declare interface QueryParameters {
   type?: "csv" | "json"
 }
 
-
+declare interface ParamsOption {
+  start?: Date
+  end?: Date
+  sort?: number
+  asc?: boolean
+  page?: number
+  count?: number
+}

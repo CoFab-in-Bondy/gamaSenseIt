@@ -57,7 +57,9 @@ public class PublicDataController extends DataController {
             @RequestParam(value = IParametersRequest.SORT, defaultValue = "0") Integer index
 
     ) {
-        return recordManager.getRecords(sensor, parameterMetadata, start, end).sortBy(index);
+        var records = recordManager.getRecords(sensor, parameterMetadata, start, end);
+        records.sortBy(index, true);
+        return records;
     }
 
     @CrossOrigin
@@ -111,9 +113,17 @@ public class PublicDataController extends DataController {
     @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.EXTENDED, method = RequestMethod.GET)
     public Node sensorByIdExtended(
-            @PathVariable long id
+            @PathVariable(name = "id") Sensor sensor,
+            @RequestParam(name = IParametersRequest.START, required = false)
+            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
+            @RequestParam(name = IParametersRequest.END, required = false)
+            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end,
+            @RequestParam(name = IParametersRequest.SORT, required = false) Integer sort,
+            @RequestParam(name = IParametersRequest.ASC, required = false) Boolean asc,
+            @RequestParam(name = IParametersRequest.PAGE, required = false) Integer page,
+            @RequestParam(name = IParametersRequest.COUNT, required = false) Integer count
     ) {
-        return sensorsRepo.findById(id).map(s-> exportJSON.toNode(s, null, null, null)).orElse(null);
+        return exportJSON.toNode(sensor, null, start, end, sort, asc, page, count);
     }
 
     @CrossOrigin

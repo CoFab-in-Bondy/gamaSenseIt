@@ -13,7 +13,7 @@ export class ApiService {
     return this.datepipe.transform(date, "MMddyyyy") || "01012000";
   }
 
-  queryToHttpParams(params: QueryParameters): HttpParams {
+  queryToHttpParams(params: QueryParams): HttpParams {
     let http = new HttpParams();
     http = http.set("sensorId", params.sensorId);
     if (params.parameterMetadataId !== undefined)
@@ -44,7 +44,7 @@ export class ApiService {
     return this.http.get<string>(API + "/public/server/separator");
   }
 
-  downloadSensorParameters(params: QueryParameters): void {
+  downloadSensorParameters(params: QueryParams): void {
     window.open(
       API + "/public/parameters/download?" + this.queryToHttpParams(params),
       "_blank"
@@ -84,8 +84,8 @@ export class ApiService {
     return this.http.get<SensorMetadataExtended[]>(API + `/public/sensors/metadata/extended`);
   }
 
-  getSensorByIdExtended(id: number): Observable<SensorExtended> {
-    return this.http.get<SensorExtended>(API + `/public/sensors/${id}/extended`);
+  getSensorByIdExtended(id: number, options: ParamsOption = {}): Observable<SensorExtended> {
+    return this.http.get<SensorExtended>(API + `/public/sensors/${id}/extended?`, {params: <Params>options} );
   }
 
   goToginPage(): void {

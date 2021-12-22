@@ -3,6 +3,7 @@ package ummisco.gamaSenseIt.springServer.data.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import ummisco.gamaSenseIt.springServer.data.classes.Node;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -133,6 +134,15 @@ public class SensorMetadata {
             return Long.compare(o1, o2);
         });
         return pmds;
+    }
+
+    public Node toNode() {
+        return new Node() {{
+            put("id", getId());
+            put("description", getDescription());
+            put("name", getName());
+            put("version", getVersion());
+        }};
     }
 
     public void setParametersMetadata(Set<ParameterMetadata> parameterMetadata) {

@@ -10,6 +10,12 @@ import { SharedModule } from "./shared/shared.module";
 import { QameleoComponent } from './modules/qameleo/qameleo.component';
 import { HomeComponent } from './modules/home/home.component';
 import { SensorsComponent } from "./modules/sensors/sensors.component";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table'
+import { MatSortModule } from "@angular/material/sort";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
   declarations: [AppComponent, QameleoComponent, HomeComponent, SensorsComponent],
@@ -19,7 +25,13 @@ import { SensorsComponent } from "./modules/sensors/sensors.component";
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ],
   providers: [
     DatePipe,

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.vividsolutions.jts.geom.Point;
+import ummisco.gamaSenseIt.springServer.data.classes.Node;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Sensor {
@@ -105,6 +105,43 @@ public class Sensor {
         this.latitude = locationY;
         this.sensorMetadata = sensorType;
         this.isHidden = false;
+    }
+
+    /*
+    @JsonView(IView.Public.class)
+    @JsonProperty("state")
+    public State state() {
+        var now = new Date().getTime();
+        var oneHourAgo = new Date(now - 60 * 60 * 1000);
+        var lastRecv = new Date(0);
+        for (var p : getParameters()) {
+            if (p.getCaptureDate().after(oneHourAgo))
+                return State.ACTIVE;
+            if (p.getCaptureDate().after(lastRecv))
+                lastRecv = p.getCaptureDate();
+        }
+        var oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
+        return lastRecv.before(oneDayAgo) ? State.DEAD : State.NO_SIGNAL;
+    }*/
+
+    @JsonView(IView.Public.class)
+    @JsonProperty("state")
+    public State state() {
+        return State.DEAD;
+    }
+
+
+
+    public Node toNode() {
+        return new Node(){{
+            put("id", getId());
+            put("name", getName());
+            put("displayName", getDisplayName());
+            put("subDisplayName", getSubDisplayName());
+            put("latitude", getLatitude());
+            put("longitude", getLongitude());
+            put("metadata", getSensorMetadata().toNode());
+        }};
     }
 
     public Long getId() {

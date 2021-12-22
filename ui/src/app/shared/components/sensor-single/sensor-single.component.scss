@@ -5,3 +5,72 @@
 .coords {
   text-decoration: none;
 }
+
+.ex-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  min-width: 300px;
+  position: relative;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 57px;
+  right: 1px;
+  background: rgba(0, 0, 0, 0);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+.mat-table {
+  overflow-x: scroll;
+  height: 300px;
+  border: 1px solid black;
+  table-layout: fixed;
+}
+
+.mat-cell,
+.mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  padding: 0px 10px;
+  line-break: unset;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+
+  white-space: nowrap;
+  text-overflow:ellipsis;
+  overflow: hidden;
+}
+
+
+.data-sm {
+  min-width: 100px !important;
+  max-width: 100px !important;
+}
+
+.data-md {
+  min-width: 150px !important;
+  max-width: 150px !important;
+}
+
+.data-lg {
+  min-width: 300px !important;
+  max-width: 300px !important;
+}
+
+.mat-row,
+.mat-header-row {
+  display: table-row;
+}
+
+
