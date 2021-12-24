@@ -107,7 +107,6 @@ public class Sensor {
         this.isHidden = false;
     }
 
-    /*
     @JsonView(IView.Public.class)
     @JsonProperty("state")
     public State state() {
@@ -122,12 +121,6 @@ public class Sensor {
         }
         var oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
         return lastRecv.before(oneDayAgo) ? State.DEAD : State.NO_SIGNAL;
-    }*/
-
-    @JsonView(IView.Public.class)
-    @JsonProperty("state")
-    public State state() {
-        return State.DEAD;
     }
 
 

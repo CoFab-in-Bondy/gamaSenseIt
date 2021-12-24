@@ -11,14 +11,10 @@ import { QameleoComponent } from './modules/qameleo/qameleo.component';
 import { HomeComponent } from './modules/home/home.component';
 import { SensorsComponent } from "./modules/sensors/sensors.component";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule } from '@angular/material/table'
-import { MatSortModule } from "@angular/material/sort";
-import { MatPaginatorModule } from "@angular/material/paginator";
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { SensorMapComponent } from './shared/components/sensor-map/sensor-map.component';
 
 @NgModule({
-  declarations: [AppComponent, QameleoComponent, HomeComponent, SensorsComponent],
+  declarations: [AppComponent, QameleoComponent, HomeComponent, SensorsComponent, SensorMapComponent],
   imports: [
     SharedModule.forRoot(),
     FormsModule,
@@ -26,12 +22,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule
+    BrowserAnimationsModule
   ],
   providers: [
     DatePipe,

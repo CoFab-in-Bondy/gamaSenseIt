@@ -12,7 +12,7 @@ __version__ = "2.0.2"
 from random import choice, choices, randint, random, randbytes
 from typing import Union
 from string import punctuation, ascii_letters
-from datetime import datetime
+from datetime import datetime, timedelta
 from math import floor, ceil
 
 import argparse
@@ -126,8 +126,10 @@ def generate_data(w: float = 1.0) -> str:
                 lorem.sentence()
             ))
 
+            # 0, 1, 8, 27 hours
+            deadtime = timedelta(hours=randint(0, 3) ** 3)
             for _ in randrange(50, 2000, w):
-                capture_date = randdatetime()
+                capture_date = randdatetime() - deadtime
                 for pm_record in pms:
                     p_id = dbid()
                     stm += insert_unsafe("parameter", (

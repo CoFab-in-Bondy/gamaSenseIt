@@ -1,14 +1,32 @@
 <div class="container-fluid">
-  <div class="row h-25">
-    <app-sensor-list
-      (selected)="id = $event; sensorSingleRef.scrollIntoView()"
-      class="p-0"
-    ></app-sensor-list>
+  <div>
+    <div class="container-fluid p-4 sensors-all shadow mt-3">
+      <div class="row justify-content-between m-0 mb-3">
+        <h1 class="col-12 col-sm-6 p-0 pb-2 m-0">Capteurs</h1>
+        <div class="col-12 col-sm-4 hstack p-0 justify-content-start justify-content-sm-end">
+          <button class="btn-map me-2" (click)="onMap()">
+            <i></i>
+            <span>Carte</span>
+          </button>
+          <button class="btn-list" (click)="onList()">
+            <i></i>
+            <span>Liste</span>
+          </button>
+        </div>
+      </div>
+      <div class="row m-0">
+        <div class="col p-0">
+          <app-sensor-list
+            *ngIf="state == 'list'"
+            (selected)="id = $event; sensorSingleRef.scrollIntoView()"
+          ></app-sensor-list>
+          <app-sensor-map *ngIf="state == 'map'"></app-sensor-map>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="row h-25">
+  <div>
     <div #sensorSingleRef></div>
-    <router-outlet
-      class="p-0">
-    </router-outlet>
+    <router-outlet> </router-outlet>
   </div>
 </div>

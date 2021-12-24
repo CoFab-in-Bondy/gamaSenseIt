@@ -1,50 +1,41 @@
-<div class="sensors-all container-fluid p-3">
-  <div class="row m-0">
-    <div class="sensors-heading container-fluid">
-      <div class="row">
-        <h1 class="col-sm-7 p-0 m-0">Liste des capteurs</h1>
-        <div class="col-sm-5 buttons container-fluid">
-          <div class="row py-3">
-            <button class="col ml-3">Carte</button>
-            <button class="col">Liste</button>
-          </div>
-        </div>
-      </div>
+<div class="tb container-fluid m-0 p-0">
+  <div class="hstack tb-header gap-3">
+    <div *ngFor="let header of ['Version', 'Capteur', 'Nom', 'DMS', 'State']">
+      <span>{{ header }}</span>
     </div>
   </div>
-  <div class="row m-0">
-    <div class="col-12 p-0">
-      <div class="wrapper-table">
-        <table cellSpacing="0">
-          <thead>
-            <tr>
-              <th class="col-sm-1 col-md-2 nobr">Version</th>
-              <th class="col-sm-4 col-md-3 nobr">Capteur</th>
-              <th class="col-sm-4 col-md-3 nobr">Nom</th>
-              <th class="col-sm-3 col-md-4 nobr">DMS</th>
-              <th class="col-sm-3 col-md-4 nobr">State</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let sensor of zipSensorsWithSensorsMetadata()"
-              (click)="selected.emit(sensor[0].id)"
-              [routerLink]="[sensor[0].id]"
-            >
-              <td>{{ sensor[1].version }}</td>
-              <td>{{ sensor[1].name }}</td>
-              <td>{{ sensor[0].displayName }}</td>
-
-              <!-- lg >= -->
-              <td class="last d-none d-md-block">{{ humanService.coordsToHumain(sensor[0].latitude, sensor[0].longitude, 3) }}</td>
-
-              <!-- lg < -->
-              <td class="last d-md-none">{{ humanService.coordsToHumain(sensor[0].latitude, sensor[0].longitude, 1) }}</td>
-
-              <td>{{sensor[0].state}}</td>
-            </tr>
-          </tbody>
-        </table>
+  <div class="container-fluid m-0 p-0 tb-body">
+    <div
+      class="row"
+      *ngFor="let s_sm of zipSensorsWithSensorsMetadata()"
+      (click)="selected.emit(s_sm[0].id)"
+      [routerLink]="['/sensors', s_sm[0].id]"
+    >
+      <div class="col-2 col-md-2 p-0 ps-3">
+        <span>{{ s_sm[1].version }}</span>
+      </div>
+      <div class="col-3 col-md-2 p-0">
+        <span>{{ s_sm[1].name }}</span>
+      </div>
+      <div class="col-3 col-md-2 p-0">
+        <span>{{ s_sm[0].displayName }}</span>
+      </div>
+      <div class="col-4 p-0 d-none d-md-block">
+        <span class="d-none d-md-block"
+          >{{
+            humanService.coordsToHumain(s_sm[0].latitude, s_sm[0].longitude, 3)
+          }}
+        </span>
+      </div>
+      <div class="col-2 p-0 d-md-none">
+        <span
+          >{{
+            humanService.coordsToHumain(s_sm[0].latitude, s_sm[0].longitude, 1)
+          }}
+        </span>
+      </div>
+      <div class="col-1 col-md-2 p-0">
+        <span>{{ s_sm[0].state }}</span>
       </div>
     </div>
   </div>

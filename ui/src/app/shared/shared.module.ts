@@ -12,14 +12,9 @@ import { AuthService } from "./services/auth.service";
 import { SensorService } from "./services/sensor.service";
 import { SensorMetadataService } from "./services/sensorMetadata.service";
 import { HumanService } from "./services/human.service";
-import { MatTableModule } from "@angular/material/table";
-import { MatSortModule } from "@angular/material/sort";
-import { MatPaginatorModule } from "@angular/material/paginator";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, MatTableModule, MatSortModule, MatPaginatorModule, MatProgressSpinnerModule, MatProgressBarModule],
+  imports: [CommonModule, RouterModule],
   exports: [
     HeaderComponent,
     Error404Component,

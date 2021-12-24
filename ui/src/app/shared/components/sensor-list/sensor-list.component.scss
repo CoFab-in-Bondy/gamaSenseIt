@@ -1,16 +1,109 @@
-.sensors-all {
-  background-color: #bbffcc;
-  border: 1px solid #0c3115;
+.tb {
+  border-radius: 15px 15px 0px 0px;
+  border: 1px solid rgb(220, 220, 220);
+  padding: 0;
+  overflow: none;
 }
 
-.sensors-heading {
-  .buttons {
-    button {
-      border: 1px solid black;
-    }
+.tb-body, .tb-header, .tb-footer {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.tb-header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: rgb(27, 148, 108);
+  color: white;
+  border-radius: 15px 15px 0px 0px;
+  overflow: hidden;
+  height: 44px;
+
+  .sort {
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    border: 0;
+    background-color: #24c791;
+  }
+
+  .col-data:first-child {
+    margin-left: 10px;
+  }
+
+  .col-data:last-child {
+    margin-right: 100px;
   }
 }
 
-.last {
-  border-right: 0px;
+.tb-body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 200px;
+
+  .col-data:first-child {
+    margin-left: 10px;
+  }
+
+  .row:hover {
+    background: rgb(198, 206, 195);
+  }
+
+  .row:not(:last-child) {
+    border-bottom: 1px solid rgb(230, 230, 230);
+  }
+
+}
+
+.tb-footer {
+  border-top: 1px solid rgb(220, 220, 220);
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+
+
+  .tb-nav button {
+    width: 25px;
+    height: 25px;
+  }
+
+  .tb-count button {
+    width: 35px;
+    height: 25px;
+    line-height: 1;
+  }
+
+  .tb-info {
+    width: 150px;
+  }
+
+
+  .tb-nav button {
+    border: 0px;
+    background-color: rgb(230, 230, 230);
+    padding: 0px;
+  }
+
+  .tb-nav button:hover {
+    background-color: rgb(210, 210, 210);
+  }
+
+  .tb-nav button:active {
+    background-color: rgb(190, 190, 190);
+  }
+
+  .tb-nav button.selected {
+    background-color: rgb(188, 233, 188);
+  }
+
 }

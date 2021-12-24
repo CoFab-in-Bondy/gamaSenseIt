@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand-md navbar-dark bg-primary">
+<header class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" [routerLink]="['/']">GamaSenseIt</a>
     <button class="navbar-toggler"
@@ -11,12 +11,12 @@
       (click)="toggleCollapsed()">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="navbarSupportedContent" [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
-      <div class="navbar-nav">
+    <div [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
+      <div class="navbar-nav" (click)="collapsed=true">
         <a class="nav-link" routerLinkActive="active" [routerLink]="['qameleo']">Qameleo</a>
-        <a *ngIf="isAuth" class="nav-link" routerLinkActive="active" [routerLink]="['sensors']">Sensors</a>
-        <a *ngIf="isAuth" class="nav-link" [href]="API + '/logout'">Logout</a>
-        <a *ngIf="!isAuth" class="nav-link" [href]="API + '/login'">Login</a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['sensors']" *ngIf="isAuth">Sensors</a>
+        <a class="nav-link" [href]="API + '/logout'" *ngIf="isAuth">Logout</a>
+        <a class="nav-link" [href]="API + '/login'" *ngIf="!isAuth">Login</a>
       </div>
     </div>
   </div>

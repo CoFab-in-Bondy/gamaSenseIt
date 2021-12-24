@@ -10,20 +10,34 @@ import { SensorService } from "../../services/sensor.service";
 import { ApiService } from "../../services/api.service";
 
 
+
+const RANGE_COUNT = [25, 50, 100];
+const ASC = true;
+const DESC = false;
+
 @Component({
   selector: "app-sensor-single",
   templateUrl: "./sensor-single.component.html",
   styleUrls: ["./sensor-single.component.scss"],
 })
-export class SensorSingleComponent implements OnDestroy, OnInit {
-  id: number;
+export class SensorSingleComponent implements OnInit, OnDestroy {
+  id: number = 0;
   sensor: SensorExtended|null = null;
 
-  dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = [];
   loading = true;
   failed = false;
-  length = 0;
+
+  sort = 0;
+  asc = ASC;
+  page = 0;
+  count = RANGE_COUNT[0];
+
+  scroll = 0;
+
+  RANGE_COUNT = RANGE_COUNT;
+
+  private routeSub: Subscription
+
 
   constructor(
     private sensorService: SensorService,
@@ -32,63 +46,108 @@ export class SensorSingleComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute
   ) {}
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
   ngOnInit(): void {
-    console.log("Reloaded");
-    console.log(`Sort : ${this.sort} - Page : ${this.paginator}`)
-
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    merge(this.sort.sortChange, this.paginator.page, this.route.params)
-    .subscribe(_ => {
-      this.loading = true;
-      this.failed = false;
-
-      this.id = +this.route.snapshot.params["id"];
-      let index = this.displayedColumns.indexOf(this.sort.active);
-      this.api.getSensorByIdExtended(this.id, {
-        page: this.paginator.pageIndex || 0,
-        count: this.paginator.pageSize || 50,
-        sort: index == -1 ? 0 : index,
-        asc: this.sort.direction != 'desc'
-      }).toPromise().then(
-        sensor => {
-          this.sensor = sensor;
-
-          let data = [];
-          for (let record of sensor.parameters.values) {
-            let row: any = {};
-            for (let i = 0; i < sensor.parameters.metadata.width; i++) {
-              let k = this.sensor.parameters.metadata.headers[i];
-              let v = record[i];
-              row[k] = v;
-            }
-            data.push(row);
-          }
-          this.dataSource.data = data;
-          this.displayedColumns = this.sensor.parameters.metadata.headers;
-          this.length = this.sensor.parameters.total;
-
-          this.loading = false;
-        }
-      ).catch(
-        err => {
-          this.sensor = null;
-          this.loading = false;
-          this.failed = true;
-          this.dataSource.data = [];
-          this.displayedColumns = [];
-        }
-      )
-    });
+    this.routeSub = this.route.params.subscribe(params => {
+      let id = +params["id"];
+      if (this.id != id)
+        this.default();
+      this.id = id;
+      this.onChange();
+    })
   }
 
   ngOnDestroy(): void {
-    //this.sensorSub?.unsubscribe();
-    // this.routeSub?.unsubscribe();
+    this.routeSub?.unsubscribe();
+  }
+
+  default() {
+    this.sort = 0;
+    this.asc = ASC;
+    this.page = 0;
+    this.count = RANGE_COUNT[0];
+  }
+
+  onScroll(ev: Event) {
+    if (!ev.target) return;
+    this.scroll = Number((<any>ev).target.scrollLeft);
+  }
+
+  onSort(index: number ) {
+    if (this.sort == index) {
+      if (this.asc) {
+        this.asc = DESC;
+        this.sort = index;
+      } else {
+        this.sort = 0;
+        this.asc = ASC;
+      }
+    } else {
+      this.asc = true;
+      this.sort = index;
+    }
+    console.log(`${this.sort} - ${this.asc}`);
+    this.page = 0;
+    this.onChange();
+  }
+
+  isSortBy(index: number) {
+    return this.sort == index;
+  }
+
+  isAsc(index: number) {
+    return this.isSortBy(index) && this.asc;
+  }
+
+  isDesc(index: number) {
+    return this.isSortBy(index) && !this.asc;
+  }
+
+  isPage(page: number) {
+    return this.page = page;
+  }
+
+  isValidPage(page: number) {
+    return page >= 0 && (page) * this.count < (this.sensor?.parameters?.total || 0);
+  }
+
+  onCount(count: number) {
+    if (this.count == count)
+      return;
+    this.page = Math.floor(this.page * this.count / count);
+    this.count = count;
+    this.onChange();
+  }
+
+  onPage(dif: number) {
+    if (!this.isValidPage(this.page + dif))
+      return;
+    this.page += dif;
+    this.onChange();
+  }
+
+  onChange() {
+    this.loading = true;
+    this.failed = false;
+
+    this.api.getSensorByIdExtended(this.id, {
+      page: this.page,
+      count: this.count,
+      sort: this.sort,
+      asc: this.asc
+    })
+    .toPromise()
+    .then(
+      sensor => {
+        this.sensor = sensor;
+        this.loading = false;
+      }
+    ).catch(
+      err => {
+        this.sensor = null;
+        this.loading = false;
+        this.failed = true;
+      }
+    )
   }
 
   onDownloadCSV() {
@@ -113,19 +172,26 @@ export class SensorSingleComponent implements OnDestroy, OnInit {
     return this.sensor?.parameters.metadata.formats[index];
   }
 
-  sizeNeeded(index: number): number {
+  classOf(index: number): string {
     switch (this.sensor?.parameters.metadata.formats[index]) {
       case "DATE":
-        return 1;
+        return "col-data col-date";
       case "DOUBLE":
-        return 1;
+        return "col-data col-double";
       case "INTEGER":
-        return 1
+        return "col-data col-integer";
       case "STRING":
-        return 3;
+        return "col-data col-string";
       default:
-        return 3;
+        return "col-data col-other";
     }
+  }
+
+  coordLink() {
+    let base = "https://www.google.com/maps/search/?api=1";
+    if (!this.sensor)
+      return base;
+    return `${base}&query=${this.sensor.latitude},${this.sensor.longitude}`;
   }
 }
 

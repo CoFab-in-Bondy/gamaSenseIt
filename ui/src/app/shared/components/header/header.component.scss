@@ -1,0 +1,13 @@
+header {
+  background: rgb(44,167,44);
+  background: linear-gradient(110deg, rgb(49, 167, 49) 0%,  rgb(95, 255, 188) 50%, rgb(163, 226, 255) 100%);
+}
+
+.nav-link:not(.active) {
+  color: white !important;
+}
+
+.nav-link.active {
+  color: white(255, 196, 0) !important;
+  text-decoration: underline;
+}

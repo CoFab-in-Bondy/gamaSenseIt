@@ -50,73 +50,19 @@ $dark: #101A10;
 $body-bg: $ligth;
 $body-color: $dark;
 
+// Leaflet & OpenStreetMAp
+@import "../node_modules/leaflet/dist/leaflet.css";
+.leaflet-default-icon-path {
+  background-image: url("/assets/markers/marker-icon.png");
+}
 
+// Font Awesome
+$fa-font-path: "~font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome';
+
+
+// bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
 
-.list-group-item-action:hover {
-  background-color: $secondary;
-}
-
-html, body { height: 100%; margin: 0px;}
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-table {
-  border-collapse: separate;
-  width: 100%;
-  border-right: 1px solid black;
-}
-
-.wrapper-table {
-  overflow-y: scroll;
-  height: 300px;
-  border: 1px solid black;
-}
-
-
-th,
-td {
-  padding: 8px 16px;
-}
-
-thead {
-
-  th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: #dddddd;
-    margin: 0px;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-  }
-
-  th:last-child {
-    border-right: 0px;
-  }
-}
-
-tbody {
-
-  > tr:nth-child(even) {
-    background: rgb(240, 240, 240);
-  }
-
-  > tr:nth-child(odd) {
-    background: rgb(248, 248, 248);
-  }
-
-  > tr:hover {
-    background: rgb(198, 206, 195);
-  }
-
-  td{
-    border-right: 1px solid black;
-  }
-
-  td:last-child {
-    border-right: 0px;
-  }
-}
-
-html, body { height: 100%; }
+html, body { height: 100%; margin: 0px; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

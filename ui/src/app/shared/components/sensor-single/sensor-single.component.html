@@ -1,75 +1,102 @@
-<div class="container-fluid p-0">
-  <div class="row m-0">
-    <div class="sensor-info col-sm-6 p-0">
-      <h2>{{ sensor?.displayName }}</h2>
-      <h3>{{ sensor?.subDisplayName }}</h3>
-      <div>
-        <a class="coords" [href]="'https://www.google.com/maps/search/?api=1&query=' + sensor?.latitude + ',' + sensor?.longitude" target="_blank">
-          {{ sensor? humanService.coordsToHumain(sensor.latitude, sensor.longitude): "" }}
-        </a>
-      </div>
-      <div class="buttons btn-group row m-0 py-2">
-        <button
-          class="btn btn-secondary border-primary btn-sm option-button"
-          (click)="onDownloadCSV()"
-        >
-          CSV
-        </button>
-        <button
-          class="btn btn-secondary border-primary btn-sm option-button"
-          (click)="onDownloadJSON()"
-        >
-          JSON
-        </button>
+<div class="container-fluid p-4 my-3 sensor shadow">
+  <div class="flex-row d-flex justify-content-center m-0 mb-3">
+    <div class="sensor-info p-0 flex-fill">
+      <div class="d-flex justify-content-between">
+        <div>
+          <h2>{{ sensor?.displayName }}</h2>
+          <h3>{{ sensor?.subDisplayName }}</h3>
+          <div>
+            <a class="coords" [href]="coordLink()" target="_blank">
+              {{
+                sensor
+                  ? humanService.coordsToHumain(
+                      sensor.latitude,
+                      sensor.longitude
+                    )
+                  : ""
+              }}
+            </a>
+          </div>
+        </div>
+        <div class="buttons m-0 py-0 mx-3 mt-2">
+          <button
+            class="btn btn-sm option-button mb-3"
+            (click)="onDownloadCSV()"
+          >
+            CSV
+          </button>
+          <button class="btn btn-sm option-button" (click)="onDownloadJSON()">
+            JSON
+          </button>
+        </div>
       </div>
     </div>
-    <div class="sensor-metadata-info col-sm-6 p-0">
+    <div class="vr"></div>
+    <div class="sensor-metadata-info p-0 flex-fill mx-3">
       <div>
-        {{ sensor?.metadata?.name}}
+        {{ sensor?.metadata?.name }}
       </div>
       <div>
-        {{ sensor?.metadata?.version}}
+        {{ sensor?.metadata?.version }}
       </div>
       <p>{{ sensor?.metadata?.description }}</p>
     </div>
   </div>
+
   <div class="row m-0">
-    <div class="ex-container mat-elevation-z8 p-0">
-      <div class="loading-shade" *ngIf="loading || failed">
-        <mat-progress-bar *ngIf="loading && !failed" class="mt-auto" mode="indeterminate"></mat-progress-bar>
-        <mat-progress-bar *ngIf="failed" class="mt-auto" mode="indeterminate"></mat-progress-bar>
+    <div class="tb container m-0 p-0">
+      <div class="hstack tb-header gap-3" [scrollLeft]="scroll">
+        <div
+          *ngFor="
+            let name of sensor ? sensor.parameters.metadata.headers : [];
+            let i = index
+          "
+          [ngClass]="classOf(i)"
+        >
+          <button class="sort" (click)="onSort(i)">{{ isSortBy(i)? isAsc(i)? "▲": "▼" : "◊" }}</button>
+          <span [title]="name">{{ name }}</span>
+        </div>
       </div>
-
-      <mat-table  #table [dataSource]="dataSource" cellspacing="0" class="col-12 p-0" matSort>
-
-        <ng-container *ngFor="let name of displayedColumns; let i = index" [matColumnDef]="name">
-          <mat-header-cell [ngClass]="{
-            'data-sm': type(i) == 'INTEGER' || type(i) == 'DOUBLE',
-            'data-md': type(i) == 'DATE',
-            'data-lg': type(i) == 'STRING'
-          }" *matHeaderCellDef mat-sort-header> {{ name }} </mat-header-cell>
-          <mat-cell [ngClass]="{
-            'data-sm': type(i) == 'INTEGER' || type(i) == 'DOUBLE',
-            'data-md': type(i) == 'DATE',
-            'data-lg': type(i) == 'STRING'
-          }" *matCellDef="let element">
-            <span [title]="element[name]">
-              {{format(i, element[name])}}
-            </span>
-          </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></mat-row>
-
-      </mat-table>
-
-      <mat-paginator #paginator
-        [length]="length"
-        [pageSize]="25"
-        [pageSizeOptions]="[25, 50, 100]"
-        [showFirstLastButtons]="true">
-      </mat-paginator>
+      <div class="vstack tb-body" (scroll)="onScroll($event)">
+        <div
+          class="hstack gap-3"
+          *ngFor="let record of sensor ? sensor.parameters.values : []"
+        >
+          <div
+            *ngFor="let value of record; let i = index"
+            [ngClass]="classOf(i)"
+          >
+          <span [title]="value">{{ format(i, value) }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row tb-footer">
+        <div class="col tb-nav d-flex justify-content-end gap-3">
+          <div class="btn-group">
+            <button class="btn" (click)="onPage(-1)">&lt;</button>
+            <button class="btn" (click)="onPage(1)">&gt;</button>
+          </div>
+          <div class="gap-3 tb-count">
+            <button
+              [ngClass]="{ selected: this.count === c, btn: true, 'mx-1': true }"
+              *ngFor="let c of RANGE_COUNT"
+              (click)="onCount(c)"
+            >
+              {{ c }}
+            </button>
+          </div>
+          <div class="tb-info">
+            <p>
+              {{ this.page * this.count }} -
+              {{
+                this.page * this.count +
+                  (this.sensor?.parameters?.values?.length || 0)
+              }}
+              of {{ this.sensor?.parameters?.total || 0 }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

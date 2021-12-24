@@ -1,0 +1,38 @@
+.sensors-all {
+  border-radius: 15px;
+}
+
+.btn-map, .btn-list {
+  border-radius: 20px;
+  background-image: linear-gradient(90deg, rgb(98, 218, 98) 0%,  rgb(165, 255, 218) 100%);
+  border: 1px solid rgb(185, 185, 185);
+  padding: 10px;
+}
+
+.btn-map:active, .btn-list:active {
+  background-image: linear-gradient(90deg, rgb(98, 218, 98) 50%,  rgb(165, 255, 218) 100%);
+  }
+
+
+
+.btn-list > i, .btn-map > i {
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
+  display: block;
+  margin-right: 10px;
+  float: left;
+}
+
+.btn-list > span, .btn-map > span {
+  width: 80px;
+  display: block;
+}
+
+.btn-map  i {
+  background-image: url('/assets/buttons/map.svg');
+}
+
+.btn-list  i {
+  background-image: url('/assets/buttons/list.svg');
+}

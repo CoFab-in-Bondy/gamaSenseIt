@@ -1,12 +1,14 @@
 import { SensorMetadataService } from "../../services/sensorMetadata.service";
-import { Component, OnDestroy, OnInit, Output, EventEmitter, ElementRef } from "@angular/core";
+import { Component, OnDestroy, OnInit, Output, EventEmitter, ElementRef, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { HumanService } from "../../services/human.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-sensor-list",
   templateUrl: "./sensor-list.component.html",
   styleUrls: ["./sensor-list.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SensorListComponent implements OnInit, OnDestroy {
   private sensorsSubscription: Subscription;
@@ -16,8 +18,14 @@ export class SensorListComponent implements OnInit, OnDestroy {
 
   constructor(
     private sensorMetadataService: SensorMetadataService,
-    public humanService: HumanService
+    public humanService: HumanService,
+    private router: Router
   ) {}
+
+  onClick(id: number) {
+    console.log("clicked");
+    this.router.navigate(['sensors', id]);
+  }
 
   ngOnInit(): void {
     this.sensorsSubscription = this.sensorMetadataService.observeAll().subscribe(

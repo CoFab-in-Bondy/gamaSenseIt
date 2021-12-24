@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SensorsComponent implements OnInit {
   id: number = NaN;
+  state: "map" | "list"= "map";
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -16,5 +17,13 @@ export class SensorsComponent implements OnInit {
 
   hasId() {
     return !Number.isNaN(this.id);
+  }
+
+  onMap() {
+    this.state = "map";
+  }
+
+  onList() {
+    this.state = "list";
   }
 }
