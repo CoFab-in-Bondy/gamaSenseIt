@@ -6,11 +6,11 @@
         <div class="col-12 col-sm-4 hstack p-0 justify-content-start justify-content-sm-end">
           <button class="btn-map me-2" (click)="onMap()">
             <i></i>
-            <span>Carte</span>
+            <span class="d-none d-md-block">Carte</span>
           </button>
           <button class="btn-list" (click)="onList()">
             <i></i>
-            <span>Liste</span>
+            <span class="d-none d-md-block">Liste</span>
           </button>
         </div>
       </div>
@@ -18,7 +18,6 @@
         <div class="col p-0">
           <app-sensor-list
             *ngIf="state == 'list'"
-            (selected)="id = $event; sensorSingleRef.scrollIntoView()"
           ></app-sensor-list>
           <app-sensor-map *ngIf="state == 'map'"></app-sensor-map>
         </div>

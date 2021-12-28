@@ -1,38 +1,22 @@
 <div class="container-fluid p-4 my-3 sensor shadow">
-  <div class="flex-row d-flex justify-content-center m-0 mb-3">
-    <div class="sensor-info p-0 flex-fill">
-      <div class="d-flex justify-content-between">
+  <div class="row m-0 mb-3">
+    <div class="sensor-info col-md-5 col-12 p-0">
+      <div>
+        <h2 class="m-0">{{ sensor?.displayName }}</h2>
+        <h3 class="m-0">{{ sensor?.subDisplayName }}</h3>
         <div>
-          <h2>{{ sensor?.displayName }}</h2>
-          <h3>{{ sensor?.subDisplayName }}</h3>
-          <div>
-            <a class="coords" [href]="coordLink()" target="_blank">
-              {{
-                sensor
-                  ? humanService.coordsToHumain(
-                      sensor.latitude,
-                      sensor.longitude
-                    )
-                  : ""
-              }}
-            </a>
-          </div>
-        </div>
-        <div class="buttons m-0 py-0 mx-3 mt-2">
-          <button
-            class="btn btn-sm option-button mb-3"
-            (click)="onDownloadCSV()"
-          >
-            CSV
-          </button>
-          <button class="btn btn-sm option-button" (click)="onDownloadJSON()">
-            JSON
-          </button>
+          <a class="coords" [href]="coordLink()" target="_blank">
+            {{
+              sensor
+                ? humanService.coordsToHumain(sensor.latitude, sensor.longitude)
+                : ""
+            }}
+          </a>
         </div>
       </div>
     </div>
-    <div class="vr"></div>
-    <div class="sensor-metadata-info p-0 flex-fill mx-3">
+
+    <div class="sensor-metadata-info col-md-5 col-12 p-0">
       <div>
         {{ sensor?.metadata?.name }}
       </div>
@@ -41,62 +25,29 @@
       </div>
       <p>{{ sensor?.metadata?.description }}</p>
     </div>
+
+    <div class="buttons col-md-2 col-12 p-0">
+      <button class="btn d-md-block option-button mb-3 me-md-0 me-3" (click)="onDownloadCSV()">
+        CSV
+      </button>
+      <button class="btn d-md-block option-button mb-3" (click)="onDownloadJSON()">
+        JSON
+      </button>
+    </div>
   </div>
 
   <div class="row m-0">
-    <div class="tb container m-0 p-0">
-      <div class="hstack tb-header gap-3" [scrollLeft]="scroll">
-        <div
-          *ngFor="
-            let name of sensor ? sensor.parameters.metadata.headers : [];
-            let i = index
-          "
-          [ngClass]="classOf(i)"
-        >
-          <button class="sort" (click)="onSort(i)">{{ isSortBy(i)? isAsc(i)? "▲": "▼" : "◊" }}</button>
-          <span [title]="name">{{ name }}</span>
-        </div>
-      </div>
-      <div class="vstack tb-body" (scroll)="onScroll($event)">
-        <div
-          class="hstack gap-3"
-          *ngFor="let record of sensor ? sensor.parameters.values : []"
-        >
-          <div
-            *ngFor="let value of record; let i = index"
-            [ngClass]="classOf(i)"
-          >
-          <span [title]="value">{{ format(i, value) }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="row tb-footer">
-        <div class="col tb-nav d-flex justify-content-end gap-3">
-          <div class="btn-group">
-            <button class="btn" (click)="onPage(-1)">&lt;</button>
-            <button class="btn" (click)="onPage(1)">&gt;</button>
-          </div>
-          <div class="gap-3 tb-count">
-            <button
-              [ngClass]="{ selected: this.count === c, btn: true, 'mx-1': true }"
-              *ngFor="let c of RANGE_COUNT"
-              (click)="onCount(c)"
-            >
-              {{ c }}
-            </button>
-          </div>
-          <div class="tb-info">
-            <p>
-              {{ this.page * this.count }} -
-              {{
-                this.page * this.count +
-                  (this.sensor?.parameters?.values?.length || 0)
-              }}
-              of {{ this.sensor?.parameters?.total || 0 }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-data-table
+      class="p-0"
+      [length]="sensor?.parameters?.total"
+      [scales]="[25, 50, 100]"
+      [sortable]="'SERVER'"
+      [pagable]="'SERVER'"
+      [minSizes]="sizes()"
+      [data]="this.records"
+      [headers]="sensor?.parameters?.metadata?.headers || []"
+      (navigate)="onChange($event)"
+    >
+    </app-data-table>
   </div>
 </div>

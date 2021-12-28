@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -9,10 +9,17 @@ import { ActivatedRoute } from '@angular/router';
 export class SensorsComponent implements OnInit {
   id: number = NaN;
   state: "map" | "list"= "map";
+  width: number;
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.id = +this.route.snapshot.params["id"];
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+      this.width = window.innerWidth;
   }
 
   hasId() {

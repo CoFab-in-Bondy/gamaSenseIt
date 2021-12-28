@@ -1,19 +1,18 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource} from "@angular/material/table";
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { merge, Subscription } from "rxjs";
-import { catchError, map, startWith, switchMap } from "rxjs/operators";
+import { Subscription } from "rxjs";
 import { HumanService } from "../../services/human.service";
 import { SensorService } from "../../services/sensor.service";
 import { ApiService } from "../../services/api.service";
+import { DataTableComponent } from "../data-table/data-table.component";
 
 
-
-const RANGE_COUNT = [25, 50, 100];
-const ASC = true;
-const DESC = false;
+const widths = {
+  "INTEGER": 150,
+  "DOUBLE": 150,
+  "STRING": 300,
+  "DATE": 150
+}
 
 @Component({
   selector: "app-sensor-single",
@@ -23,21 +22,9 @@ const DESC = false;
 export class SensorSingleComponent implements OnInit, OnDestroy {
   id: number = 0;
   sensor: SensorExtended|null = null;
+  records: string[][];
 
-  loading = true;
-  failed = false;
-
-  sort = 0;
-  asc = ASC;
-  page = 0;
-  count = RANGE_COUNT[0];
-
-  scroll = 0;
-
-  RANGE_COUNT = RANGE_COUNT;
-
-  private routeSub: Subscription
-
+  private routeSub: Subscription;
 
   constructor(
     private sensorService: SensorService,
@@ -46,13 +33,14 @@ export class SensorSingleComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
 
+  @ViewChild(DataTableComponent, {static: true})
+  public tb: DataTableComponent;
+
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
       let id = +params["id"];
-      if (this.id != id)
-        this.default();
       this.id = id;
-      this.onChange();
+      this.tb.onChange();
     })
   }
 
@@ -60,94 +48,33 @@ export class SensorSingleComponent implements OnInit, OnDestroy {
     this.routeSub?.unsubscribe();
   }
 
-  default() {
-    this.sort = 0;
-    this.asc = ASC;
-    this.page = 0;
-    this.count = RANGE_COUNT[0];
-  }
-
-  onScroll(ev: Event) {
-    if (!ev.target) return;
-    this.scroll = Number((<any>ev).target.scrollLeft);
-  }
-
-  onSort(index: number ) {
-    if (this.sort == index) {
-      if (this.asc) {
-        this.asc = DESC;
-        this.sort = index;
-      } else {
-        this.sort = 0;
-        this.asc = ASC;
-      }
-    } else {
-      this.asc = true;
-      this.sort = index;
-    }
-    console.log(`${this.sort} - ${this.asc}`);
-    this.page = 0;
-    this.onChange();
-  }
-
-  isSortBy(index: number) {
-    return this.sort == index;
-  }
-
-  isAsc(index: number) {
-    return this.isSortBy(index) && this.asc;
-  }
-
-  isDesc(index: number) {
-    return this.isSortBy(index) && !this.asc;
-  }
-
-  isPage(page: number) {
-    return this.page = page;
-  }
-
-  isValidPage(page: number) {
-    return page >= 0 && (page) * this.count < (this.sensor?.parameters?.total || 0);
-  }
-
-  onCount(count: number) {
-    if (this.count == count)
-      return;
-    this.page = Math.floor(this.page * this.count / count);
-    this.count = count;
-    this.onChange();
-  }
-
-  onPage(dif: number) {
-    if (!this.isValidPage(this.page + dif))
-      return;
-    this.page += dif;
-    this.onChange();
-  }
-
-  onChange() {
-    this.loading = true;
-    this.failed = false;
-
-    this.api.getSensorByIdExtended(this.id, {
-      page: this.page,
-      count: this.count,
-      sort: this.sort,
-      asc: this.asc
-    })
+  onChange(info: DataTableEvent) {
+    this.api.getSensorByIdExtended(this.id, info)
     .toPromise()
     .then(
       sensor => {
         this.sensor = sensor;
-        this.loading = false;
+        this.records = []
+        for (let record of this.sensor.parameters.values) {
+          let sRecord = [];
+          for (let v of record)
+            sRecord.push(v.toString());
+          this.records.push(sRecord);
+        }
       }
     ).catch(
-      err => {
-        this.sensor = null;
-        this.loading = false;
-        this.failed = true;
-      }
+      err => this.sensor = null
     )
+  }
+
+  sizes() {
+    let width = this.sensor?.parameters.metadata.width || 0;
+    let type = this.sensor?.parameters.metadata.formats || [];
+    let arr = [];
+    for (let i = 0; i < width; i++) {
+      arr.push(widths[type[i]]);
+    }
+    return arr;
   }
 
   onDownloadCSV() {
@@ -170,21 +97,6 @@ export class SensorSingleComponent implements OnInit, OnDestroy {
 
   type(index: number): "INTEGER"|"DOUBLE"|"STRING"|"DATE"|undefined {
     return this.sensor?.parameters.metadata.formats[index];
-  }
-
-  classOf(index: number): string {
-    switch (this.sensor?.parameters.metadata.formats[index]) {
-      case "DATE":
-        return "col-data col-date";
-      case "DOUBLE":
-        return "col-data col-double";
-      case "INTEGER":
-        return "col-data col-integer";
-      case "STRING":
-        return "col-data col-string";
-      default:
-        return "col-data col-other";
-    }
   }
 
   coordLink() {

@@ -7,7 +7,7 @@ import { ApiService } from "./api.service";
 export class SensorMetadataService {
   private subject = new Subject<SensorMetadataExtended[]>();
   private _sensorsMetadata: SensorMetadataExtended[] = [];
-  private _lastLoad = new Date(2000);
+  private _lastLoad = new Date(0);
 
   constructor(private api: ApiService) {}
 
@@ -23,7 +23,7 @@ export class SensorMetadataService {
     console.log(
       `Last load of sensors ${this._lastLoad} => (${
         new Date().getTime() - this._lastLoad.getTime()
-      }`
+      })`
     );
     if (new Date().getTime() - this._lastLoad.getTime() > 60000)
       this.load();

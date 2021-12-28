@@ -60,7 +60,7 @@ public class Sensor {
     @JsonView(IView.Public.class)
     private boolean isHidden;
 
-    // ----- sensorMetadata ---- //
+    // ----- hiddenMessage ---- //
     @Column(name = "hidden_message")
     @JsonProperty("hiddenMessage")
     @JsonView(IView.Public.class)
@@ -70,11 +70,17 @@ public class Sensor {
     @JsonIgnore
     private SensorMetadata sensorMetadata;
 
-    // ----- parameters ----- //
+    // ----- sensorMetadata ----- //
     @Column(name = "sensor_metadata_id", nullable = false, insertable = false, updatable = false)
     @JsonProperty("sensorMetadataId")
     @JsonView(IView.Public.class)
     private Long sensorMetadataId;
+
+    // ----- lastCaptureDate ----- //
+    @Column(name = "last_capture_date")
+    @JsonProperty("lastCaptureDate")
+    @JsonView(IView.Public.class)
+    private Date lastCaptureDate;
 
     // ----- bulk_data ----- //
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
@@ -107,6 +113,7 @@ public class Sensor {
         this.isHidden = false;
     }
 
+    /*
     @JsonView(IView.Public.class)
     @JsonProperty("state")
     public State state() {
@@ -122,8 +129,15 @@ public class Sensor {
         var oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
         return lastRecv.before(oneDayAgo) ? State.DEAD : State.NO_SIGNAL;
     }
+    */
 
+    public Date getLastCaptureDate() {
+        return lastCaptureDate;
+    }
 
+    public void setLastCaptureDate(Date lastCaptureDate) {
+        this.lastCaptureDate = lastCaptureDate;
+    }
 
     public Node toNode() {
         return new Node(){{

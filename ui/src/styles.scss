@@ -56,11 +56,6 @@ $body-color: $dark;
   background-image: url("/assets/markers/marker-icon.png");
 }
 
-// Font Awesome
-$fa-font-path: "~font-awesome/fonts";
-@import '~font-awesome/scss/font-awesome';
-
-
 // bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
 

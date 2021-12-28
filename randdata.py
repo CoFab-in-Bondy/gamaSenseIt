@@ -80,6 +80,8 @@ def insert_unsafe(
             inside.append(f"x'{v.hex().upper()}'")
         elif isinstance(v, datetime):
             inside.append(f"'{v:%Y-%m-%d %H:%M:%S}'")
+        elif v is None:
+            inside.append("NULL")
     return f"INSERT INTO {table} VALUES ({', '.join(inside)});\n"
 
 
@@ -123,7 +125,8 @@ def generate_data(w: float = 1.0) -> str:
                 randlong(),
                 f"sensor-name-{sm}.{s}",
                 sm_id,
-                lorem.sentence()
+                lorem.sentence(),
+                None
             ))
 
             # 0, 1, 8, 27 hours

@@ -26,14 +26,12 @@ public class Parameter {
     private byte[] data;
 
     // ----- captureDate ----- //
-
     @Column(name = "capture_date")
     @JsonProperty("captureDate")
     @JsonView(IView.Public.class)
     private Date captureDate;
 
     // ----- sensor_id ----- //
-
     @JoinColumn(name = "sensor_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

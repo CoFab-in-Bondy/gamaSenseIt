@@ -38,7 +38,7 @@ declare interface Sensor {
   isHidden: boolean,
   hiddenMessage: string,
   sensorMetadataId: number,
-  state: "ACTIVE" | "NO_SIGNAL" | "DEAD",
+  lastCaptureDate: number
 }
 
 
@@ -60,7 +60,7 @@ declare interface SensorExtended {
   subDisplayName: string,
   latitude: number,
   longitude: number,
-  state: "ACTIVE" | "NO_SIGNAL" | "DEAD",
+  lastCaptureDate: number,
   metadata: {
     id: number,
     description: string,
@@ -101,6 +101,13 @@ declare interface QueryParams {
 declare interface ParamsOption {
   start?: Date
   end?: Date
+  sort?: number
+  asc?: boolean
+  page?: number
+  count?: number
+}
+
+declare interface DataTableEvent {
   sort?: number
   asc?: boolean
   page?: number

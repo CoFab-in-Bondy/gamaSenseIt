@@ -1,42 +1,11 @@
-<div class="tb container-fluid m-0 p-0">
-  <div class="hstack tb-header gap-3">
-    <div *ngFor="let header of ['Version', 'Capteur', 'Nom', 'DMS', 'State']">
-      <span>{{ header }}</span>
-    </div>
-  </div>
-  <div class="container-fluid m-0 p-0 tb-body">
-    <div
-      class="row"
-      *ngFor="let s_sm of zipSensorsWithSensorsMetadata()"
-      (click)="selected.emit(s_sm[0].id)"
-      [routerLink]="['/sensors', s_sm[0].id]"
-    >
-      <div class="col-2 col-md-2 p-0 ps-3">
-        <span>{{ s_sm[1].version }}</span>
-      </div>
-      <div class="col-3 col-md-2 p-0">
-        <span>{{ s_sm[1].name }}</span>
-      </div>
-      <div class="col-3 col-md-2 p-0">
-        <span>{{ s_sm[0].displayName }}</span>
-      </div>
-      <div class="col-4 p-0 d-none d-md-block">
-        <span class="d-none d-md-block"
-          >{{
-            humanService.coordsToHumain(s_sm[0].latitude, s_sm[0].longitude, 3)
-          }}
-        </span>
-      </div>
-      <div class="col-2 p-0 d-md-none">
-        <span
-          >{{
-            humanService.coordsToHumain(s_sm[0].latitude, s_sm[0].longitude, 1)
-          }}
-        </span>
-      </div>
-      <div class="col-1 col-md-2 p-0">
-        <span>{{ s_sm[0].state }}</span>
-      </div>
-    </div>
-  </div>
-</div>
+
+<app-data-table
+[sortable]="'NO'"
+[pagable]="'NO'"
+[minSizes]="[75, 150, 150, 200, 50]"
+[data]="sensors"
+[headers]="['Version', 'Capteur', 'Nom', 'DMS', 'Activité']"
+[routerLinks]="links"
+[height]="250-44-2">
+</app-data-table>
+

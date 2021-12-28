@@ -1,0 +1,84 @@
+<div
+  [ngClass]="{
+    tb: true,
+    'container-flex': true,
+    'm-0': true,
+    'p-0': true,
+    'no-footer': pagable === 'NO'
+  }"
+>
+  <div class="hstack tb-header gap-3" [scrollLeft]="scroll">
+    <div
+      *ngFor="let name of headers; let i = index"
+      class="col-data"
+      [ngStyle]="{ flex: '1 0 ' + minSizes[i] + 'px' }"
+    >
+      <button *ngIf="sortable !== 'NO'" class="sort" (click)="onSort(i)">
+        {{ isSortBy(i) ? (isAsc(i) ? "▲" : "▼") : "◊" }}
+      </button>
+      <span [title]="name">{{ name }}</span>
+    </div>
+  </div>
+  <div
+    class="vstack tb-body"
+    [ngStyle]="{ 'height.px': height }"
+    (scroll)="onScroll($event)"
+  >
+    <div
+      class="hstack gap-3"
+      [ngClass]="{
+        hstack: true,
+        'gap-3': true,
+        'tb-link': routerLinks ? true : false
+      }"
+      *ngFor="let record of data; let iRow = index"
+      [routerLink]="routerLinks === undefined ? undefined : routerLinks[iRow]"
+    >
+      <div
+        *ngFor="let value of record; let iCol = index"
+        class="col-data"
+        [ngStyle]="{ flex: '1 0 ' + minSizes[iCol] + 'px' }"
+      >
+        <span [title]="value">{{ format(value) }}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="pagable !== 'NO'" class="row tb-footer">
+    <div class="col">
+      <div class="d-flex justify-content-end gap-3">
+
+        <div class="tb-nav">
+          <div class="btn-group">
+            <button class="btn" (click)="onPage(-1)">&lt;</button>
+            <button class="btn" (click)="onPage(1)">&gt;</button>
+          </div>
+        </div>
+
+        <div class="tb-count htsack">
+          <button
+            *ngFor="let scale of scales"
+            [ngClass]="{
+              selected: this.count === scale,
+              btn: true,
+              'me-1': true
+            }"
+            (click)="onCount(scale)"
+          >
+            {{ scale }}
+          </button>
+        </div>
+
+        <div class="tb-info">
+          <span *ngIf="pagable === 'SERVER'"
+            >{{ this.page * this.count }} -</span
+          >
+          <span>
+            {{ this.page * this.count + (this.data ? this.data.length : 0) }}
+          </span>
+          <span *ngIf="length !== undefined">of {{ length ?? 0 }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

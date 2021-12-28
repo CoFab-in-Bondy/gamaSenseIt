@@ -12,6 +12,7 @@ import { AuthService } from "./services/auth.service";
 import { SensorService } from "./services/sensor.service";
 import { SensorMetadataService } from "./services/sensorMetadata.service";
 import { HumanService } from "./services/human.service";
+import { DataTableComponent} from './components/data-table/data-table.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule],
@@ -28,6 +29,7 @@ import { HumanService } from "./services/human.service";
     Error500Component,
     SensorListComponent,
     SensorSingleComponent,
+    DataTableComponent
   ],
   providers: [ApiService],
 })
