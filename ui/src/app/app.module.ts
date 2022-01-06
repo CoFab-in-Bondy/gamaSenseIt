@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { ChangeDetectorRef, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
 import { DatePipe, DecimalPipe } from "@angular/common";
@@ -11,10 +11,9 @@ import { QameleoComponent } from './modules/qameleo/qameleo.component';
 import { HomeComponent } from './modules/home/home.component';
 import { SensorsComponent } from "./modules/sensors/sensors.component";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SensorMapComponent } from './shared/components/sensor-map/sensor-map.component';
 
 @NgModule({
-  declarations: [AppComponent, QameleoComponent, HomeComponent, SensorsComponent, SensorMapComponent],
+  declarations: [AppComponent, QameleoComponent, HomeComponent, SensorsComponent],
   imports: [
     SharedModule.forRoot(),
     FormsModule,

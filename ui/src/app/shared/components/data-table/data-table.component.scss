@@ -86,8 +86,21 @@
     margin-left: 10px;
   }
 
+  .tb-link {
+    cursor: pointer;
+    background-color: white;
+  }
+
   .tb-link:hover {
-    background: rgb(198, 206, 195);
+    background-color: rgb(220, 220, 220);
+  }
+
+  .tb-link.active {
+    background-color: rgb(210, 210, 210);
+  }
+
+  .tb-link:hover.active {
+    background-color: rgb(200, 200, 200);
   }
 
   >div:not(:last-child) {

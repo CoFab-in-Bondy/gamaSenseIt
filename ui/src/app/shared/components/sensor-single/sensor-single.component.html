@@ -26,17 +26,27 @@
       <p>{{ sensor?.metadata?.description }}</p>
     </div>
 
-    <div class="buttons col-md-2 col-12 p-0">
-      <button class="btn d-md-block option-button mb-3 me-md-0 me-3" (click)="onDownloadCSV()">
-        CSV
-      </button>
-      <button class="btn d-md-block option-button mb-3" (click)="onDownloadJSON()">
-        JSON
-      </button>
-    </div>
-  </div>
+    <app-dialog class="col-md-2 col-12 p-0">
 
-  <div class="row m-0">
+      <button class="download degraded mb-3 mb-md-0 float-md-end" trigger>
+        <i></i>
+        <span class="d-none d-md-block">Télécharger</span>
+      </button>
+
+      <div body>
+        <div class="buttons">
+          <button class="degraded" (click)="onDownloadCSV();" #close>
+            CSV
+          </button>
+          <button class="degraded" (click)="onDownloadJSON()" #close>
+            JSON
+          </button>
+        </div>
+      </div>
+
+    </app-dialog>
+
+  <div class="row m-0 p-0">
     <app-data-table
       class="p-0"
       [length]="sensor?.parameters?.total"

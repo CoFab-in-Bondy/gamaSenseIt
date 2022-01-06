@@ -13,6 +13,8 @@ import { SensorService } from "./services/sensor.service";
 import { SensorMetadataService } from "./services/sensorMetadata.service";
 import { HumanService } from "./services/human.service";
 import { DataTableComponent} from './components/data-table/data-table.component';
+import { SensorMapComponent } from "./components/sensor-map/sensor-map.component";
+import { DialogComponent } from "./components/dialog/dialog.component";
 
 @NgModule({
   imports: [CommonModule, RouterModule],
@@ -22,6 +24,9 @@ import { DataTableComponent} from './components/data-table/data-table.component'
     Error500Component,
     SensorListComponent,
     SensorSingleComponent,
+    DataTableComponent,
+    SensorMapComponent,
+    DialogComponent
   ],
   declarations: [
     HeaderComponent,
@@ -29,7 +34,9 @@ import { DataTableComponent} from './components/data-table/data-table.component'
     Error500Component,
     SensorListComponent,
     SensorSingleComponent,
-    DataTableComponent
+    DataTableComponent,
+    SensorMapComponent,
+    DialogComponent
   ],
   providers: [ApiService],
 })

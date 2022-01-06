@@ -1,24 +1,38 @@
 .sensor {
   border-radius: 15px;
-}
 
-.sensor h2 {
-  font-size: 28px;
-  margin: 0px;
-}
+  h2 {
+    font-size: 28px;
+    margin: 0px;
+  }
 
-.sensor h3 {
-  font-size: 18px;
-  margin: 5px;
+  h3 {
+    font-size: 18px;
+    margin: 5px;
+  }
 }
 
 .vr {
   color: rgb(200, 200, 200);
 }
 
-.option-button {
-  width: 100px !important;
-  background-color: #1b946c;
+.download {
+  border-radius: 20px;
+  padding: 10px;
+
+  > i {
+    background-repeat: no-repeat;
+    height: 20px;
+    width: 20px;
+    display: block;
+    float: left;
+    background-image: url('/assets/buttons/download.svg');
+  }
+
+  > span {
+    width: 120px;
+    display: block;
+  }
 }
 
 .coords {

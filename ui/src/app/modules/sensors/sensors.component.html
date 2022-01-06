@@ -4,11 +4,11 @@
       <div class="row justify-content-between m-0 mb-3">
         <h1 class="col-12 col-sm-6 p-0 pb-2 m-0">Capteurs</h1>
         <div class="col-12 col-sm-4 hstack p-0 justify-content-start justify-content-sm-end">
-          <button class="btn-map me-2" (click)="onMap()">
+          <button class="btn-map me-2 degraded" (click)="onMap()">
             <i></i>
             <span class="d-none d-md-block">Carte</span>
           </button>
-          <button class="btn-list" (click)="onList()">
+          <button class="btn-list degraded" (click)="onList()">
             <i></i>
             <span class="d-none d-md-block">Liste</span>
           </button>
@@ -26,6 +26,6 @@
   </div>
   <div>
     <div #sensorSingleRef></div>
-    <router-outlet> </router-outlet>
+    <router-outlet></router-outlet>
   </div>
 </div>

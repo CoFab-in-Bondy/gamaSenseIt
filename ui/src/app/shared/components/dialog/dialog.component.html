@@ -1,0 +1,17 @@
+<!-- Button for dialog -->
+<div class="modab-btn" (click)="onOpen()">
+  <ng-content select="[trigger]"></ng-content>
+</div>
+
+<!-- Wrapper for background -->
+<div
+  class="modal"
+  [ngStyle]="{'display': displayed? 'block': 'none'}"
+  #dialogBg
+>
+  <!-- Dialog box -->
+  <div class="modal-content">
+    <span class="close degraded" (click)="onClose()" #close>&times;</span>
+    <ng-content select="[body]"></ng-content>
+  </div>
+</div>

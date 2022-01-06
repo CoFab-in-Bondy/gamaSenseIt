@@ -50,6 +50,38 @@ $dark: #101A10;
 $body-bg: $ligth;
 $body-color: $dark;
 
+/*
+.degraded {
+  background-image: linear-gradient(90deg, rgb(98, 218, 98) 0%,  rgb(165, 255, 218) 100%);
+  border: 1px solid rgb(185, 185, 185);
+  color: black;
+  transition: background 0s;
+}
+
+.degraded:hover {
+  background-image: linear-gradient(90deg, rgb(165, 255, 218) 0%, rgb(79, 188, 231) 100%);
+}
+*/
+
+.degraded {
+  background-color: rgb(98, 218, 98);
+  box-shadow: 0 48px 40px -40px rgb(110, 221, 255) inset;
+  transition: box-shadow 0.3s, background-color 0.3s;
+  color: black;
+  border: 1px solid rgb(185, 185, 185);
+}
+
+.degraded:hover {
+  background-color: rgb(165, 255, 218);
+  box-shadow: 0 48px 40px -40px rgb(79, 188, 231) inset;
+}
+
+.degraded:active {
+  background-color: rgb(79, 188, 231);
+  box-shadow: 0 48px 40px -40px rgb(98, 218, 98) inset;
+}
+
+
 // Leaflet & OpenStreetMAp
 @import "../node_modules/leaflet/dist/leaflet.css";
 .leaflet-default-icon-path {
