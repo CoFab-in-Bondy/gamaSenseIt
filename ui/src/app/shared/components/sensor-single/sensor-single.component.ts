@@ -5,6 +5,7 @@ import { HumanService } from "../../services/human.service";
 import { SensorService } from "../../services/sensor.service";
 import { ApiService } from "../../services/api.service";
 import { DataTableComponent } from "../data-table/data-table.component";
+import { Icon } from "../../models/icon.model";
 
 
 const widths = {
@@ -87,8 +88,8 @@ export class SensorSingleComponent implements OnInit, OnDestroy {
     this.sensorService.download({ sensorId: this.sensor.id, type: "json" });
   }
 
-  format(index: number, value: string|number): string {
-    if (this.sensor?.parameters.metadata.formats[index] === "DOUBLE")
+  format(index: number, value: string|number): string|Icon {
+    if (this.type(index) === "DOUBLE")
       return Number(value).toExponential(3);
     if (value === null || value === undefined)
       return "";

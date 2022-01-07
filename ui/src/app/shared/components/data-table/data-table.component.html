@@ -15,7 +15,7 @@
       class="col-data"
       [ngStyle]="{ flex: '1 0 ' + minSizes[i] + 'px' }"
     >
-      <button *ngIf="sortable !== 'NO'" class="sort" (click)="onSort(i)">
+      <button *ngIf="sortable !== 'NO'" class="sort me-2" (click)="onSort(i)">
         {{ isSortBy(i) ? (isAsc(i) ? "▲" : "▼") : "◊" }}
       </button>
       <span [title]="name">{{ name }}</span>
@@ -32,6 +32,7 @@
       [ngClass]="{
         'hstack': true,
         'gap-3': true,
+        'col-line': true,
         'tb-link': routerLinks ? true : false
       }"
       *ngFor="let record of data; let iRow = index"
@@ -43,7 +44,12 @@
         class="col-data"
         [ngStyle]="{ flex: '1 0 ' + minSizes[iCol] + 'px' }"
       >
-        <span [title]="value">{{ format(value) }}</span>
+        <ng-container *ngIf="!isIcon(format(value))">
+          <span  [title]="value">{{ format(value) }}</span>
+        </ng-container>
+        <ng-container *ngIf="isIcon(format(value))">
+          <img [src]="value.url" [ngStyle]="{'width.px': value.width, 'height.px': value.height}">
+        </ng-container>
       </div>
     </div>
   </div>

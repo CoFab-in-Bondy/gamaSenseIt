@@ -65,12 +65,12 @@ CREATE TABLE sensor (
     display_name VARCHAR(255),
     hidden_message VARCHAR(255),
     is_hidden BIT,
+    last_capture_date DATETIME,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     name VARCHAR(255),
     sensor_metadata_id BIGINT NOT NULL,
     sub_display_name VARCHAR(255),
-    last_capture_date DATETIME,
     PRIMARY KEY (id)
 ) engine = InnoDB;
 

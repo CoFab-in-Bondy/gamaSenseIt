@@ -1,0 +1,60 @@
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://web.resource.org/cc/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns1="http://sozi.baierouge.fr" id="svg16385" sodipodi:docname="VoyantRougeEteint.svg" sodipodi:version="0.32" version="1.0" inkscape:output_extension="org.inkscape.output.svg.inkscape" inkscape:version="0.45.1" sodipodi:docbase="E:\Utile\Bibliothéque Inkscape\Images\Voyants\Elaborés" viewBox="1.85 55.44 102.91 102.91">
+  <defs id="defs16387">
+    <radialGradient id="radialGradient10489" gradientUnits="userSpaceOnUse" cy="260.36" cx="387" r="14.136" inkscape:collect="always">
+      <stop id="stop3692" style="stop-color:#bc1c00" offset="0"/>
+      <stop id="stop3702" style="stop-color:#bc1d00" offset=".86724"/>
+      <stop id="stop3700" style="stop-color:#731404" offset=".95510"/>
+      <stop id="stop3694" style="stop-color:#892918" offset="1"/>
+    </radialGradient>
+    <linearGradient id="linearGradient10491" y2="198.03" gradientUnits="userSpaceOnUse" x2="362.88" gradientTransform="translate(-195.04 15.542)" y1="198.03" x1="279.37" inkscape:collect="always">
+      <stop id="stop5538" style="stop-color:white" offset="0"/>
+      <stop id="stop5540" style="stop-color:#fefaf9;stop-opacity:.26943" offset="1"/>
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview id="base" bordercolor="#666666" inkscape:pageshadow="2" inkscape:window-y="0" pagecolor="#ffffff" inkscape:window-height="746" width="107px" inkscape:zoom="1.9990919" inkscape:window-x="0" height="161px" borderopacity="1.0" inkscape:current-layer="layer1" inkscape:cx="175.33802" inkscape:cy="58.998338" inkscape:window-width="1024" inkscape:pageopacity="0.0" inkscape:document-units="px"/>
+  <g id="layer1" inkscape:label="Calque 1" inkscape:groupmode="layer">
+    <g id="g10500" transform="translate(-72.743 -129.17)">
+      <g id="g10485" transform="translate(-.000455 -.2291)">
+        <path id="path3759" sodipodi:rx="14" sodipodi:ry="14" style="stroke:#000000;stroke-width:.27281;fill:url(#radialGradient10489)" sodipodi:type="arc" d="m401 260.36a14 14 0 1 1 -28 0 14 14 0 1 1 28 0z" transform="matrix(3.6655 0 0 3.6655 -1292.5 -718.06)" sodipodi:cy="260.36218" sodipodi:cx="387"/>
+        <path id="path3761" style="opacity:.32115;fill:url(#linearGradient10491)" d="m126.46 190.57c-20.74 0-38.042 14.81-41.964 34.41 19.434 3.35 14.597 7.15 27.464 10.94 15.47 4.55 22.53-16.36 33-13 7.06 2.26 14.99 1.38 22.72-1.1-5.05-18.01-21.59-31.25-41.22-31.25z"/>
+      </g>
+    </g>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Voyant Rouge Eteint - Red Light OFF</dc:title>
+        <dc:date>2007-09-06T13:37:58</dc:date>
+        <dc:description/>
+        <dc:source>https://openclipart.org/detail/5286/voyant-rouge-eteint---red-light-off-by-fatboy178</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>fatboy178</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>automatisme</rdf:li>
+            <rdf:li>electrique</rdf:li>
+            <rdf:li>insdustrie</rdf:li>
+            <rdf:li>rouge</rdf:li>
+            <rdf:li>voyant</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

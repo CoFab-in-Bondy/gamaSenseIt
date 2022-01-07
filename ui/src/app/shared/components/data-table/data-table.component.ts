@@ -5,6 +5,7 @@ import {
   Input,
   Output,
 } from "@angular/core";
+import { Icon } from "../../models/icon.model";
 
 enum SortEnum {
   SERVER = 2,
@@ -18,17 +19,6 @@ enum PageEnum {
   NO = 0,
 }
 
-export class Icon {
-  private _url: string;
-  constructor(url: string) {
-    this._url = url;
-  }
-
-  get url(): string {
-    return this._url;
-  }
-}
-
 @Component({
   selector: "app-data-table",
   templateUrl: "./data-table.component.html",
@@ -38,6 +28,11 @@ export class Icon {
 export class DataTableComponent {
   SortEnum = SortEnum;
   PageEnum = PageEnum;
+  Icon = Icon;
+
+  isIcon(value: string|Icon) {
+    return value instanceof Icon;
+  }
 
   @Input() height: number = 250;
 
@@ -49,7 +44,7 @@ export class DataTableComponent {
 
   @Input() minSizes: number[] = [];
   @Input() headers: string[] = [];
-  @Input() data: (string|Icon)[][] = [];
+  @Input() data: any[][] = [];
 
   @Input() routerLinks: any[][];
 
@@ -142,6 +137,8 @@ export class DataTableComponent {
   format(value: any): string | Icon {
     if (value === null || value === undefined || value === NaN)
       return "";
+    if (value instanceof Icon)
+      return value;
     return value.toString();
   }
 }

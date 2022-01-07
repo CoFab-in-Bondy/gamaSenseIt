@@ -5,13 +5,13 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  ElementRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { HumanService } from "../../services/human.service";
 import { Router } from "@angular/router";
+import { Icon } from "../../models/icon.model";
 
 @Component({
   selector: "app-sensor-list",
@@ -63,15 +63,15 @@ export class SensorListComponent implements OnInit, OnDestroy {
     this.sensorsSubscription?.unsubscribe();
   }
 
-  state(s: Sensor): string {
+  state(s: Sensor): Icon {
     let now = new Date().getTime();
     let date = new Date(s.lastCaptureDate).getTime();
     if (date > now - 60 * 60 * 1000) {
-      return "Moins d'un heure";
+      return new Icon("assets/lights/light-green.svg", 24, 24);
     } else if (date > now - 24 * 60 * 60 * 1000) {
-      return "Moins d'un jour";
+      return new Icon("assets/lights/light-orange.svg", 24, 24);
     } else {
-      return "Plus d'un jour";
+      return new Icon("assets/lights/light-red.svg", 24, 24);
     }
   }
 }

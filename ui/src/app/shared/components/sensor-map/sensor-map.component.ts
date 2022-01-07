@@ -95,10 +95,15 @@ export class SensorMapComponent implements OnInit {
               }
             }
           });
+          this.update();
         },
         (err) => console.error(err)
       );
     this.sensorMetadataService.lazyLoad();
+  }
+
+  update() {
+    this.map.invalidateSize();
   }
 
   private deactiveMarker() {

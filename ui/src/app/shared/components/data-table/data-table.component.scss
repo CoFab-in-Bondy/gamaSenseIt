@@ -103,7 +103,7 @@
     background-color: rgb(200, 200, 200);
   }
 
-  >div:not(:last-child) {
+  .col-line:not(:last-child) {
     border-bottom: 1px solid rgb(230, 230, 230);
   }
 }

@@ -43,7 +43,7 @@ def randblob(data_format: int) -> bytes:
     raise TypeError("Invalid data_format")
 
 
-def randdatetime(delta: int = 3000000) -> datetime:
+def randdatetime(delta: int = 30000) -> datetime:
     """Return a random datetime with a given delta."""
     return datetime.fromtimestamp(
         datetime.now().timestamp() - delta + randint(0, delta)
@@ -121,12 +121,12 @@ def generate_data(w: float = 1.0) -> str:
                 f"sensor-sm={sm}-{s}",
                 "Oops, " + lorem.sentence(),
                 1 if random() * 10 < 1 else 0,
+                None,
                 randlat(),
                 randlong(),
                 f"sensor-name-{sm}.{s}",
                 sm_id,
-                lorem.sentence(),
-                None
+                lorem.sentence()
             ))
 
             # 0, 1, 8, 27 hours
