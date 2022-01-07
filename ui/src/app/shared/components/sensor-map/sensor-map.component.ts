@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import * as L from "leaflet";
 import { Subscription } from "rxjs";
 import { DELAY_DEAD, DELAY_NO_SIGNAL } from "src/app/constantes";
@@ -24,11 +24,8 @@ const orangeMarker = new MarkerIcon({
   iconUrl: "assets/markers/marker-orange.png",
 });
 const redMarker = new MarkerIcon({ iconUrl: "assets/markers/marker-red.png" });
-const stateToIcon = {
-  "1": greenMarker,
-  "2": orangeMarker,
-  "3": redMarker,
-};
+const clickMarker = new MarkerIcon({ iconUrl: "assets/markers/marker-icon.png" })
+
 
 @Component({
   selector: "app-sensor-map",
@@ -38,14 +35,19 @@ const stateToIcon = {
 export class SensorMapComponent implements OnInit {
   private map: L.Map;
   private sensorsSubscription: Subscription;
+  private routeSubscription: Subscription;
   private sensorsMetadata: SensorMetadataExtended[] = [];
+  private markers = new Map<number, [Sensor, any]>();
+  private markerActive: any;
+  private sensorActive: any;
 
   @Input() height: number = 250;
 
   constructor(
     private sensorMetadataService: SensorMetadataService,
     public humanService: HumanService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   private initMap(): void {
@@ -73,28 +75,72 @@ export class SensorMapComponent implements OnInit {
       .observeAll()
       .subscribe(
         (sensors) => {
+
+          // add icons to the map
           this.sensorsMetadata = sensors;
           for (let sensorMetadata of this.sensorsMetadata) {
             for (let sensor of sensorMetadata.sensors) {
               this.addSensorToMap(sensor);
             }
           }
+
+          // highlight the actual icons
+          this.routeSubscription = <any>this.route.firstChild?.params.subscribe(params => {
+            for (let sensorMetadata of this.sensorsMetadata) {
+              for (let sensor of sensorMetadata.sensors) {
+                if (sensor.id === +params["id"]) {
+                  this.addSensorToMap(sensor, true);
+                  return;
+                }
+              }
+            }
+          });
         },
         (err) => console.error(err)
       );
     this.sensorMetadataService.lazyLoad();
   }
 
-  private addSensorToMap(s: Sensor) {
-    const mark = L.marker([s.latitude, s.longitude], { icon: this.state(s) });
-    mark.on("click", (e: L.LeafletEvent) => {
+  private deactiveMarker() {
+    if (this.markerActive && this.sensorActive) {
+      const sensorActive = this.sensorActive;
+      this.markerActive = null;
+      this.sensorActive = null;
+      this.addSensorToMap(sensorActive);
+    }
+  }
+
+  private addSensorToMap(s: Sensor, clicked: boolean = false) {
+
+    // generate an icon
+    const marker = L.marker(
+      [s.latitude, s.longitude],
+      { icon: clicked? clickMarker: this.state(s) }
+    );
+
+    // remove old icon
+    if (clicked) {
+      this.deactiveMarker();
+      this.markerActive = marker;
+      this.sensorActive = s;
+    }
+
+    // replace by actual marker if sensor already has an icon
+    if (this.markers.has(s.id)) {
+      this.map.removeLayer((<any>this.markers.get(s.id))[1]);
+    }
+
+    // add it to the map
+    this.markers.set(s.id, [s, marker]);
+    marker.addTo(this.map);
+    marker.on("click", (e: L.LeafletEvent) => {
       this.router.navigate(["sensors", s.id]);
     });
-    mark.addTo(this.map);
   }
 
   ngOnDestroy(): void {
     this.sensorsSubscription?.unsubscribe();
+    this.routeSubscription?.unsubscribe();
   }
 
   state(s: Sensor): any {
