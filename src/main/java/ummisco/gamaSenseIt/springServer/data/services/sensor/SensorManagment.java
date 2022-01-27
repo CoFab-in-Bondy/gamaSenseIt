@@ -80,7 +80,7 @@ public class SensorManagment implements ISensorManagment {
     @Override
     public void saveData(String message, Date date) {
 
-        String[] data = message.split(";");
+        String[] data = message.split(";", 4);
         if (data.length < 4)
             return;
         long capturedateS, token;
@@ -100,7 +100,6 @@ public class SensorManagment implements ISensorManagment {
 
         
         Sensor selectedSensor = foundSensors.get(0);
-        // }
 
         Date capturedate = new Date(capturedateS * 1000);
         

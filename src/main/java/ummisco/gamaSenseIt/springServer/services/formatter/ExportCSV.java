@@ -10,6 +10,7 @@ import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.Sensor;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Date;
@@ -42,6 +43,11 @@ public class ExportCSV extends Export {
         writer.writeNext(Arrays.stream(metadata.ids()).map(Objects::toString).toArray(String[]::new));
         writer.writeNext(metadata.units());
         records.forEach(record -> writer.writeNext(record.asStrings()));
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return out.toString().getBytes();
     }
 }

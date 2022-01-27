@@ -1,9 +1,13 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
+import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,27 +16,33 @@ import java.util.List;
 @Service
 public class SensorDataAnalyser implements ISensorDataAnalyser {
 
+    @Autowired
+    private IParameterMetadataRepository pmdRepo;
+
+    @Autowired
+    private ISensorMetadataRepository smdRepo;
+
     private static final Logger logger = LoggerFactory.getLogger(ISensorDataAnalyser.class);
 
     @Override
     public List<Parameter> analyseBulkData(String bulkData, Date captureDate, Sensor sensor) {
         logger.info("Analysing : sensor " + sensor.getName() + " data " + bulkData);
 
-        SensorMetadata smd = sensor.getSensorMetadata();
+        // need to use a repository because hibernate proxy is disabled here
+        SensorMetadata smd = smdRepo.findById(sensor.getSensorMetadataId()).get();
         String sep = smd.getDataSeparator();
-        logger.debug("separator " + sep);
+        logger.info("separator " + sep);
         String[] morsels = bulkData.split(sep);
 
-        var pmds = smd.getParametersMetadata();
-
-        if (logger.isDebugEnabled())
-            for (var pmd : pmds)
-                logger.debug("meta_" + pmd.getId() + "_");
+        // need to use a repository because hibernate proxy is disabled here
+        var pmds = pmdRepo.findBySensorMetadataIdOrderByIdx(smd.getId());
+        for (var pmd : pmds)
+            logger.info("meta_" + pmd.getId() + "_");
 
         var res = new ArrayList<Parameter>();
         int i = 0;
         for (var pmd : pmds) {
-            logger.debug("SID/" + pmd.getId() + "/");
+            logger.info("SID/" + pmd.getId() + "/");
             var p = pmd.createParameter(morsels[i], captureDate, sensor);
             if (p != null)
                 res.add(p);

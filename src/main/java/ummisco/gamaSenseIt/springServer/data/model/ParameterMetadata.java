@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "parameter_metadata",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"sensor_metadata_id", "idx"})})
-public class ParameterMetadata {
+public class ParameterMetadata implements Comparable<ParameterMetadata> {
 
     private static final Logger logger = LoggerFactory.getLogger(ParameterMetadata.class);
 
@@ -198,6 +198,17 @@ public class ParameterMetadata {
         return getDataType() == null ? null : getDataType().createParameterFromMorsel(message, captureDate, this, s);
     }
 
+    @Override
+    public int compareTo(ParameterMetadata o) {
+        long idx = getIdx() == null ? Long.MAX_VALUE : getIdx();
+        long oIdx = o.getIdx() == null ? Long.MAX_VALUE : o.getIdx();
+        int cmp = Long.compare(idx, oIdx);
+        if (cmp != 0)
+            return Long.compare(getId(), o.getId());
+        else
+            return cmp;
+    }
+
 
     public enum DataParameter {
         TEMPERATURE,
@@ -233,8 +244,8 @@ public class ParameterMetadata {
 
         public Parameter createParameterFromMorsel(String morsel, Date captureDate, ParameterMetadata pmd, Sensor s) {
             return switch (ordinal()) {
-                case 0 -> new Parameter(Double.parseDouble(morsel), captureDate, pmd, s);
-                case 1 -> new Parameter(Long.parseLong(morsel), captureDate, pmd, s);
+                case 0 -> new Parameter(Long.parseLong(morsel), captureDate, pmd, s);
+                case 1 -> new Parameter(Double.parseDouble(morsel), captureDate, pmd, s);
                 case 2 -> new Parameter(morsel, captureDate, pmd, s);
                 default -> null;
             };
