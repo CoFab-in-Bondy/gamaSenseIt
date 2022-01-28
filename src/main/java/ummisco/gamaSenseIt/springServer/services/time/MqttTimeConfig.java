@@ -45,8 +45,7 @@ public class MqttTimeConfig {
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler handlerOut() {
-    	MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("Client_"+System.currentTimeMillis(), mqttClientFactory);
-    	messageHandler.setAsync(true);
+    	MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("Client_" + System.currentTimeMillis(), mqttClientFactory);
         messageHandler.setDefaultTopic(brokerTimeTopic);
         messageHandler.setAsync(true);
         return messageHandler;

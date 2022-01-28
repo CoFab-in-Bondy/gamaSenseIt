@@ -71,6 +71,7 @@ CREATE TABLE sensor (
     name VARCHAR(255),
     sensor_metadata_id BIGINT NOT NULL,
     sub_display_name VARCHAR(255),
+    notifier BIT NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
@@ -177,5 +178,5 @@ ADD
 CREATE TRIGGER trig_sensor_last_capture_date AFTER INSERT ON parameter
     FOR EACH ROW
     UPDATE sensor
-        SET last_capture_date = NEW.capture_date
+        SET last_capture_date = NEW.capture_date, notifier = true
         WHERE id = NEW.sensor_id AND (last_capture_date < NEW.capture_date OR last_capture_date IS NULL);

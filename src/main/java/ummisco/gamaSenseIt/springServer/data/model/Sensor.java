@@ -55,10 +55,18 @@ public class Sensor {
     @JsonProperty("latitude")
     @JsonView(IView.Public.class)
     private double latitude;
+
+    // ----- isHidden ----- //
     @Column(name = "is_hidden")
     @JsonProperty("isHidden")
     @JsonView(IView.Public.class)
     private boolean isHidden;
+
+    // ----- isHidden ----- //
+    @Column(name = "notifier")
+    @JsonProperty("notifier")
+    @JsonView(IView.Public.class)
+    private boolean notifier;
 
     // ----- hiddenMessage ---- //
     @Column(name = "hidden_message")

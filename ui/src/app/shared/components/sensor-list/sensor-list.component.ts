@@ -46,7 +46,7 @@ export class SensorListComponent implements OnInit, OnDestroy {
               this.sensors.push([
                 smd.version,
                 smd.name,
-                s.name,
+                s.displayName,
                 this.humanService.coordsToHumain(s.latitude, s.longitude),
                 this.state(s),
               ]);

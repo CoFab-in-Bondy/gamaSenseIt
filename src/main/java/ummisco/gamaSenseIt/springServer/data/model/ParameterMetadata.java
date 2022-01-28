@@ -245,7 +245,7 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
         public Parameter createParameterFromMorsel(String morsel, Date captureDate, ParameterMetadata pmd, Sensor s) {
             return switch (ordinal()) {
                 case 0 -> new Parameter(Long.parseLong(morsel), captureDate, pmd, s);
-                case 1 -> new Parameter(Double.parseDouble(morsel), captureDate, pmd, s);
+                case 1 -> new Parameter("NAN".equalsIgnoreCase(morsel.strip())? Double.NaN : Double.parseDouble(morsel), captureDate, pmd, s);
                 case 2 -> new Parameter(morsel, captureDate, pmd, s);
                 default -> null;
             };
