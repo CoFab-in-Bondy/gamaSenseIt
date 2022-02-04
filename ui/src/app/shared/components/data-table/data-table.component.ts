@@ -45,6 +45,7 @@ export class DataTableComponent {
   @Input() minSizes: number[] = [];
   @Input() headers: string[] = [];
   @Input() data: any[][] = [];
+  @Input() empty = "Aucune données";
 
   @Input() routerLinks: any[][];
 

@@ -2,10 +2,11 @@
 <app-data-table
 [sortable]="'NO'"
 [pagable]="'NO'"
-[minSizes]="[75, 150, 150, 200, 30]"
+[minSizes]="[150, 150, 200, 50]"
 [data]="sensors"
-[headers]="['Version', 'Capteur', 'Nom', 'DMS', '']"
+[headers]="['Nom', 'Type', 'DMS', 'Status']"
 [routerLinks]="links"
+[empty]="'Aucun capteurs disponible'"
 [height]="250-44-2">
 </app-data-table>
 

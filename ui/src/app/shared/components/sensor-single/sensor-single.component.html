@@ -54,7 +54,8 @@
       [sortable]="'SERVER'"
       [pagable]="'SERVER'"
       [minSizes]="sizes()"
-      [data]="this.records"
+      [data]="this.records || []"
+      [empty]="'Aucune donnée à afficher'"
       [headers]="sensor?.parameters?.metadata?.headers || []"
       (navigate)="onChange($event)"
     >

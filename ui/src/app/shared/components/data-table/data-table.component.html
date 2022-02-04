@@ -87,7 +87,7 @@
           <span>
             {{ this.page * this.count + (this.data ? this.data.length : 0) }}
           </span>
-          <span *ngIf="length !== undefined"> sur {{ length ?? 0 }}</span>
+          <span *ngIf="length !== undefined"> sur {{ length || 0 }}</span>
         </div>
       </div>
     </div>

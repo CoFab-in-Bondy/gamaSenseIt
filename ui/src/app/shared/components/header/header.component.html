@@ -13,10 +13,10 @@
     </button>
     <div [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
       <div class="navbar-nav" (click)="collapsed=true">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['qameleo']">Qameleo</a>
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['sensors']" *ngIf="isAuth">Sensors</a>
-        <a class="nav-link" [href]="API + '/logout'" *ngIf="isAuth">Logout</a>
-        <a class="nav-link" [href]="API + '/login'" *ngIf="!isAuth">Login</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['qameleo']">Qameleo</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['sensors']" *ngIf="isAuth()">Sensors</a>
+        <button class="nav-link btn" (click)="logout()" *ngIf="isAuth()">Logout</button>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['login']" *ngIf="!isAuth()">Login</a>
       </div>
     </div>
   </div>

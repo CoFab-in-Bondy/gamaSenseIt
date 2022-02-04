@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { API } from 'src/app/constantes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   collapsed = true;
-  isAuth = false;
   API = API;
 
-  constructor(private auth: AuthService) { }
+  constructor(private auth: AuthService, private router: Router) { }
 
-  async ngOnInit(): Promise<void> {
-    this.isAuth = await this.auth.isAuth();
+  isAuth(): boolean {
+    return this.auth.isAuth();
   }
 
   toggleCollapsed(): void {
     this.collapsed = !this.collapsed;
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 
 }

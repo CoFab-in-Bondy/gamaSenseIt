@@ -1,0 +1,13 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmitForm()">
+	<div class="from-group">
+		<label for="mail">Mail</label>
+		<input type="text" class="form-control" id="mail"
+           formControlName="mail">
+	</div>
+	<div class="from-group">
+		<label for="password">Mot de passe</label>
+		<input type="text" class="form-control" id="password"
+           formControlName="password">
+	</div>
+  <button class="btn btn-primary" type="submit" [disabled]="userForm.invalid">Se connecter</button>
+</form>

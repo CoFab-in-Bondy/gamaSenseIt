@@ -44,9 +44,8 @@ export class SensorListComponent implements OnInit, OnDestroy {
             for (let s of smd.sensors) {
               this.links.push(["/sensors", "" + s.id]);
               this.sensors.push([
-                smd.version,
-                smd.name,
                 s.displayName,
+                `${smd.name} (${smd.version})`,
                 this.humanService.coordsToHumain(s.latitude, s.longitude),
                 this.state(s),
               ]);

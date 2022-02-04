@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "./modules/home/home.component";
+import { LoginComponent } from "./modules/login/login.component";
 import { QameleoComponent } from "./modules/qameleo/qameleo.component";
 import { SensorsComponent } from "./modules/sensors/sensors.component";
 
@@ -39,6 +40,10 @@ const routes: Routes = [
   {
     path: "qameleo",
     component: QameleoComponent,
+  },
+  {
+    path: "login",
+    component: LoginComponent,
   },
   {
     path: "qameleo/:id",

@@ -6,14 +6,14 @@ import { AuthService } from "../services/auth.service";
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(private auth: AuthService ) { }
+  constructor(private auth: AuthService, private router: Router ) { }
 
   async canActivate(): Promise<boolean | UrlTree> {
-    if (await this.auth.isAuth()) {
-      return true;
-    } else {
-      window.location.href = API + '/login';
+    if (!this.auth.isAuth()) {
+      this.router.navigate(['/login']);
       return false;
+    } else {
+      return true;
     }
   }
 }

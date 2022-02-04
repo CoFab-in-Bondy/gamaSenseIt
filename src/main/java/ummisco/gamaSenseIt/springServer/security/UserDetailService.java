@@ -2,7 +2,6 @@ package ummisco.gamaSenseIt.springServer.security;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,15 +18,18 @@ import ummisco.gamaSenseIt.springServer.data.repositories.IUserRepository;
 public class UserDetailService implements UserDetailsService {
 
 	@Autowired
-	IUserRepository usersRep;
+	IUserRepository usersRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-	    User user = usersRep.findByMail(mail);
+	    User user = usersRepo.findByMail(mail);
+		if (user == null) throw new UsernameNotFoundException("Not found");
 	    List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 	    grantedAuthorities.add(new SimpleGrantedAuthority(user.getPrivilege().toString()));
-	    return new org.springframework.security.core.userdetails.User(user.getMail()
-	    		, user.getPassword(), grantedAuthorities);
+	    return new org.springframework.security.core.userdetails.User(
+				user.getMail(),
+				user.getPassword(),
+				grantedAuthorities
+		);
 	}
-
 }

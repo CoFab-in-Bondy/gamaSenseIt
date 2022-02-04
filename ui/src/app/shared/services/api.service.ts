@@ -36,8 +36,22 @@ export class ApiService {
       roles: ["ADMIN"],
       name: "***REMOVED***",
       auth: true
-    }); o.complete()})
+    }); o.complete()});
     // return this.http.get<AuthMe>(API + "/auth/me");
+  }
+
+  postLogin(username: string, password: string): Observable<any> {
+    return this.http.post<any>(API + "/auth/login", {
+      username: username,
+      password: password
+    });
+  }
+
+  postResgister(username: string, password: string): Observable<any> {
+    return this.http.post<any>(API + "/auth/register", {
+      username: username,
+      password: password
+    });
   }
 
   getServerSeparator(): Observable<string> {
