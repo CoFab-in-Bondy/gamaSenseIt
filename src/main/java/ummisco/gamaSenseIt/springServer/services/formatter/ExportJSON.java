@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Service("ExportJSON")
 public class ExportJSON extends Export {
 
     @Autowired

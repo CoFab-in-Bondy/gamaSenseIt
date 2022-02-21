@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
-@Service
+@Service("ExportCSV")
 public class ExportCSV extends Export {
 
     @Autowired

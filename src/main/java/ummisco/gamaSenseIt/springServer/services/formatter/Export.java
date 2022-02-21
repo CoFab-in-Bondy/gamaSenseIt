@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.lang.Nullable;
 import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.Sensor;
+import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,20 +27,24 @@ public abstract class Export {
     @Autowired
     protected NamedParameterJdbcTemplate jdbc;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
 
     public Export(@NotNull MediaType media, @NotNull String ext) {
         this.ext = ext;
         this.media = media;
     }
 
-    private static String buildFilename(
+    private String buildFilename(
             @NotNull Sensor sensor,
             @NotNull String type,
             @Nullable ParameterMetadata parameterMetadata,
             @Nullable Date start,
             @Nullable Date end
     ) {
-        return (parameterMetadata == null ? "parameters" : parameterMetadata.getName())
+        return securityUtils.sanitizeFilename(
+                (parameterMetadata == null ? "parameters" : parameterMetadata.getName())
                 + "-"
                 + sensor.getName()
                 + (start != null || end != null
@@ -49,7 +54,8 @@ public abstract class Export {
                 + (end == null ? "X" : dateFormat.format(end))
                 : "")
                 + "."
-                + type;
+                + type
+        );
     }
 
     public static byte[] zipBytes(String filename, byte[] input) throws IOException {
