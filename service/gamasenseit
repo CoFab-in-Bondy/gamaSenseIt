@@ -1,0 +1,9 @@
+#!/bin/sh
+
+JAVA_HOME=/path/to/jvmdir
+JAVA_OPTIONS=" -Xms256m -Xmx512m -server "
+APP_PATH="/usr/bin/gamasenseit/gamasenseit.jar"
+APP_OPTIONS=""
+
+echo "Start GamaSenseIt Server"
+"${JAVA_HOME}/bin/java" $JAVA_OPTIONS -jar "$APP_PATH" $APP_OPTIONS &
