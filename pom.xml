@@ -46,7 +46,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Get Longitude and latitude from client : https://mvnrepository.com/artifact/com.maxmind.geoip2/geoip2-->
+        <!-- Get Longitude and latitude from client : https://mvnrepository.com/artifact/com.maxmind.geoip2/geoip2 -->
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>
             <artifactId>geoip2</artifactId>
@@ -196,6 +196,21 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
             </plugin>
+
+
+            <!-- Spring Boot Maven Plugin : https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin -->
+            <!-- Ptach error :  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>mmdb</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+
 
             <!-- Maven Failsafe Plugin : https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-failsafe-plugin -->
             <plugin>

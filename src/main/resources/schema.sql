@@ -89,7 +89,7 @@ CREATE TABLE user (
 ) engine = InnoDB;
 
 CREATE TABLE access (
-    id bigint NOT NULL,
+    id BIGINT NOT NULL,
     category INTEGER NOT NULL,
     name VARCHAR(255) NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
