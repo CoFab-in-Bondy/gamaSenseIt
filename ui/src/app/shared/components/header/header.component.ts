@@ -12,11 +12,7 @@ export class HeaderComponent {
   collapsed = true;
   API = API;
 
-  constructor(private auth: AuthService, private router: Router) { }
-
-  isAuth(): boolean {
-    return this.auth.isAuth();
-  }
+  constructor(public auth: AuthService, private router: Router) { }
 
   toggleCollapsed(): void {
     this.collapsed = !this.collapsed;
@@ -26,5 +22,4 @@ export class HeaderComponent {
     this.auth.logout();
     this.router.navigate(['/']);
   }
-
 }

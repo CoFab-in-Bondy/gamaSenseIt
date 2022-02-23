@@ -1,31 +1,3 @@
 .sensors-all {
   border-radius: 15px;
 }
-
-.btn-map, .btn-list {
-  border-radius: 20px;
-  padding: 10px;
-}
-
-
-
-.btn-list > i, .btn-map > i {
-  background-repeat: no-repeat;
-  height: 24px;
-  width: 24px;
-  display: block;
-  float: left;
-}
-
-.btn-list > span, .btn-map > span {
-  width: 80px;
-  display: block;
-}
-
-.btn-map  i {
-  background-image: url('/assets/buttons/map.svg');
-}
-
-.btn-list  i {
-  background-image: url('/assets/buttons/list.svg');
-}

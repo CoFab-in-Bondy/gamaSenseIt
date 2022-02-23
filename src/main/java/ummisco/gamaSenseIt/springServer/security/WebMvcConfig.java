@@ -1,8 +1,9 @@
-package ummisco.gamaSenseIt.springServer;
+package ummisco.gamaSenseIt.springServer.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
@@ -10,7 +11,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 import java.io.IOException;
 
 @Configuration
-public class RedirectToIndex implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     /* replace the basic recourse handler*/
     @Override
@@ -27,5 +28,14 @@ public class RedirectToIndex implements WebMvcConfigurer {
                                 : new ClassPathResource("/static/index.html");
                     }
                 });
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins(
+                "http://localhost:8080", // HTTP Server
+                "http://localhost:8443", // HTTPS Server
+                "http://localhost:4200"  // Node Server
+        );
     }
 }

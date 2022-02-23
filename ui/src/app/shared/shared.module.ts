@@ -15,28 +15,36 @@ import { HumanService } from "./services/human.service";
 import { DataTableComponent} from './components/data-table/data-table.component';
 import { SensorMapComponent } from "./components/sensor-map/sensor-map.component";
 import { DialogComponent } from "./components/dialog/dialog.component";
+import { Error403Component } from "./components/error403/error403.component";
+import { AdminGuard } from "./guards/admin.guard";
+import { UserGuard } from "./guards/user.guard";
+import { ButtonComponent } from "./components/button/button.component";
 
 @NgModule({
   imports: [CommonModule, RouterModule],
   exports: [
     HeaderComponent,
+    Error403Component,
     Error404Component,
     Error500Component,
     SensorListComponent,
     SensorSingleComponent,
     DataTableComponent,
     SensorMapComponent,
-    DialogComponent
+    DialogComponent,
+    ButtonComponent
   ],
   declarations: [
     HeaderComponent,
+    Error403Component,
     Error404Component,
     Error500Component,
     SensorListComponent,
     SensorSingleComponent,
     DataTableComponent,
     SensorMapComponent,
-    DialogComponent
+    DialogComponent,
+    ButtonComponent
   ],
   providers: [ApiService],
 })
@@ -48,6 +56,8 @@ export class SharedModule {
         SensorMetadataService,
         SensorService,
         AuthGuard,
+        UserGuard,
+        AdminGuard,
         AuthService,
         HumanService,
         ApiService

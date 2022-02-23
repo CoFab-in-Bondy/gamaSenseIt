@@ -95,11 +95,11 @@ export class ApiService {
   }*/
 
   getSensorsMetadataExtended(): Observable<SensorMetadataExtended[]> {
-    return this.http.get<SensorMetadataExtended[]>(API + `/public/sensors/metadata/extended`);
+    return this.http.get<SensorMetadataExtended[]>(API + `/public/sensors/metadata`);
   }
 
   getSensorByIdExtended(id: number, options: ParamsOption = {}): Observable<SensorExtended> {
-    return this.http.get<SensorExtended>(API + `/public/sensors/${id}/extended?`, {params: <Params>options} );
+    return this.http.get<SensorExtended>(API + `/public/sensors/${id}?`, {params: <Params>options} );
   }
 
   goToginPage(): void {

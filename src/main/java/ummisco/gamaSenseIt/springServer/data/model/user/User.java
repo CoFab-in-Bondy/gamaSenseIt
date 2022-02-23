@@ -1,100 +1,102 @@
 package ummisco.gamaSenseIt.springServer.data.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.ColumnDefault;
+import ummisco.gamaSenseIt.springServer.data.model.IView;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
+@Table(name = "user")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long idUser;
 
-	@Column(length = 60)
-	String firstname;
+    @ManyToMany(mappedBy = "users")
+    private final Set<Access> accesses = new HashSet<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    @JsonProperty("id")
+    @JsonView(IView.Public.class)
+    private Long id;
 
-	@Column(length = 60)
-	String lastName;
+    @Column(length = 60)
+    private String firstname;
+    @Column(length = 60)
+    private String lastName;
+    @Column(length = 200, unique = true)
+    private String mail;
+    @JsonIgnore
+    private String password;
 
-	@Column(length = 200, unique = true)
-	String mail;
+    @ColumnDefault("1")
+    private UserPrivilege privilege;
 
-	@JsonIgnore
-	String password;
-	
-	UserPrivilege privilege;
-	
-	@OneToMany(mappedBy = "user")
-	List<Role> myRoleInGroups;
-	
-	public User() {
-	}
-	public User(String firstname, String lastName, String mail, String password, UserPrivilege priv) {
-		super();
-		this.firstname = firstname;
-		this.lastName = lastName;
-		this.mail = mail;
-		this.password = password;
-		this.privilege = priv;
-	}
-	
-	public Long getIdUser() {
-		return idUser;
-	}
-	public void setIdUser(Long idUser) {
-		this.idUser = idUser;
-	}
-	public String getFirstname() {
-		return firstname;
-	}
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getMail() {
-		return mail;
-	}
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public UserPrivilege getPrivilege() {
-		return this.privilege;
-	}
+    public User() {
+    }
 
-	public void setPrivilege(UserPrivilege privilege) {
-		this.privilege = privilege;
-	}
-	public List<Role> getMyRoles() {
-		return myRoleInGroups;
-	}
-	public HashMap<UserGroup,Role> getRoleInGroups(){
-		HashMap<UserGroup,Role> res=new HashMap<>();
-		for(var i:this.myRoleInGroups){
-			res.put(i.userGroup, i);
-		}
-		return res;
-	}
-	public void joinToGroup(UserGroup g, ERole rle)
-	{
-		if(this.myRoleInGroups==null) this.myRoleInGroups = new ArrayList<>();
-		this.myRoleInGroups.add(new Role(g,this,rle));
-	}
-	
-	
+    public User(String firstname, String lastName, String mail, String password, UserPrivilege priv) {
+        super();
+        this.firstname = firstname;
+        this.lastName = lastName;
+        this.mail = mail;
+        this.password = password;
+        this.privilege = priv;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<Access> getAccesses() {
+        return this.accesses;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserPrivilege getPrivilege() {
+        return this.privilege;
+    }
+
+    public void setPrivilege(UserPrivilege privilege) {
+        this.privilege = privilege;
+    }
 }

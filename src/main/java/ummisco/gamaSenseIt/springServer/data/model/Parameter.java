@@ -43,7 +43,6 @@ public class Parameter {
     private Long sensorId;
 
     // ----- parameter_metadata_id ----- //
-
     @JoinColumn(name = "parameter_metadata_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

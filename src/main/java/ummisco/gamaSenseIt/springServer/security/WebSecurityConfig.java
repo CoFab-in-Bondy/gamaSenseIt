@@ -11,13 +11,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ummisco.gamaSenseIt.springServer.data.model.user.UserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.repositories.IUserRepository;
+import ummisco.gamaSenseIt.springServer.security.jwt.JwtRequestFilter;
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    
-	@Autowired
-	UserDetailService userDetailsService;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    UserDetailService userDetailsService;
 
     @Autowired
     IUserRepository userRepo;
@@ -28,42 +30,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable().authorizeRequests()
-                .antMatchers( "/auth/**").permitAll()
-                .antMatchers("/private/**", "/public/**").authenticated()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                /*.antMatchers("/**")
-                .permitAll()*/
-                /*
-                .and()
-            .formLogin()
-                .permitAll()
-                .and()
-            .logout()
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/")
-                .permitAll()*/
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        /**
-         http
-         .authorizeRequests()
-         .antMatchers("/", "/public/**", "/qameleo/**" ,"/private/**")
-         .permitAll()
-         .anyRequest()
-         .authenticated()
-         .and()
-         .formLogin()
-         .and()
-         .logout()
-         .permitAll();
-         **/
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/auth/**", "/public/**").permitAll()
+                .antMatchers("/private/**").hasAnyAuthority(UserPrivilege.USER.name());
     }
 
     @Autowired
     void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
-        .userDetailsService(userDetailsService)
-        .passwordEncoder(new BCryptPasswordEncoder());
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Bean

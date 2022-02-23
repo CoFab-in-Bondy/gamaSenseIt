@@ -5,6 +5,7 @@ import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
 
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -25,4 +26,7 @@ public interface ISensorManagment {
     void saveDefaultSensorInit();
 
     void saveData(String message, Date date);
+
+    Sensor addSensorForUser(Sensor sensor, long userId);
+    SensorMetadata addSensorMetadata(SensorMetadata smd, Collection<ParameterMetadata> pmds);
 }

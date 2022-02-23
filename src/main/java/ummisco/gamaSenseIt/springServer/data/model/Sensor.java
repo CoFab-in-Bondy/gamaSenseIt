@@ -7,7 +7,9 @@ import com.vividsolutions.jts.geom.Point;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Sensor {
@@ -148,7 +150,7 @@ public class Sensor {
     }
 
     public Node toNode() {
-        return new Node(){{
+        return new Node() {{
             put("id", getId());
             put("name", getName());
             put("displayName", getDisplayName());
@@ -254,5 +256,10 @@ public class Sensor {
 
     public Set<SensoredBulkData> getBulkData() {
         return bulkData;
+    }
+
+    @Override
+    public String toString() {
+        return "Sensor(" + this.getId() + ")";
     }
 }

@@ -1,6 +1,7 @@
 package ummisco.gamaSenseIt.springServer.data.services.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
@@ -13,18 +14,21 @@ public class UserManagment implements IUserManagment{
 	@Autowired
 	IUserRepository repo;
 
+	@Autowired
+	PasswordEncoder encoder;
+
 	@Override
-	public void createUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
-		
-		User u = new User( firstname,  lastName,  mail,  password, privilege);
-		repo.save(u);
-		
+	public User createUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
+		String hash = encoder.encode(password);
+		User user = new User( firstname,  lastName,  mail, hash, privilege);
+		repo.save(user);
+		return user;
 	}
 
 	@Override
-	public void createIfNotExistUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
-		if (repo.findByMail(mail) == null)
-			createUser(firstname,  lastName,  mail,  password, privilege);
+	public User createIfNotExistUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
+		var user = repo.findByMail(mail);
+		return user == null? createUser(firstname,  lastName,  mail,  password, privilege): user;
 	}
 
 }

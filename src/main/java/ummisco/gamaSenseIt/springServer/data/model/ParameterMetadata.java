@@ -92,12 +92,18 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
     public ParameterMetadata() {
     } // for JSON compatibility
 
-    public ParameterMetadata(String name, String unit, DataFormat type, DataParameter dataParameter) {
+    public ParameterMetadata(String name, String unit, DataFormat type) {
         this.name = name;
         this.unit = unit;
         this.dataType = type;
-        this.depreciatedParameter = dataParameter;
         this.setIconFromParameter();
+    }
+
+    public ParameterMetadata(String name, String unit, DataFormat type, String icon) {
+        this.name = name;
+        this.unit = unit;
+        this.dataType = type;
+        this.icon = icon;
     }
 
     private void setIconFromParameter() {
@@ -239,13 +245,13 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
 
         public String convertToString(byte[] data) {
             var obj = convertToObject(data);
-            return obj == null? "" : obj.toString();
+            return obj == null ? "" : obj.toString();
         }
 
         public Parameter createParameterFromMorsel(String morsel, Date captureDate, ParameterMetadata pmd, Sensor s) {
             return switch (ordinal()) {
                 case 0 -> new Parameter(Long.parseLong(morsel), captureDate, pmd, s);
-                case 1 -> new Parameter("NAN".equalsIgnoreCase(morsel.strip())? Double.NaN : Double.parseDouble(morsel), captureDate, pmd, s);
+                case 1 -> new Parameter("NAN".equalsIgnoreCase(morsel.strip()) ? Double.NaN : Double.parseDouble(morsel), captureDate, pmd, s);
                 case 2 -> new Parameter(morsel, captureDate, pmd, s);
                 default -> null;
             };

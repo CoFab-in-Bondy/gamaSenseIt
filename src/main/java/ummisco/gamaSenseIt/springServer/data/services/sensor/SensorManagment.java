@@ -4,21 +4,29 @@ package ummisco.gamaSenseIt.springServer.data.services.sensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service("SensorManagment")
 public class SensorManagment implements ISensorManagment {
 
     @Autowired
-    IParameterMetadataRepository parameterSensorRepo;
+    IParameterMetadataRepository parameterMetadataRepo;
 
     @Autowired
     ISensorRepository sensorRepo;
+
+    @Autowired
+    IAccessRepository accessRepository;
+
+    @Autowired
+    IAccessUserRepository accessUserRepository;
+
+    @Autowired
+    IAccessSensorRepository accessSensorRepository;
 
     @Autowired
     ISensoredBulkDataRepository bulkDataRepo;
@@ -83,11 +91,11 @@ public class SensorManagment implements ISensorManagment {
         String[] data = message.split(";", 4);
         if (data.length < 4)
             return;
-        long capturedateS, token;
+        long captureTimestamp, token;
         String sensorName = data[1];
 
         try {
-            capturedateS = Long.parseLong(data[0]);
+            captureTimestamp = Long.parseLong(data[0]);
             token = Long.parseLong(data[2]);
         } catch (NumberFormatException e) {
             return;
@@ -101,7 +109,7 @@ public class SensorManagment implements ISensorManagment {
         
         Sensor selectedSensor = foundSensors.get(0);
 
-        Date capturedate = new Date(capturedateS * 1000);
+        Date capturedate = new Date(captureTimestamp * 1000);
         
         long diff = Math.abs(date.getTime() - capturedate.getTime());
         long diffDays = (diff / (1000 * 60 * 60 * 24));
@@ -134,15 +142,52 @@ public class SensorManagment implements ISensorManagment {
     }
 
     @Override
-    public SensorMetadata addSensorMetadata(SensorMetadata smd) {
-
-        return sensorMetadataRepo.save(smd);
-    }
-
-    @Override
     public ParameterMetadata addParameterToSensorMetadata(SensorMetadata smd, ParameterMetadata pmd) {
         pmd.setSensorMetadata(smd);
         sensorMetadataRepo.save(smd);
-        return parameterSensorRepo.save(pmd);
+        return parameterMetadataRepo.save(pmd);
+    }
+
+    @Override
+    public SensorMetadata addSensorMetadata(SensorMetadata smd, Collection<ParameterMetadata> pmds) {
+        var smdSaved = sensorMetadataRepo.save(smd);
+        int idx = Stream.concat(smdSaved.getParametersMetadata().stream(), pmds.stream())
+                .map(ParameterMetadata::getIdx)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(-1) + 1;
+        for (var pmd : pmds) {
+            if (pmd.getIdx() == null) {
+                idx ++;
+                System.out.println("IDX " + idx);
+                pmd.setIdx(idx);
+            }
+            pmd.setSensorMetadata(smdSaved);
+            parameterMetadataRepo.save(pmd);
+        }
+        return smdSaved;
+    }
+
+    /**
+     * Save a sensor to the persistent layer and add access to the creator in a special group owners
+     *
+     * @param sensor Sensor to save in persistent layer
+     * @param userId User Id of original creator
+     * @return The saved sensor with updated default field
+     **/
+    @Override
+    public Sensor addSensorForUser(Sensor sensor, long userId) {
+        // TODO: qui ajoute les metasensor ???
+        var sensorSaved = sensorRepo.save(sensor);
+        var access = new Access(sensor.getDisplayName(), AccessCategory.OWNER);
+        var accessId = accessRepository.save(access).getId();
+        accessSensorRepository.save(new AccessSensor(accessId, sensorSaved.getId()));
+        accessUserRepository.save(new AccessUser(accessId, userId, AccessUserPrivilege.MANAGE));
+        return sensorSaved;
+    }
+
+    @Override
+    public SensorMetadata addSensorMetadata(SensorMetadata sensorMetadata) {
+        return sensorMetadataRepo.save(sensorMetadata);
     }
 }

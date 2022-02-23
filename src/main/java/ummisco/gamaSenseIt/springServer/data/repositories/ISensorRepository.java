@@ -21,4 +21,24 @@ public interface ISensorRepository extends CrudRepository<Sensor, Long> {
                 AND s.last_capture_date < NOW() - INTERVAL 1 DAY
                 AND s.notifier = true""")
     List<Sensor> findPowerOffNotAlreadyNotified();
+
+
+    @Query("""
+        SELECT s FROM Sensor s
+            JOIN AccessSensor acs ON (acs.sensorId = s.id)
+            JOIN Access ac ON (ac.id = acs.accessId)
+            JOIN AccessUser acu ON (acu.accessId = ac.id)
+                WHERE acu.userId = :userId
+    """)
+    List<Sensor> findReadableSensors(long userId);
+
+    @Query("""
+        SELECT s FROM Sensor s
+            JOIN AccessSensor acs ON (acs.sensorId = s.id)
+            JOIN Access ac ON (ac.id = acs.accessId)
+            JOIN AccessUser acu ON (acu.accessId = ac.id)
+                WHERE acu.userId = :userId AND s.id = :sensorId
+    """)
+    Sensor findReadableSensor(long userId, long sensorId);
+
 }

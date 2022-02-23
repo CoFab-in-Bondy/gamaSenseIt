@@ -1,0 +1,6 @@
+<button [type]="type" class="degraded" (click)="click.emit($event)">
+  <i [ngStyle]="{'background-image': url? 'url(' + url + ')': false }"></i>
+  <span [ngStyle]="{'width.px': +width || 80}" class="d-none d-md-block">
+    <ng-content></ng-content>
+  </span>
+</button>

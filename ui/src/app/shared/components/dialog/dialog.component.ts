@@ -28,10 +28,12 @@ export class DialogComponent implements AfterContentInit {
   }
 
   onOpen() {
+    console.log("Open dialog");
     this.displayed = true;
   }
 
   onClose() {
+    console.log("Close dialog");
     this.displayed = false;
   }
 

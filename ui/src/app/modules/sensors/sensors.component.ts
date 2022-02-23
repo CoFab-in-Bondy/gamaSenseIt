@@ -34,7 +34,6 @@ export class SensorsComponent implements OnInit {
 
     // map crash if use list than map
     this.d.detectChanges();
-    this.map.update();
   }
 
   onList() {

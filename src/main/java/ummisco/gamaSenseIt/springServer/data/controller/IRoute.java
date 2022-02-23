@@ -10,19 +10,21 @@ public interface IRoute {
             METADATA = "/metadata",
             ID = "/{id}",
 
-            // First level
-            PUBLIC = "/public",
+    // First level
+    PUBLIC = "/public",
             PRIVATE = "/private",
             AUTH = "/auth",
 
-            // Second level
-            SERVER = "/server",
+    // Second level
+    SERVER = "/server",
             PARAMETERS = "/parameters",
             SENSORS = "/sensors",
             EXTENDED = "/extended",
             DOWNLOAD = "/download",
             ME = "/me",
+            ACCESS = "/access",
             SENSORS_METADATA = SENSORS + METADATA,
-            PARAMETERS_METADATA = PARAMETERS + METADATA;
+            PARAMETERS_METADATA = PARAMETERS + METADATA,
+            IP = "ip";
 
 }

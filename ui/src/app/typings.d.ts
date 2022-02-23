@@ -20,6 +20,17 @@ declare interface ParameterMetadata {
   depreciatedParameter: string,
 }
 
+declare interface PartialSensor {
+  sensorMetadataId: number,
+  name: string,
+  displayName: string,
+  subDisplayName: string,
+  longitude: number,
+  latitude: number,
+  hiddenMessage?: string,
+  isHidden?: boolean
+}
+
 
 declare interface AuthMe {
   roles: string[],
@@ -112,4 +123,9 @@ declare interface DataTableEvent {
   asc?: boolean
   page?: number
   count?: number
+}
+
+declare interface Pos {
+  lat: number,
+  lng: number
 }

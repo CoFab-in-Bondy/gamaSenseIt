@@ -1,26 +1,18 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TRIGGER IF EXISTS sensor.trig_sensor_last_capture_date;
+DROP VIEW IF EXISTS view_access_user_sensor;
 
 DROP TABLE IF EXISTS hibernate_sequence;
-
 DROP TABLE IF EXISTS parameter;
-
 DROP TABLE IF EXISTS parameter_metadata;
-
-DROP TABLE IF EXISTS role;
-
 DROP TABLE IF EXISTS sensor;
-
-DROP TABLE IF EXISTS sensored_bulk_data;
-
 DROP TABLE IF EXISTS sensor_metadata;
-
+DROP TABLE IF EXISTS sensored_bulk_data;
 DROP TABLE IF EXISTS user;
-
-DROP TABLE IF EXISTS user_group;
-
-DROP TABLE IF EXISTS user_group_roles;
+DROP TABLE IF EXISTS access_user;
+DROP TABLE IF EXISTS access_sensor;
+DROP TABLE IF EXISTS access;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -52,14 +44,6 @@ CREATE TABLE parameter_metadata (
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
-CREATE TABLE role (
-    role_id BIGINT NOT NULL,
-    role INTEGER,
-    user_id BIGINT,
-    group_id BIGINT,
-    PRIMARY KEY (role_id)
-) engine = InnoDB;
-
 CREATE TABLE sensor (
     id BIGINT NOT NULL,
     display_name VARCHAR(255),
@@ -68,7 +52,7 @@ CREATE TABLE sensor (
     last_capture_date DATETIME,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
-    name VARCHAR(255),
+    name VARCHAR(255) UNIQUE,
     sensor_metadata_id BIGINT NOT NULL,
     sub_display_name VARCHAR(255),
     notifier BIT NOT NULL DEFAULT FALSE,
@@ -95,25 +79,39 @@ CREATE TABLE sensor_metadata (
 ) engine = InnoDB;
 
 CREATE TABLE user (
-    id_user BIGINT NOT NULL,
+    id BIGINT NOT NULL,
     firstname VARCHAR(60),
     last_name VARCHAR(60),
     mail VARCHAR(200),
     password VARCHAR(255),
-    privilege INTEGER,
-    PRIMARY KEY (id_user)
+    privilege INTEGER DEFAULT 1 NOT NULL,
+    PRIMARY KEY (id)
 ) engine = InnoDB;
 
-CREATE TABLE user_group (
-    group_id BIGINT NOT NULL,
-    name VARCHAR(60),
-    PRIMARY KEY (group_id)
-) engine = InnoDB;
+CREATE TABLE access (
+    id bigint NOT NULL,
+    category INTEGER NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) engine=InnoDB;
 
-CREATE TABLE user_group_roles (
-    user_group_group_id BIGINT NOT NULL,
-    roles_role_id BIGINT NOT NULL
-) engine = InnoDB;
+CREATE TABLE access_sensor (
+    access_id BIGINT NOT NULL,
+    sensor_id BIGINT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY (access_id, sensor_id)
+) engine=InnoDB;
+
+CREATE TABLE access_user (
+    access_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    privilege INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY (access_id, user_id)
+) engine=InnoDB;
+
 
 ALTER TABLE
     parameter_metadata
@@ -124,11 +122,6 @@ ALTER TABLE
     user
 ADD
     CONSTRAINT cu_user_on_mail UNIQUE (mail);
-
-ALTER TABLE
-    user_group_roles
-ADD
-    CONSTRAINT cu_user_group_roles_roles_role_id UNIQUE (roles_role_id);
 
 ALTER TABLE
     parameter
@@ -146,16 +139,6 @@ ADD
     CONSTRAINT fk_pmd_to_smd FOREIGN KEY (sensor_metadata_id) REFERENCES sensor_metadata (id);
 
 ALTER TABLE
-    role
-ADD
-    CONSTRAINT fk_role_to_user FOREIGN KEY (user_id) REFERENCES user (id_user);
-
-ALTER TABLE
-    role
-ADD
-    CONSTRAINT fk_role_to_group FOREIGN KEY (group_id) REFERENCES user_group (group_id);
-
-ALTER TABLE
     sensor
 ADD
     CONSTRAINT fk_s_to_smd FOREIGN KEY (sensor_metadata_id) REFERENCES sensor_metadata (id);
@@ -165,18 +148,45 @@ ALTER TABLE
 ADD
     CONSTRAINT fk_sbd_to_s FOREIGN KEY (sensor_id) REFERENCES sensor (id);
 
-ALTER TABLE
-    user_group_roles
-ADD
-    CONSTRAINT fk_user_group_roles_to_roles_role FOREIGN KEY (roles_role_id) REFERENCES role (role_id);
 
 ALTER TABLE
-    user_group_roles
+    access_sensor
 ADD
-    CONSTRAINT fk_user_group_roles_to_user_group FOREIGN KEY (user_group_group_id) REFERENCES user_group (group_id);
+    CONSTRAINT fk_as_to_s FOREIGN KEY (sensor_id) REFERENCES sensor (id);
+
+ALTER TABLE
+    access_sensor
+ADD
+    CONSTRAINT fk_as_to_a FOREIGN KEY (access_id) REFERENCES access (id);
+
+ALTER TABLE
+    access_user
+ADD
+    CONSTRAINT fk_au_to_u FOREIGN KEY (user_id) REFERENCES user (id);
+
+ALTER TABLE
+    access_user
+ADD
+    CONSTRAINT fk_au_to_a FOREIGN KEY (access_id) REFERENCES access (id);
 
 CREATE TRIGGER trig_sensor_last_capture_date AFTER INSERT ON parameter
     FOR EACH ROW
     UPDATE sensor
         SET last_capture_date = NEW.capture_date, notifier = true
         WHERE id = NEW.sensor_id AND (last_capture_date < NEW.capture_date OR last_capture_date IS NULL);
+
+
+-- CREATE OR REPLACE VIEW view_access_user_sensor AS
+--    SELECT DISTINCT user_id, sensor_id FROM (
+--        SELECT acu.user_id, acs.sensor_id FROM access ac
+--            JOIN access_sensor acs ON (acs.access_id = ac.id)
+--            JOIN access_user acu ON (acu.access_id = ac.id)
+--        UNION
+--        SELECT ac.owner_id as user_id, acs.sensor_id FROM access ac
+--            JOIN access_sensor acs ON (acs.access_id = ac.id)
+--        UNION
+--        SELECT u.id as user_id, acs.sensor_id FROM access ac
+--            JOIN access_sensor acs ON (acs.access_id = ac.id)
+--            CROSS JOIN user u
+--            WHERE ac.pub = 1
+--    ) as t;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
+import ummisco.gamaSenseIt.springServer.data.model.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -59,8 +60,8 @@ public class SensorMetadata {
     @JsonIgnore
     private Set<ParameterMetadata> parametersMetadata = new HashSet<>();
 
-    // ----- parameterMetadata ----- //
 
+    // ----- sensor ----- //
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensorMetadata")
     @JsonIgnore
     private Set<Sensor> sensors = new HashSet<>();
@@ -122,7 +123,6 @@ public class SensorMetadata {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     @JsonView(IView.ParametersMetadataOfSensorMetadata.class)
     @JsonProperty("parametersMetadata")

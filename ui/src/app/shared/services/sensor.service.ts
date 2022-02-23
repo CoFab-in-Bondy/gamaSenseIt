@@ -1,5 +1,7 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { API } from "src/app/constantes";
 import { ApiService } from "./api.service";
 
 @Injectable()
@@ -9,7 +11,7 @@ export class SensorService {
   private _lastLoadBySensorId = new Map<number, Date>();
   private static EMPTY_SUBJECT = new Subject<SensorExtended>();
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private http: HttpClient) {}
 
   emitBySensorId(id: number): void {
     let sensor = this.getBySensorId(id);
@@ -25,12 +27,15 @@ export class SensorService {
         new Date().getTime() - (lastLoad ? lastLoad.getTime() : 0)
       }`
     );
+    /*
     if (
       lastLoad === undefined ||
       new Date().getTime() - lastLoad.getTime() > 60000
     )
       this.loadBySensorId(id);
     else this.emitBySensorId(id);
+    */
+   this.loadBySensorId(id);
   }
 
   loadBySensorId(id: number): void {
@@ -55,5 +60,9 @@ export class SensorService {
 
   download(params: QueryParams): void {
     this.api.downloadSensorParameters(params);
+  }
+
+  addSensor(sensor: PartialSensor): Observable<SensorExtended> {
+    return this.http.post<SensorExtended>(API + "/private/sensors", sensor);
   }
 }

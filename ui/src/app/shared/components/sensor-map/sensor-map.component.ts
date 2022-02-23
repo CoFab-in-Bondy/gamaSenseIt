@@ -3,29 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import * as L from "leaflet";
 import { Subscription } from "rxjs";
 import { DELAY_DEAD, DELAY_NO_SIGNAL } from "src/app/constantes";
+import { CLICK_MARKER, GREEN_MARKER, ORANGE_MARKER, RED_MARKER } from "../../models/icon.model";
 import { HumanService } from "../../services/human.service";
 import { SensorMetadataService } from "../../services/sensorMetadata.service";
-
-const MarkerIcon: any = L.Icon.extend({
-  options: {
-    shadowUrl: "assets/markers/marker-shadow.png",
-    iconSize: [25, 40], // size of the icon
-    shadowSize: [41, 41], // size of the shadow
-    iconAnchor: [12, 40], // point of the icon which will correspond to marker's location
-    shadowAnchor: [13, 40], // the same for the shadow
-    popupAnchor: [13, 40], // point from which the popup should open relative to the iconAnchor
-  },
-});
-
-const greenMarker = new MarkerIcon({
-  iconUrl: "assets/markers/marker-green.png",
-});
-const orangeMarker = new MarkerIcon({
-  iconUrl: "assets/markers/marker-orange.png",
-});
-const redMarker = new MarkerIcon({ iconUrl: "assets/markers/marker-red.png" });
-const clickMarker = new MarkerIcon({ iconUrl: "assets/markers/marker-icon.png" })
-
 
 @Component({
   selector: "app-sensor-map",
@@ -69,7 +49,7 @@ export class SensorMapComponent implements OnInit {
     tiles.addTo(this.map);
   }
 
-  ngOnInit(): void {
+  init() {
     this.initMap();
     this.sensorsSubscription = this.sensorMetadataService
       .observeAll()
@@ -95,15 +75,19 @@ export class SensorMapComponent implements OnInit {
               }
             }
           });
-          this.update();
+          setTimeout(()=>{
+            this.map.invalidateSize();
+          }, 500);
         },
         (err) => console.error(err)
       );
     this.sensorMetadataService.lazyLoad();
   }
 
-  update() {
-    this.map.invalidateSize();
+  ngOnInit(): void {
+    setTimeout(()=>{
+      this.init();
+    }, 500);
   }
 
   private deactiveMarker() {
@@ -120,7 +104,7 @@ export class SensorMapComponent implements OnInit {
     // generate an icon
     const marker = L.marker(
       [s.latitude, s.longitude],
-      { icon: clicked? clickMarker: this.state(s) }
+      { icon: clicked? CLICK_MARKER: this.state(s) }
     );
 
     // remove old icon
@@ -152,11 +136,11 @@ export class SensorMapComponent implements OnInit {
     let now = new Date().getTime();
     let date = new Date(s.lastCaptureDate).getTime();
     if (date > now - DELAY_NO_SIGNAL) {
-      return greenMarker;
+      return GREEN_MARKER;
     } else if (date > now - DELAY_DEAD) {
-      return orangeMarker;
+      return ORANGE_MARKER;
     } else {
-      return redMarker;
+      return RED_MARKER;
     }
   }
 }
