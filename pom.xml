@@ -195,19 +195,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
-            </plugin>
-
-
-            <!-- Spring Boot Maven Plugin : https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin -->
-            <!-- Ptach error :  -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.2.0</version>
                 <configuration>
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>mmdb</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
+                    <executable>true</executable>
                 </configuration>
             </plugin>
 
