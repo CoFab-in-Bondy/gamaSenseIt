@@ -1,9 +1,8 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
-import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 
 import java.util.Collection;
 import java.util.Date;

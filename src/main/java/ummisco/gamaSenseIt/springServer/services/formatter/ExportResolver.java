@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 
 import java.util.Date;
 import java.util.List;

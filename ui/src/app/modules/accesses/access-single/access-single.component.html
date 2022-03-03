@@ -1,0 +1,17 @@
+<div class="container-fluid box">
+  <input type="text" placeholder="Rechercher" (input)="onSearch($event)" />
+  <div class="my-2">
+    <app-tributton (swap)="onUserOrSensor($event)" left="fas fa-hdd" right="fas fa-user"></app-tributton>
+  </div>
+  <div class="my-2">
+    <app-tributton (swap)="onInOrOut($event)" left="fas fa-plus" right="fas fa-times"></app-tributton>
+  </div>
+  <div class="wrapper">
+    <div class="line mx-2" *ngFor="let match of search">
+      <app-access-item [accessId]="id" [m]="match"></app-access-item>
+    </div>
+    <div *ngIf="search.length == 0">
+      Aucuns résulats
+    </div>
+  </div>
+</div>

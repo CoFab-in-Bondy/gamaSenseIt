@@ -2,9 +2,9 @@ package ummisco.gamaSenseIt.springServer.services.activation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
 import ummisco.gamaSenseIt.springServer.data.model.user.UserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
@@ -31,7 +31,10 @@ public class BaseActivation {
 
     @PostConstruct
     public void activate() throws IOException {
-        if (sensorRepo.count() != 0) return;
+        int count = 0;
+        for (var s : sensorRepo.findAll())
+            count ++;
+        if (count != 0) return;
 
         var nmarilleau = userManagment.createIfNotExistUser("luis", "bondel", "nmarilleau@gmail.com", "123456", UserPrivilege.ADMIN);
         var space = userManagment.createIfNotExistUser(" ", " ", " ", " ", UserPrivilege.ADMIN);

@@ -49,8 +49,22 @@ declare interface Sensor {
   isHidden: boolean,
   hiddenMessage: string,
   sensorMetadataId: number,
-  lastCaptureDate: number
+  lastCaptureDate: string|null
 }
+
+declare interface User {
+  firstname: string
+  lastname: string
+  id: number
+}
+
+type Merge<A, B> = { [K in keyof (A | B)]: K extends keyof B ? B[K] : A[K] };
+type AccessMatchUser = {user: User, present: boolean, privilege: "MANAGE"|"VIEW"};
+type AccessMatchSensor = {sensor: Sensor, present: boolean };
+
+type AccessMatch = AccessMatchUser | AccessMatchSensor;
+type AccessSearch = AccessMatch[];
+type RGB = `rgb(${number},${''|' '}${number},${''|' '}${number})`;
 
 
 declare interface SensorMetadata {
@@ -128,4 +142,14 @@ declare interface DataTableEvent {
 declare interface Pos {
   lat: number,
   lng: number
+}
+
+declare interface Access {
+  createdAt: string
+  id: number
+  name: string
+  privilege: "OWNER"|"MAINTENANCE"|"SOCIAL"
+  updatedAt: string
+  sizeSensors?: number
+  sizeUsers?: number
 }

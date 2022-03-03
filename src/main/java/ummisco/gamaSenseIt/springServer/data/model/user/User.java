@@ -7,7 +7,6 @@ import org.hibernate.annotations.ColumnDefault;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -15,8 +14,9 @@ import java.util.Set;
 @Table(name = "user")
 public class User {
 
-    @ManyToMany(mappedBy = "users")
-    private final Set<Access> accesses = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<AccessUser> accessUsers;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -25,9 +25,14 @@ public class User {
     private Long id;
 
     @Column(length = 60)
+    @JsonProperty("firstname")
+    @JsonView(IView.Public.class)
     private String firstname;
+
     @Column(length = 60)
-    private String lastName;
+    @JsonProperty("lastname")
+    @JsonView(IView.Public.class)
+    private String lastname;
     @Column(length = 200, unique = true)
     private String mail;
     @JsonIgnore
@@ -36,13 +41,19 @@ public class User {
     @ColumnDefault("1")
     private UserPrivilege privilege;
 
+    @JsonView(IView.AccessUser.class)
+    @Transient
+    @JsonProperty("accessUserPrivilege")
+    private AccessUserPrivilege accessUserPrivilege = null;
+
+
     public User() {
     }
 
-    public User(String firstname, String lastName, String mail, String password, UserPrivilege priv) {
+    public User(String firstname, String lastname, String mail, String password, UserPrivilege priv) {
         super();
         this.firstname = firstname;
-        this.lastName = lastName;
+        this.lastname = lastname;
         this.mail = mail;
         this.password = password;
         this.privilege = priv;
@@ -56,8 +67,16 @@ public class User {
         this.id = id;
     }
 
-    public Set<Access> getAccesses() {
-        return this.accesses;
+    public AccessUserPrivilege getAccessUserPrivilege() {
+        return accessUserPrivilege;
+    }
+
+    public void setAccessUserPrivilege(AccessUserPrivilege accessUserPrivilege) {
+        this.accessUserPrivilege = accessUserPrivilege;
+    }
+
+    public Set<AccessUser> getAccessUsers() {
+        return accessUsers;
     }
 
     public String getFirstname() {
@@ -68,12 +87,12 @@ public class User {
         this.firstname = firstname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getMail() {

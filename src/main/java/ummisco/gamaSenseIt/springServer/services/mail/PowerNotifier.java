@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 
 import javax.mail.MessagingException;

@@ -1,0 +1,38 @@
+@import "../../../../variables.scss";
+
+.tributton {
+  background-color: $white-light-gray;
+  width: fit-content;
+  border-radius: 20px;
+  position: relative;
+  z-index: 5;
+  width: 180px;
+  height: 26px;
+
+  .target {
+    width: 60px;
+    height: 26px;
+    position: absolute;
+    border-radius: 20px;
+    transition: left 0.1s;
+    z-index: 0;
+  }
+
+  .buttons {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  button {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 0;
+    width: 60px;
+    height: 26px;
+    border-radius: 20px;
+
+    &:hover:not(.active) {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+

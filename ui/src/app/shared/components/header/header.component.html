@@ -13,11 +13,12 @@
     </button>
     <div [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
       <div class="navbar-nav" (click)="collapsed=true">
-        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/qameleo']">Qameleo</a>
-        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/sensors']">Sensors</a>
-        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/management']" *ngIf="auth.isUser()">Management</a>
-        <button class="nav-link btn" (click)="logout()" *ngIf="auth.isAuth()">Logout</button>
-        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/login']" *ngIf="!auth.isAuth()">Login</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/']">Accueil</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/view']">Visualisation</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/sensors']" *ngIf="auth.isUser()">Gestion des capteurs</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/accesses']" *ngIf="auth.isUser()">Gestion des accès</a>
+        <button class="nav-link btn" (click)="logout()" *ngIf="auth.isAuth()">Déconnexion</button>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/login']" *ngIf="!auth.isAuth()">Connexion</a>
       </div>
     </div>
   </div>

@@ -5,8 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorDTO;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorDTO;
+import ummisco.gamaSenseIt.springServer.data.model.user.Access;
+import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
+import ummisco.gamaSenseIt.springServer.data.services.access.AccessSearch;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(IRoute.PRIVATE)
@@ -56,7 +61,6 @@ public class PrivateDataController extends DataController {
      | Sensors                            |
      *------------------------------------*/
 
-    @CrossOrigin
     @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.POST)
     @JsonView(IView.Public.class)
     public Sensor addSensor(
@@ -85,9 +89,11 @@ public class PrivateDataController extends DataController {
         sensor.setHiddenMessage(sensorDTO.getHiddenMessage());
         sensor.setHidden(sensorDTO.getIsHidden());
         sensor = sensorsManagement.addSensorForUser(sensor, user().getId());
-        System.err.println("Returning sensor");
+        System.out.println("Returning sensor");
         return sensor;
     }
+
+
 
     /*
     @CrossOrigin
@@ -142,4 +148,76 @@ public class PrivateDataController extends DataController {
         return this.sensorsMetadataRepo.save(new SensorMetadata(name, version, sep, description));
     }
     */
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SEARCH, method = RequestMethod.GET)
+    @JsonView(IView.AccessUser.class)
+    public AccessSearch accessByIdSearch(
+            @PathVariable(name = "id") long accessId,
+            @RequestParam(name = IParametersRequest.QUERY, defaultValue = "") String query,
+            @RequestParam(name = IParametersRequest.SENSOR, defaultValue = "1") boolean sensor,
+            @RequestParam(name = IParametersRequest.USER, defaultValue = "1") boolean user,
+            @RequestParam(name = IParametersRequest.IN, defaultValue = "1") boolean in,
+            @RequestParam(name = IParametersRequest.OUT, defaultValue = "1") boolean out
+    ) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        return accessManagement.search(currentUser().getId(), accessId, query, sensor, user, in, out);
+    }
+
+    @RequestMapping(value = IRoute.ACCESSES  + IRoute.SEARCH, method = RequestMethod.GET)
+    @JsonView(IView.AccessCount.class)
+    public List<Access> accessSearch(@RequestParam(name = IParametersRequest.QUERY, defaultValue = "") String query) {
+        query = "%" + query.replace("%", "%%") + "%";
+        return this.accessRepo.searchManageableAccessByName(currentUser().getId(), query);
+    }
+
+    public record UserIdRecord(long userId) {}
+    public record SensorIdRecord(long sensorId) {}
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS, method = RequestMethod.POST)
+    @JsonView(IView.AccessUser.class)
+    public void accessByIdAddUser(@PathVariable(name = "id") long accessId, @RequestBody UserIdRecord userIdRecord) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        accessManagement.addAccessUser(accessId, userIdRecord.userId());
+    }
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS + "/{userId}", method = RequestMethod.DELETE)
+    @JsonView(IView.AccessUser.class)
+    public void accessByIdDelUser(@PathVariable(name = "id") long accessId, @PathVariable(name = "userId") long userId) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        accessManagement.delAccessUser(accessId, userId);
+    }
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS + "/{userId}" + IRoute.PROMOTE, method = RequestMethod.POST)
+    @JsonView(IView.AccessUser.class)
+    public void accessByIdPromoteUser(
+            @PathVariable(name = "id") long accessId,
+            @PathVariable(name = "userId") long userId
+    ) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        accessManagement.promoteAccessUser(accessId, userId, AccessUserPrivilege.MANAGE);
+    }
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS + "/{userId}" + IRoute.DISMISE, method = RequestMethod.POST)
+    @JsonView(IView.AccessUser.class)
+    public void accessByIdDismissUser(
+            @PathVariable(name = "id") long accessId,
+            @PathVariable(name = "userId") long userId
+    ) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        accessManagement.promoteAccessUser(accessId, userId, AccessUserPrivilege.VIEW);
+    }
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SENSORS, method = RequestMethod.POST)
+    @JsonView(IView.AccessUser.class)
+    public void accessByIdAddSensor(@PathVariable(name = "id") long accessId, @RequestBody SensorIdRecord sensorIdRecord) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        accessManagement.addAccessSensor(accessId, sensorIdRecord.sensorId());
+    }
+
+    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SENSORS + "/{sensorId}", method = RequestMethod.DELETE)
+    @JsonView(IView.AccessUser.class)
+    public void accessByIdDelSensor(@PathVariable(name = "id") long accessId, @PathVariable(name = "sensorId") long sensorId) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        accessManagement.delAccessSensor(accessId, sensorId);
+    }
 }

@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Service("ExportJSON")

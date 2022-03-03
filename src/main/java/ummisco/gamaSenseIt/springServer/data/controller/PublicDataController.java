@@ -8,9 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.SensorMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordList;
 import ummisco.gamaSenseIt.springServer.services.formatter.ExportJSON;
 
@@ -57,7 +56,7 @@ public class PublicDataController extends DataController {
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end,
             @RequestParam(value = IParametersRequest.SORT, defaultValue = "0") Integer index
     ) {
-        var records = recordManager.getRecords(sensor(sensorId), parameterMetadata, start, end);
+        var records = recordManager.getRecords(sensorRead(sensorId), parameterMetadata, start, end);
         records.sortBy(index, true);
         return records;
     }
@@ -73,7 +72,7 @@ public class PublicDataController extends DataController {
             @RequestParam(value = IParametersRequest.END, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end
     ) {
-        return export.format(type, sensor(sensorId), parameterMetadata, start, end);
+        return export.format(type, sensorRead(sensorId), parameterMetadata, start, end);
     }
 
     /*------------------------------------*
@@ -126,9 +125,7 @@ public class PublicDataController extends DataController {
             @RequestParam(name = IParametersRequest.PAGE, required = false) Integer page,
             @RequestParam(name = IParametersRequest.COUNT, required = false) Integer count
     ) {
-        System.out.println("MMMMH...");
-        System.out.println("SENSORS : " + sensor(sensorId));
-        return exportJSON.toNode(sensor(sensorId), null, start, end, sort, asc, page, count);
+        return exportJSON.toNode(sensorRead(sensorId), null, start, end, sort, asc, page, count);
     }
 
     /* FIXME : Security issue
@@ -187,13 +184,15 @@ public class PublicDataController extends DataController {
     public Iterable<SensorMetadata> getAllSensorMetadataExtended() {
         var smds = this.sensorsMetadataRepo.findAll();
         var smdsIter = smds.iterator();
-        var sensors = this.sensorsRepo.findReadableSensors(user().getId());
-        var checker = sensors.stream().map(Sensor::getId).collect(Collectors.toSet());
+        var sensorsId = this.sensorsRepo.findReadableSensors(user().getId());
+        if (user() != publicUser())
+            sensorsId.addAll(this.sensorsRepo.findReadableSensors(publicUser().getId()));
+        sensorsId.addAll(this.sensorsRepo.findReadableSensors(publicUser().getId()));
         while (smdsIter.hasNext()) {
             var smd = smdsIter.next();
             smd.setSensors(smd.getSensors()
                     .stream()
-                    .filter(s -> checker.contains(s.getId()))
+                    .filter(s -> sensorsId.contains(s.getId()))
                     .collect(Collectors.toSet()));
             /*
             if (smd.getSensors().isEmpty())
@@ -204,7 +203,7 @@ public class PublicDataController extends DataController {
     }
 
     @RequestMapping(value = "geo", method = RequestMethod.GET)
-    public Object processData(
+    public Object geo(
             HttpServletRequest request
     ) {
         var city = geoService.geolocate(request);
@@ -215,6 +214,7 @@ public class PublicDataController extends DataController {
                 put("lng", loc.getLongitude());
             }};
         } else {
+            // can't find location, use server default
             return new Node() {{
                 put("lat", 48.856614);
                 put("lng", 2.3522219);

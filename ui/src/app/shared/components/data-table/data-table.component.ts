@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from "@angular/core";
-import { Icon } from "../../models/icon.model";
+import { Icon } from "@models/icon.model";
 
 enum SortEnum {
   SERVER = 2,
@@ -47,7 +47,7 @@ export class DataTableComponent {
   @Input() data: any[][] = [];
   @Input() empty = "Aucune données";
 
-  @Input() routerLinks: any[][];
+  @Input() routerLinks: (number| string)[][];
 
   @Output() navigate = new EventEmitter<DataTableEvent>();
 

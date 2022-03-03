@@ -1,0 +1,61 @@
+<div class="container-fluid my-3 sensor box">
+  <div class="row m-0 mb-3">
+    <div class="sensor-info col-md-5 col-12 p-0">
+      <div>
+        <h2 class="m-0">{{ sensor?.displayName }}</h2>
+        <h3 class="m-0">{{ sensor?.subDisplayName }}</h3>
+        <div>
+          <a class="coords" [href]="coordLink()" target="_blank">
+            {{
+              sensor
+                ? humanService.coordsToHumain(sensor.latitude, sensor.longitude)
+                : ""
+            }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sensor-metadata-info col-md-5 col-12 p-0">
+      <div>
+        {{ sensor?.metadata?.name }}
+      </div>
+      <div>
+        {{ sensor?.metadata?.version }}
+      </div>
+      <p>{{ sensor?.metadata?.description }}</p>
+    </div>
+
+    <app-dialog class="col-md-2 col-12 p-0">
+      <app-button class="mb-3 mb-md-0 float-md-end" width="120" url="/assets/buttons/download.svg" trigger>
+        Télécharger
+      </app-button>
+
+      <div body>
+        <div class="buttons">
+          <button class="degraded" (click)="onDownloadCSV();" #close>
+            CSV
+          </button>
+          <button class="degraded" (click)="onDownloadJSON()" #close>
+            JSON
+          </button>
+        </div>
+      </div>
+    </app-dialog>
+
+  <div class="row m-0 p-0">
+    <app-data-table
+      class="p-0"
+      [length]="sensor?.parameters?.total"
+      [scales]="[25, 50, 100]"
+      [sortable]="'SERVER'"
+      [pagable]="'SERVER'"
+      [minSizes]="sizes()"
+      [data]="this.records || []"
+      [empty]="'Aucune donnée à afficher'"
+      [headers]="sensor?.parameters?.metadata?.headers || []"
+      (navigate)="onChange($event)"
+    >
+    </app-data-table>
+  </div>
+</div>

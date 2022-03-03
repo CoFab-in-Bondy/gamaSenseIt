@@ -1,0 +1,21 @@
+@import "../../../../variables.scss";
+
+input[type="button"].active {
+  background-color: $light-green;
+
+}
+
+input[type="button"]:not(.active) {
+  background-color: $red;
+}
+
+.wrapper{
+  height: 60vh;
+  overflow-y: auto;
+  border: solid 1px gray;
+}
+
+.line {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

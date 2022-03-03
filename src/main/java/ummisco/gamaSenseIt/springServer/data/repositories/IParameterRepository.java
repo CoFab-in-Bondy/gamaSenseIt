@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import ummisco.gamaSenseIt.springServer.data.model.Parameter;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Parameter;
 import java.util.Date;
 import java.util.List;
 

@@ -3,7 +3,7 @@ package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.*;
 import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
@@ -179,7 +179,7 @@ public class SensorManagment implements ISensorManagment {
     public Sensor addSensorForUser(Sensor sensor, long userId) {
         // TODO: qui ajoute les metasensor ???
         var sensorSaved = sensorRepo.save(sensor);
-        var access = new Access(sensor.getDisplayName(), AccessCategory.OWNER);
+        var access = new Access(sensor.getDisplayName(), AccessPrivilege.MAINTENANCE);
         var accessId = accessRepository.save(access).getId();
         accessSensorRepository.save(new AccessSensor(accessId, sensorSaved.getId()));
         accessUserRepository.save(new AccessUser(accessId, userId, AccessUserPrivilege.MANAGE));

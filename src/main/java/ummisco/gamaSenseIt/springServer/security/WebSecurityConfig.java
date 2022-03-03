@@ -36,7 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/auth/**", "/public/**").permitAll()
-                .antMatchers("/private/**").hasAnyAuthority(UserPrivilege.USER.name());
+                // TODO change authority
+                // .antMatchers("/private/**").hasAnyAuthority(UserPrivilege.USER.name());
+                .antMatchers("/private/**").permitAll();
     }
 
     @Autowired

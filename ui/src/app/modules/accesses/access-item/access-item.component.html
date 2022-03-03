@@ -1,0 +1,24 @@
+<div>
+  <i class="type fas" [ngClass]="{
+    'fa-hdd': isSensor(m),
+    'sensor': isSensor(m),
+    'fa-user': isUser(m),
+    'user': isUser(m)
+  }"></i>
+  <span>{{
+    isSensor(m)
+    ? m.sensor.displayName
+    : m.user.firstname + ' ' + m.user.lastname
+  }}</span>
+  <div class="cmd">
+    <button class="fa-crown manage me-2" (click)="onPromote()" *ngIf="isIn(m) && isUser(m)" [ngClass]="{
+      'fas': isManager(m),
+      'far': isViewer(m)
+    }"></button>
+    <button class="fas fa-eye eye me-2" (click)="onView()" *ngIf="isSensor(m)"></button>
+    <button class="fas fa-plus" (click)="onPresent()" [ngClass]="{
+      'del': isIn(m),
+      'add': isOut(m)
+    }"></button>
+  </div>
+</div>

@@ -5,6 +5,9 @@ public interface IView {
     interface Private extends Public {}
     interface Internal extends Private {}
 
+    // access
+    interface AccessCount extends Public {}
+
     // parameters
     interface SensorOfParameter extends Public {}
     interface ParameterMetadataOfParameter extends Public {}
@@ -22,4 +25,8 @@ public interface IView {
     interface SensorsOfSensorMetadata extends Public {}
 
     interface SensorMetadataExtended extends SensorsOfSensorMetadata, ParametersMetadataOfSensorMetadata {}
+
+    interface AccessUser extends Public {
+
+    }
 }

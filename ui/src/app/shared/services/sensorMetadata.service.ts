@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
 import { ApiService } from "./api.service";
 
 @Injectable()
@@ -25,9 +24,9 @@ export class SensorMetadataService {
         new Date().getTime() - this._lastLoad.getTime()
       })`
     );
-    if (new Date().getTime() - this._lastLoad.getTime() > 60000)
-      this.load();
-    else this.emit();
+    // if (new Date().getTime() - this._lastLoad.getTime() > 60000)
+    this.load();
+    // else this.emit();
   }
 
   load(): void {

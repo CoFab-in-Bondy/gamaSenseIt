@@ -81,7 +81,7 @@ CREATE TABLE sensor_metadata (
 CREATE TABLE user (
     id BIGINT NOT NULL,
     firstname VARCHAR(60),
-    last_name VARCHAR(60),
+    lastname VARCHAR(60),
     mail VARCHAR(200),
     password VARCHAR(255),
     privilege INTEGER DEFAULT 1 NOT NULL,
@@ -90,10 +90,10 @@ CREATE TABLE user (
 
 CREATE TABLE access (
     id BIGINT NOT NULL,
-    category INTEGER NOT NULL,
     name VARCHAR(255) NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    privilege INTEGER NOT NULL,
     PRIMARY KEY (id)
 ) engine=InnoDB;
 

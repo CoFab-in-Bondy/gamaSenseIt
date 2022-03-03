@@ -1,7 +1,7 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
-import ummisco.gamaSenseIt.springServer.data.model.Parameter;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Parameter;
 
 import java.util.Date;
 import java.util.List;

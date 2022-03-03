@@ -81,6 +81,22 @@ $body-color: $dark;
   box-shadow: 0 48px 40px -40px rgb(98, 218, 98) inset;
 }
 
+.box {
+  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%) !important;
+  border-radius: 15px !important;
+  padding: 1.5rem !important;
+  border: 1px solid rgb(236, 236, 236);
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 
 // Leaflet & OpenStreetMAp
 @import "../node_modules/leaflet/dist/leaflet.css";

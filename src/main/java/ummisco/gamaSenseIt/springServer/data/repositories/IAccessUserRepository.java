@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessUser;
 
 @Repository
-public interface IAccessUserRepository extends CrudRepository<AccessUser, Long> {
+public interface IAccessUserRepository extends CrudRepository<AccessUser, AccessUser.AccessUserPK> {
 }

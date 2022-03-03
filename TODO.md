@@ -20,3 +20,7 @@ Que les admins
 
 Erreur de cross origin en post sur le management
 sensor qui n'a jamais emit
+
+patch: le cursuer lors du survos d'un capteur ajouter
+patch: rechargement pour voir le nouveau capteur
+patch: ERROR Error: Map container not found. après plusieurs chargement 

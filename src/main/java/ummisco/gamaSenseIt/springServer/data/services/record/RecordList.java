@@ -2,7 +2,7 @@ package ummisco.gamaSenseIt.springServer.data.services.record;
 
 
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
-import ummisco.gamaSenseIt.springServer.data.model.ParameterMetadata;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 
 import java.util.*;
 

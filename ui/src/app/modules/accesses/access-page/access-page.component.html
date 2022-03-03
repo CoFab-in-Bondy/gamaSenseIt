@@ -1,0 +1,22 @@
+<div class="m-3">
+  <div class="container-fluid m-0 p-0">
+    <div class="row">
+      <div
+        class="col-6"
+        [ngClass]="{ 'col-6': routerActive, 'col-12': !routerActive }"
+      >
+        <app-access-list></app-access-list>
+      </div>
+      <div
+        class="col-6"
+        [ngClass]="{ 'col-6': routerActive, 'd-none': !routerActive }"
+      >
+        <router-outlet
+          (activate)="onActivate($event)"
+          (deactivate)="onDeactivate($event)"
+        ></router-outlet>
+      </div>
+    </div>
+  </div>
+  <div></div>
+</div>

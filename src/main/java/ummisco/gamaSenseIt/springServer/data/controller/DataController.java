@@ -6,9 +6,10 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
+import ummisco.gamaSenseIt.springServer.data.services.access.AccessManagement;
 import ummisco.gamaSenseIt.springServer.data.services.geo.GeoService;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
@@ -51,6 +52,11 @@ public abstract class DataController {
     @Autowired
     protected GeoService geoService;
 
+    @Autowired
+    protected AccessManagement accessManagement;
+
+    private User publicUser;
+
     public static <M, D> ArrayList<D> apply(Iterable<M> list, Function<M, D> caster) {
         var result = new ArrayList<D>();
         for (var obj : list)
@@ -58,21 +64,31 @@ public abstract class DataController {
         return result;
     }
 
-    public User user() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String mail = auth instanceof AnonymousAuthenticationToken ? "public" : auth.getName();
-        System.out.println("MAIL '" + mail + "'");
-        return userRepo.findByMail(mail);
+    public User publicUser() {
+        if (publicUser == null)
+            publicUser = userRepo.findByMail("public");
+        return publicUser;
     }
 
-    public Sensor sensor(long sensorId) throws ResponseStatusException {
+    public User currentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth instanceof AnonymousAuthenticationToken ? null: userRepo.findByMail(auth.getName());
+
+    }
+
+    public User user() {
+        var current = currentUser();
+        return current != null? current: publicUser();
+    }
+
+    public Sensor sensorRead(long sensorId) throws ResponseStatusException {
         var s = sensorsRepo.findReadableSensor(user().getId(), sensorId);
+        if (s == null)
+            s = sensorsRepo.findReadableSensor(publicUser().getId(), sensorId);
         if (s == null) {
             System.err.println("Can't find sensors with id " + sensorId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "can't find sensor");
         }
         return s;
     }
-
-
 }

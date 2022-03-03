@@ -1,11 +1,9 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, DatePipe, DecimalPipe } from "@angular/common";
 import { Error404Component } from "./components/error404/error404.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { Error500Component } from "./components/error500/error500.component";
 import { ApiService } from "./services/api.service";
-import { SensorListComponent } from "./components/sensor-list/sensor-list.component";
-import { SensorSingleComponent } from "./components/sensor-single/sensor-single.component";
 import { AuthGuard } from "./guards/auth.guard";
 import { RouterModule } from "@angular/router";
 import { AuthService } from "./services/auth.service";
@@ -13,38 +11,57 @@ import { SensorService } from "./services/sensor.service";
 import { SensorMetadataService } from "./services/sensorMetadata.service";
 import { HumanService } from "./services/human.service";
 import { DataTableComponent} from './components/data-table/data-table.component';
-import { SensorMapComponent } from "./components/sensor-map/sensor-map.component";
 import { DialogComponent } from "./components/dialog/dialog.component";
 import { Error403Component } from "./components/error403/error403.component";
 import { AdminGuard } from "./guards/admin.guard";
 import { UserGuard } from "./guards/user.guard";
 import { ButtonComponent } from "./components/button/button.component";
+import { AccessService } from "./services/access.service";
+import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { AppRoutingModule } from "../app-routing.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { JwtInterceptor } from "./interceptors/jwt.interceptor";
+import { XsrfInterceptor } from "./interceptors/xsrf.interceptor";
+import { TributtonComponent } from './components/tributton/tributton.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule],
   exports: [
+    // shared exports
     HeaderComponent,
     Error403Component,
     Error404Component,
     Error500Component,
-    SensorListComponent,
-    SensorSingleComponent,
     DataTableComponent,
-    SensorMapComponent,
     DialogComponent,
-    ButtonComponent
+    ButtonComponent,
+    DateAgoPipe,
+    TributtonComponent,
+    // global exports
+    CommonModule,
+    FormsModule,
+    BrowserModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientXsrfModule,
+    FontAwesomeModule,
   ],
   declarations: [
     HeaderComponent,
     Error403Component,
     Error404Component,
     Error500Component,
-    SensorListComponent,
-    SensorSingleComponent,
     DataTableComponent,
-    SensorMapComponent,
     DialogComponent,
-    ButtonComponent
+    ButtonComponent,
+    DateAgoPipe,
+    TributtonComponent
   ],
   providers: [ApiService],
 })
@@ -53,14 +70,21 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
+        // shared providers
         SensorMetadataService,
         SensorService,
+        AccessService,
         AuthGuard,
         UserGuard,
         AdminGuard,
         AuthService,
         HumanService,
-        ApiService
+        ApiService,
+        // global providers
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: XsrfInterceptor, multi: true },
+        DatePipe,
+        DecimalPipe,
       ],
     };
   }

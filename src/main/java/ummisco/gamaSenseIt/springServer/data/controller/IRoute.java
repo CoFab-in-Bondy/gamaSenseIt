@@ -8,7 +8,11 @@ public interface IRoute {
             DATE = "/date",
             SEPARATOR = "/separator",
             METADATA = "/metadata",
+            SEARCH = "/search",
             ID = "/{id}",
+    USERS = "/users",
+    PROMOTE = "/promote",
+    DISMISE = "/dismiss",
 
     // First level
     PUBLIC = "/public",
@@ -22,7 +26,7 @@ public interface IRoute {
             EXTENDED = "/extended",
             DOWNLOAD = "/download",
             ME = "/me",
-            ACCESS = "/access",
+            ACCESSES = "/accesses",
             SENSORS_METADATA = SENSORS + METADATA,
             PARAMETERS_METADATA = PARAMETERS + METADATA,
             IP = "ip";

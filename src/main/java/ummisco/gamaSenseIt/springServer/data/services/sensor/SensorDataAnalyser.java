@@ -1,11 +1,12 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.*;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Parameter;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.data.repositories.IParameterMetadataRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorMetadataRepository;
 

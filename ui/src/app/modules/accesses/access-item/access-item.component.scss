@@ -1,0 +1,60 @@
+@import "../../../../variables.scss";
+
+.del, .add, .eye, .manage {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: transform 0.2s, background-color 0.1s, filter 0.1s;
+  &:hover {
+    -webkit-filter: brightness(1.1);
+    filter: brightness(1.1);
+  }
+}
+
+.del, .add {
+  color: white;
+}
+
+.del {
+  background-color: $red;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.add {
+  background-color: $light-green;
+}
+
+
+i.sensor, i.user{
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+  background-color: $white-light-gray;
+}
+
+i.user, i.user {
+  padding: 8px 8px;
+
+}
+
+i.sensor, i.sensor {
+  padding: 8px 6px;
+
+}
+
+div.cmd {
+  float: right;
+}
+
+.eye {
+  background-color: $white-light-gray;
+  color: black;
+}
+
+.manage {
+  background-color: $yellow;
+  color: black;
+}

@@ -1,0 +1,16 @@
+<div class="tributton">
+  <div
+    class="target"
+    [ngStyle]="{
+      'background-color': color,
+      left: (state - 1) * 60 + 'px'
+    }"
+  ></div>
+  <div class="buttons">
+    <button (click)="onLeftClick($event)" [ngClass]="[state == TriState.LEFT? 'active': '', left]"></button>
+    <button (click)="onMiddleClick($event)" [ngClass]="state == TriState.MIDDLE? 'active': ''">
+      <i [ngClass]="left"></i><i [ngClass]="right"></i>
+    </button>
+    <button (click)="onRightClick($event)" [ngClass]="[state == TriState.RIGHT? 'active': '', right]"></button>
+  </div>
+</div>

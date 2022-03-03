@@ -1,0 +1,39 @@
+.updateAt, .sizeSensors, .sizeUsers {
+  display: inline-block;
+  text-align: right;
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.wrapper{
+  height: 60vh;
+  overflow-y: auto;
+}
+
+i {
+  margin-left: 5px;
+}
+
+.updateAt {
+  width: 160px;
+}
+
+.sizeSensors, .sizeUsers {
+  background-color: lightcyan;
+  border-radius: 15px
+}
+
+.sizeSensors {
+  width: 70px;
+}
+.sizeUsers {
+  width: 70px;
+}
+
+.ligne {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+}

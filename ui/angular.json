@@ -127,6 +127,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "./node_modules/fint-awesome/css/font-awesome.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/leaflet/dist/leaflet.css"
             ],

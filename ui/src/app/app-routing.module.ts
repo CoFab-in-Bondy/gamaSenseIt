@@ -1,17 +1,17 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "./modules/home/home.component";
-import { LoginComponent } from "./modules/login/login.component";
-import { FormSensorComponent } from "./modules/form-sensor/form-sensor.component";
-import { QameleoComponent } from "./modules/qameleo/qameleo.component";
-import { SensorsComponent } from "./modules/sensors/sensors.component";
-import { Error403Component } from "./shared/components/error403/error403.component";
+import { Error403Component } from "@components/error403/error403.component";
 
-import { Error404Component } from "./shared/components/error404/error404.component";
-import { Error500Component } from "./shared/components/error500/error500.component";
-import { SensorSingleComponent } from "./shared/components/sensor-single/sensor-single.component";
-import { AuthGuard } from "./shared/guards/auth.guard";
-import { UserGuard } from "./shared/guards/user.guard";
+import { Error404Component } from "@components/error404/error404.component";
+import { Error500Component } from "@components/error500/error500.component";
+import { UserGuard } from "@guards/guards/user.guard";
+import { ViewPageComponent } from "./modules/view/view-page/view-page.component";
+import { ViewSingleComponent } from "./modules/view/view-single/view-single.component";
+import { LoginPageComponent } from "./modules/auth/login-page/login-page.component";
+import { SensorPageComponent } from "./modules/sensors/sensor-page/sensor-page.component";
+import { AccessPageComponent } from "./modules/accesses/access-page/access-page.component";
+import { AccessSingleComponent } from "./modules/accesses/access-single/access-single.component";
 
 const routes: Routes = [
   {
@@ -20,34 +20,40 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: "sensors",
-    component: SensorsComponent,
+    path: "view",
+    component: ViewPageComponent,
     children: [
       {
         path: ":id",
-        component: SensorSingleComponent
+        component: ViewSingleComponent
       }
     ]
   },
   {
     path: "qameleo",
-    pathMatch: "full",
-    component: QameleoComponent,
+    redirectTo: "sensors"
   },
   {
     path: "login",
     pathMatch: "full",
-    component: LoginComponent,
+    component: LoginPageComponent,
   },
   {
-    path: "management",
+    path: "sensors",
     canActivate: [UserGuard],
     pathMatch: "full",
-    component: FormSensorComponent,
+    component: SensorPageComponent,
   },
   {
-    path: "qameleo/:id",
-    component: QameleoComponent,
+    path: "accesses",
+    canActivate: [UserGuard],
+    component: AccessPageComponent,
+    children: [
+      {
+        path: ":id",
+        component: AccessSingleComponent
+      }
+    ]
   },
   {
     path: "error404",
@@ -69,7 +75,11 @@ const routes: Routes = [
 
 /* {preloadingStrategy: PreloadAllModules} | permet le chergent en plusieurs temps*/
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  imports: [
+    RouterModule.forRoot(routes),
+  ],
+  exports: [
+    RouterModule
+  ],
 })
 export class AppRoutingModule {}

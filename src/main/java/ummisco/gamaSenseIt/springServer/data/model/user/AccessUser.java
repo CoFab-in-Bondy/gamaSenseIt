@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
-import ummisco.gamaSenseIt.springServer.data.model.Sensor;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ public class AccessUser {
     @JoinColumn(name = "access_id", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private Sensor access;
+    private Access access;
 
     @Id
     @Column(name = "access_id")
@@ -32,7 +32,7 @@ public class AccessUser {
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private Sensor user;
+    private User user;
 
     @Id
     @Column(name = "user_id")
@@ -40,7 +40,7 @@ public class AccessUser {
     @JsonView(IView.Public.class)
     private Long userId;
 
-    // ----- category ----- //
+    // ----- privilege ----- //
     @Column(name = "privilege", nullable = false)
     @JsonProperty("privilege")
     @JsonView(IView.Public.class)
@@ -94,19 +94,19 @@ public class AccessUser {
         this.privilege = privilege;
     }
 
-    public Sensor getAccess() {
+    public Access getAccess() {
         return access;
     }
 
-    public void setAccess(Sensor access) {
+    public void setAccess(Access access) {
         this.access = access;
     }
 
-    public Sensor getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Sensor user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
