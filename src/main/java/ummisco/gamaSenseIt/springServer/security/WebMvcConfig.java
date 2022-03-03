@@ -33,6 +33,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins(
+                "http://localhost:80", // HTTP Server
+                "http://localhost:443", // HTTPS Server
                 "http://localhost:8080", // HTTP Server
                 "http://localhost:8443", // HTTPS Server
                 "http://localhost:4200"  // Node Server
