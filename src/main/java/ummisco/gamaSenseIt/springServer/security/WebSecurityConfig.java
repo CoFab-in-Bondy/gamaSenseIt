@@ -1,6 +1,7 @@
 package ummisco.gamaSenseIt.springServer.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,25 +28,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+    @Value("${gamaSenseIt.password-strength:-1}")
+    private int strength;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/auth/**", "/public/**").permitAll()
-                // TODO change authority
-                // .antMatchers("/private/**").hasAnyAuthority(UserPrivilege.USER.name());
-                .antMatchers("/private/**").permitAll();
+                .antMatchers("/private/**").hasAnyAuthority(UserPrivilege.USER.name());
     }
 
     @Autowired
     void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+                .passwordEncoder(new BCryptPasswordEncoder(strength));
     }
 
     @Bean

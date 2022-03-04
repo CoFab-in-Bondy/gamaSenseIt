@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subscriber } from "rxjs";
-import { API, DEFAULT_LAT, DEFAULT_LNG } from "src/app/constantes";
+import { DEFAULT_LAT, DEFAULT_LNG } from "src/app/constantes";
 
 @Injectable()
 export class HumanService {
@@ -60,7 +60,7 @@ export class HumanService {
   }
 
   private forwardToGetApproximateLocation(o: Subscriber<Pos>) {
-    return this.http.get<Pos>(API + "/public/geo").subscribe(
+    return this.http.get<Pos>("/public/geo").subscribe(
       res => o.next(res),
       _ => o.next({lat: DEFAULT_LAT, lng: DEFAULT_LNG}),
       o.complete

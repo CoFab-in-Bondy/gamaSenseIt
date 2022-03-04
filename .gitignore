@@ -36,9 +36,5 @@ GeoLite2-ASN.mmdb
 GeoLite2-City.mmdb
 GeoLite2-Country.mmdb
 
-# Ignore config
-application.properties
-application.yml
-
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

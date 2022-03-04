@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(IRoute.AUTH)
-@CrossOrigin
 public class AuthController {
 
     @Autowired

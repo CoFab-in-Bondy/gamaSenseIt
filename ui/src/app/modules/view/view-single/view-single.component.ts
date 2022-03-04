@@ -80,12 +80,16 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
 
   onDownloadCSV() {
     if (!this.sensor) return;
-    this.sensorService.download({ sensorId: this.sensor.id, type: "csv" });
+    this.sensorService
+      .download({ sensorId: this.sensor.id, type: "csv" })
+      .subscribe(()=>{}, console.error);
   }
 
   onDownloadJSON() {
     if (!this.sensor) return;
-    this.sensorService.download({ sensorId: this.sensor.id, type: "json" });
+    this.sensorService
+      .download({ sensorId: this.sensor.id, type: "json" })
+      .subscribe(()=>{}, console.error);
   }
 
   format(index: number, value: string|number): string|Icon {

@@ -7,7 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class JwtUtils {
@@ -15,7 +17,7 @@ public class JwtUtils {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.tokenValidity}")
+    @Value("${jwt.tokenValidity:3600000}")
     private long tokenValidity;
 
     public Jwt parse(String token) {
@@ -27,13 +29,13 @@ public class JwtUtils {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
     public String generateTokenForUser(UserDetails user) {
-        return generateToken(new HashMap<>(){{
+        return generateToken(new HashMap<>() {{
             put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
         }}, user.getUsername());
     }

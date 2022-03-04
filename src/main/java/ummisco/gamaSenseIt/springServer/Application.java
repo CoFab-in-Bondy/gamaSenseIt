@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.endpoint.MessageProducerSupport;
@@ -25,22 +26,7 @@ import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
 import java.util.Calendar;
 import java.util.Date;
 
-/*@SpringBootApplication(scanBasePackages = {
-        "ummisco.gamaSenseIt.springServer",
-        "ummisco.gamaSenseIt.springServer.security",
-        "ummisco.gamaSenseIt.springServer.services",
-        "ummisco.gamaSenseIt.springServer.data.model",
-        "ummisco.gamaSenseIt.springServer.data.repositories",
-        "ummisco.gamaSenseIt.springServer.data.services",
-        "ummisco.gamaSenseIt.springServer.data.controller",
-        "ummisco.gamaSenseIt.springServer.qameleo"
-})*/
-// @EnableAutoConfiguration already in SpringBootApplication
-// @EnableWebSecurity
-
 @SpringBootApplication
-@EnableTransactionManagement
-@ImportResource(value = "classpath:application-config.xml")
 public class Application {
 
     @Autowired

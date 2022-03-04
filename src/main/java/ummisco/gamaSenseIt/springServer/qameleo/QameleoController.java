@@ -1,15 +1,12 @@
 package ummisco.gamaSenseIt.springServer.qameleo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ummisco.gamaSenseIt.springServer.data.controller.PublicDataController;
 import ummisco.gamaSenseIt.springServer.data.repositories.IParameterRepository;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 
-import java.util.*;
 
 @RestController
 @RequestMapping("/api-qameleo/")
@@ -23,6 +20,7 @@ public class QameleoController {
     @Autowired
     IParameterRepository parametersRepo;
 
+    /*
     @CrossOrigin
     @RequestMapping(value = IQameleoController.AIR_QUALITY)
     public QameleoData getLastData(@RequestParam(value = IQameleoController.SENSOR_ID) long sensorID) {
@@ -68,4 +66,5 @@ public class QameleoController {
             sum += ((Double) p.value());
         return sum / parameters.size();
     }
+    */
 }

@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(IRoute.PRIVATE)
-@CrossOrigin
 public class PrivateDataController extends DataController {
 
     /*------------------------------------*
@@ -89,7 +88,6 @@ public class PrivateDataController extends DataController {
         sensor.setHiddenMessage(sensorDTO.getHiddenMessage());
         sensor.setHidden(sensorDTO.getIsHidden());
         sensor = sensorsManagement.addSensorForUser(sensor, user().getId());
-        System.out.println("Returning sensor");
         return sensor;
     }
 

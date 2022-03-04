@@ -1,26 +1,36 @@
-import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, HostListener, QueryList, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  ElementRef,
+  HostListener,
+  QueryList,
+  ViewChild,
+} from "@angular/core";
 
 @Component({
-  selector: 'app-dialog',
-  templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  selector: "app-dialog",
+  templateUrl: "./dialog.component.html",
+  styleUrls: ["./dialog.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DialogComponent implements AfterContentInit {
-
   constructor() {}
 
   public displayed = false;
 
-  @ViewChild('dialogBg') bg: ElementRef;
+  @ViewChild("dialogBg") bg: ElementRef;
 
-  @ContentChildren('close', { descendants: true }) closeElements: QueryList<ElementRef>;
+  @ContentChildren("close", { descendants: true })
+  closeElements: QueryList<ElementRef>;
 
   ngAfterContentInit(): void {
-    this.closeElements.forEach(element => element.nativeElement.onclick = () => this.onClose());
+    const close = () => this.onClose();
+    this.closeElements.forEach(e => e.nativeElement.onclick = close);
   }
 
-  @HostListener('document:click', ['$event'])
+  @HostListener("document:click", ["$event"])
   onOut(event: PointerEvent) {
     if (this.bg.nativeElement == event.target) {
       this.onClose();
@@ -36,5 +46,4 @@ export class DialogComponent implements AfterContentInit {
     console.log("Close dialog");
     this.displayed = false;
   }
-
 }

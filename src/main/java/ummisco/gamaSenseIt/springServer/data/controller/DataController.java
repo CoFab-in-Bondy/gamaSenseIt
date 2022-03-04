@@ -83,11 +83,11 @@ public abstract class DataController {
 
     public Sensor sensorRead(long sensorId) throws ResponseStatusException {
         var s = sensorsRepo.findReadableSensor(user().getId(), sensorId);
-        if (s == null)
+        if (s == null && user() != publicUser())
             s = sensorsRepo.findReadableSensor(publicUser().getId(), sensorId);
         if (s == null) {
             System.err.println("Can't find sensors with id " + sensorId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "can't find sensor");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
         }
         return s;
     }

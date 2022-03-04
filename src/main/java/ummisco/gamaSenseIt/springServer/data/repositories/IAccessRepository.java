@@ -1,25 +1,24 @@
 package ummisco.gamaSenseIt.springServer.data.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ummisco.gamaSenseIt.springServer.data.model.user.Access;
-import ummisco.gamaSenseIt.springServer.data.model.user.User;
 
 import java.util.List;
 
 @Repository
-public interface IAccessRepository extends CrudRepository<Access, Long> {
+public interface IAccessRepository extends JpaRepository<Access, Long> {
     // acu.privilege MANAGE - VIEW
 
     @Query("""
-    SELECT ac FROM Access ac
-        JOIN AccessUser acu ON (acu.accessId = ac.id)
-        WHERE acu.userId = :userId
-            AND acu.privilege = 0
-            AND LOWER(ac.name) LIKE LOWER(:query)
-        ORDER BY ac.updatedAt
-    """)
+            SELECT ac FROM Access ac
+                JOIN AccessUser acu ON (acu.accessId = ac.id)
+                WHERE acu.userId = :userId
+                    AND acu.privilege = 0
+                    AND LOWER(ac.name) LIKE LOWER(:query)
+                ORDER BY ac.updatedAt
+            """)
     List<Access> searchManageableAccessByName(long userId, String query);
 
     /*

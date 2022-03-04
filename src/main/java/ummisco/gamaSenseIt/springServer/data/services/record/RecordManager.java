@@ -33,7 +33,6 @@ public class RecordManager {
         var parameters = parameterRepo.advancedFindAll(sensor.getId(), parameterMetadata != null ? parameterMetadata.getId() : null, start, end);
         parameters.forEach(p -> {
             var capture = captures.computeIfAbsent(p.getCaptureDate(), date -> new HashMap<>());
-            System.out.println();
             capture.put(p.getParameterMetadataId(), p.getData());
         });
         var pmds = parameterMetadata == null

@@ -1,8 +1,7 @@
 import { DatePipe } from "@angular/common";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { API } from "src/app/constantes";
 
 @Injectable()
 export class ApiService {
@@ -13,21 +12,8 @@ export class ApiService {
     return this.datepipe.transform(date, "MMddyyyy") || "01012000";
   }
 
-  queryToHttpParams(params: QueryParams): HttpParams {
-    let http = new HttpParams();
-    http = http.set("sensorId", params.sensorId);
-    if (params.parameterMetadataId !== undefined)
-      http = http.set("parameterMetadataId", params.parameterMetadataId);
-    if (params.start !== undefined)
-      http = http.set("start", this.date(params.start));
-    if (params.end !== undefined) http = http.set("end", this.date(params.end));
-    if (params.type !== undefined) http = http.set("type", params.type);
-    console.log("queryToHttpParams return " + http.toString());
-    return http;
-  }
-
   getServerDate(): Observable<Date> {
-    return this.http.get<Date>(API + "/public/server/date");
+    return this.http.get<Date>("/public/server/date");
   }
 
   getAuthMe(): Observable<AuthMe> {
@@ -37,31 +23,68 @@ export class ApiService {
       name: "***REMOVED***",
       auth: true
     }); o.complete()});
-    // return this.http.get<AuthMe>(API + "/auth/me");
+    // return this.http.get<AuthMe>("/auth/me");
   }
 
   postLogin(username: string, password: string): Observable<any> {
-    return this.http.post<any>(API + "/auth/login", {
+    return this.http.post<any>("/auth/login", {
       username: username,
       password: password
     });
   }
 
   postResgister(username: string, password: string): Observable<any> {
-    return this.http.post<any>(API + "/auth/register", {
+    return this.http.post<any>("/auth/register", {
       username: username,
       password: password
     });
   }
 
   getServerSeparator(): Observable<string> {
-    return this.http.get<string>(API + "/public/server/separator");
+    return this.http.get<string>("/public/server/separator");
   }
 
-  downloadSensorParameters(params: QueryParams): void {
-    window.open(
-      API + "/public/parameters/download?" + this.queryToHttpParams(params),
-      "_blank"
+  buildFilename(params: QueryParams, ext?: string) {
+    const {parameterMetadataId, start, end, type, sensorId} = params;
+    return (
+      parameterMetadataId == undefined ?
+        "parameters" : parameterMetadataId)
+      + "-"
+      + sensorId
+      + (start != undefined || end != undefined
+      ? "-"
+      + (start == undefined ? "X" : start)
+      + "-"
+      + (end == undefined ? "X" : end)
+      : "")
+      + "."
+      + type
+      + (ext? `.${ext}`: "");
+  }
+
+  downloadSensorParameters(params: QueryParams): Observable<void> {
+
+    return new Observable(
+      o=>{
+        this.http.get("/public/parameters/download", { params: <any>params, responseType: 'blob'}).subscribe(
+          data=>{
+            const blob = new Blob([data], { type: 'application/zip' });
+            const url = window.URL.createObjectURL(blob);
+            const anchor = document.createElement("a");
+            anchor.download = this.buildFilename(params, ".zip");
+            anchor.href = url;
+            anchor.click();
+            anchor.remove();
+            o.next();
+            o.complete();
+          },
+          err=>{
+            o.error(err);
+            o.complete();
+          }
+        )
+
+      }
     );
   }
   /*
@@ -95,15 +118,11 @@ export class ApiService {
   }*/
 
   getSensorsMetadataExtended(): Observable<SensorMetadataExtended[]> {
-    return this.http.get<SensorMetadataExtended[]>(API + `/public/sensors/metadata`);
+    return this.http.get<SensorMetadataExtended[]>(`/public/sensors/metadata`);
   }
 
   getSensorByIdExtended(id: number, options: ParamsOption = {}): Observable<SensorExtended> {
-    return this.http.get<SensorExtended>(API + `/public/sensors/${id}?`, {params: <Params>options} );
-  }
-
-  goToginPage(): void {
-    window.location.href = 'https://localhost:8443/login';
+    return this.http.get<SensorExtended>(`/public/sensors/${id}?`, {params: <Params>options} );
   }
 
   /**

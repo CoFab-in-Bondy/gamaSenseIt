@@ -1,3 +1,16 @@
+type N = 0|1|2|3|4|5|6|7|8|8;
+type DD = (
+  "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" |
+  "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "19" | "20" |
+  "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "29" | "30" |
+  "31"
+);
+type MM = (
+  "01"| "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" | "11" | "12"
+)
+type YYYY = `${20|21}${N}${N}`
+type DDMMYYYY = `${DD}${MM}${YYYY}`;
+
 declare interface Parameter {
   id: number,
   value: number | string,
@@ -7,7 +20,6 @@ declare interface Parameter {
   parameterMetadataId: number,
   // parameterMetadata: ParameterMetadata
 }
-
 
 declare interface ParameterMetadata {
   id: number,
@@ -118,8 +130,8 @@ declare interface Params {
 declare interface QueryParams {
   sensorId: number,
   parameterMetadataId?: number,
-  start?: Date,
-  end?: Date,
+  start?: DDMMYYYY,
+  end?: DDMMYYYY,
   type?: "csv" | "json"
 }
 

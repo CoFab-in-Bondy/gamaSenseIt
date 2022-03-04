@@ -110,7 +110,7 @@ export class SensorFormComponent implements OnInit {
       isHidden: !!form['isHidden']
     }).subscribe(
       res=>{
-        this.router.navigate(["/sensors", res.id]);
+        this.router.navigate(["/view", res.id]);
       },
       err=>{
         if (err.status == 404)

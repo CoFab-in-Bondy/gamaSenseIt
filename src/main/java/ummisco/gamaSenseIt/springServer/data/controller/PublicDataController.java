@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(IRoute.PUBLIC)
-@CrossOrigin
 public class PublicDataController extends DataController {
 
     @Autowired

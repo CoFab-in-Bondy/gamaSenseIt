@@ -1,5 +1,8 @@
 package ummisco.gamaSenseIt.springServer.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -13,6 +16,11 @@ import java.io.IOException;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
+
+    @Value("${gamaSenseIt.cors-url:}")
+    private String corsUrl;
+
     /* replace the basic recourse handler*/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -23,21 +31,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     /* si la ressource n'existe pas on retourne sur l'index.html */
                     @Override
                     protected Resource getResource(String resourcePath, Resource location) throws IOException {
-                        Resource requestedResource = location.createRelative(resourcePath);
-                        return requestedResource.exists() && requestedResource.isReadable() ? requestedResource
-                                : new ClassPathResource("/static/index.html");
+                        Resource res = super.getResource(resourcePath, location);
+                        return res != null ? res : new ClassPathResource("/static/index.html");
                     }
                 });
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins(
-                "http://localhost:80", // HTTP Server
-                "https://localhost:443", // HTTPS Server
-                "http://localhost:8080", // HTTP Server
-                "https://localhost:8443", // HTTPS Server
-                "http://localhost:4200"  // Node Server
-        );
+        if (corsUrl != null && !corsUrl.isEmpty()) {
+            logger.info("CORS enabled for : " + corsUrl);
+            registry.addMapping("/**").allowedOrigins(corsUrl).allowedMethods("*");
+        } else {
+            registry.addMapping("/**").allowedOrigins().allowedMethods("*");
+        }
     }
 }

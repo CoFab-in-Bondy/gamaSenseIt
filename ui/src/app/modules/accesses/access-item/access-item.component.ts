@@ -15,7 +15,7 @@ export class AccessItemComponent implements OnInit {
   @Input() m: AccessMatchSensor|AccessMatchUser;
 
   ngOnInit(): void {
-    console.log(this.m);
+    
   }
 
   isSensor(m: AccessMatch): m is AccessMatchSensor {

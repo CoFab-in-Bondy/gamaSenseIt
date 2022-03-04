@@ -159,7 +159,6 @@ public class SensorManagment implements ISensorManagment {
         for (var pmd : pmds) {
             if (pmd.getIdx() == null) {
                 idx ++;
-                System.out.println("IDX " + idx);
                 pmd.setIdx(idx);
             }
             pmd.setSensorMetadata(smdSaved);
@@ -177,7 +176,7 @@ public class SensorManagment implements ISensorManagment {
      **/
     @Override
     public Sensor addSensorForUser(Sensor sensor, long userId) {
-        // TODO: qui ajoute les metasensor ???
+        // TODO: qui ajoute les metasensor : les admins
         var sensorSaved = sensorRepo.save(sensor);
         var access = new Access(sensor.getDisplayName(), AccessPrivilege.MAINTENANCE);
         var accessId = accessRepository.save(access).getId();

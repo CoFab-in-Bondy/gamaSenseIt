@@ -1,12 +1,16 @@
 package ummisco.gamaSenseIt.springServer.data.services.record;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 
 import java.util.*;
 
 public class RecordList extends ArrayList<Record> {
+
+    private static final Logger logger = LoggerFactory.getLogger(RecordList.class);
 
     private final RecordListMetadata metadata;
     private final int total;
@@ -46,13 +50,12 @@ public class RecordList extends ArrayList<Record> {
         if (0 > index || index >= metadata.width())
             return;
         try {
-            System.out.println("Sorting recordlist");
             Comparator<Record> cmp = Comparator.comparing(r -> ((Comparable<Object>)r.get(index)));
             if (asc)
                 cmp = cmp.reversed();
             sort(cmp);
         } catch (ClassCastException ignored) {
-            System.err.println("Error during casting for record");
+            logger.error("Error during casting for record");
         }
     }
 

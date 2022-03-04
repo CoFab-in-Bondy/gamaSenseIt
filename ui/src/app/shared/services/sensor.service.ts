@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
-import { API } from "src/app/constantes";
 import { ApiService } from "./api.service";
 
 @Injectable()
@@ -58,11 +57,11 @@ export class SensorService {
     return this._subject.get(id) || SensorService.EMPTY_SUBJECT;
   }
 
-  download(params: QueryParams): void {
-    this.api.downloadSensorParameters(params);
+  download(params: QueryParams): Observable<void> {
+    return this.api.downloadSensorParameters(params);
   }
 
   addSensor(sensor: PartialSensor): Observable<SensorExtended> {
-    return this.http.post<SensorExtended>(API + "/private/sensors", sensor);
+    return this.http.post<SensorExtended>("/private/sensors", sensor);
   }
 }

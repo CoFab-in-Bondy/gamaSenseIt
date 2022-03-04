@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AuthService } from '@services/auth.service';
-import { API } from 'src/app/constantes';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +9,6 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
   collapsed = true;
-  API = API;
 
   constructor(public auth: AuthService, private router: Router) { }
 

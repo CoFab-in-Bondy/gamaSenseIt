@@ -46,7 +46,6 @@ public class ExportJSON extends Export {
             records.page(0, count);
 
         root.put("parameters", records.toNode());
-        System.out.println("RESULT OF " + s + " " + pmd + " " + start + " " + end + " " + sort + " " + asc + " " + page + " " + count);
         return root;
     }
 

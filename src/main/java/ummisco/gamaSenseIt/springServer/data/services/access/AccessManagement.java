@@ -78,7 +78,6 @@ public class AccessManagement {
 
     public AccessSearch search(long userId, long accessId, String mixedCaseQuery, boolean sensor, boolean user, boolean in, boolean out) {
         final var query = mixedCaseQuery.toLowerCase();
-        System.out.println("SEARCH : " + query);
         var ac = accessRepo
                 .findById(accessId)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find access"));
