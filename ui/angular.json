@@ -82,10 +82,6 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/proxy.conf.js",
-                  "with": "src/proxy.conf.prod.js"
                 }
               ],
               "outputHashing": "all"
@@ -109,7 +105,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "gamasenseit:build:production"
+              "browserTarget": "gamasenseit:build:production",
+              "proxyConfig": "src/proxy.conf.prod.js"
             },
             "development": {
               "browserTarget": "gamasenseit:build:development"

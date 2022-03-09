@@ -43,6 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             logger.info("CORS enabled for : " + corsUrl);
             registry.addMapping("/**").allowedOrigins(corsUrl).allowedMethods("*");
         } else {
+            logger.info("CORS disabled");
             registry.addMapping("/**").allowedOrigins().allowedMethods("*");
         }
     }
