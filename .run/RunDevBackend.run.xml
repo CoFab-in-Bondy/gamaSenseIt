@@ -11,7 +11,7 @@
           <option name="goals">
             <list>
               <option value="spring-boot:run" />
-              <option value="-Drun.arguents=--spring.main.lazy-initialization=true,--gamaSenseIt.cors-url=http://localhost:4200" />
+              <option value="-Dspring-boot.run.arguments=--gamaSenseIt.cors-url=http://localhost:4200" />
             </list>
           </option>
           <option name="pomFileName" />
