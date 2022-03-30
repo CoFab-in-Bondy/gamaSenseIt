@@ -29,6 +29,7 @@ public interface IParametersRequest {
             VERSION = "version",
             QUERY = "query",
             TYPE = "type",
+            MANAGEABLE = "manageable",
             SORT = "sort",
             DATE_PATTERN = "MMddyyyy",
             ASC = "asc",

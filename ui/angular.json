@@ -39,6 +39,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            },
             "allowedCommonJsDependencies": [
                 "rxjs-compat",
                 "rxjs"

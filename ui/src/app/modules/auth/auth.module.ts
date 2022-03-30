@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { SharedModule } from "@guards/shared.module";
+import { SharedModule } from "src/app/shared/shared.module";
 import { LoginPageComponent } from "./login-page/login-page.component";
 
 @NgModule({

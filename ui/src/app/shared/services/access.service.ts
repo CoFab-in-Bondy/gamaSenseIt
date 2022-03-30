@@ -7,19 +7,23 @@ import { Observable } from "rxjs";
 export class AccessService {
   constructor(private http: HttpClient, public datepipe: DatePipe) {}
 
-  searchAccess({ query }: {query: string} ): Observable<Access[]> {
+  search({ query }: {query: string} ): Observable<Access[]> {
     return this.http.get<Access[]>("/private/accesses/search", {
       params: { query },
     });
   }
 
-  searchAccessById(
+  searchById(
     id: number|string,
     args: {query?: string, sensor?: boolean, user?: boolean, in?: boolean, out?: boolean}
   ): Observable<AccessSearch> {
     return this.http.get<AccessSearch>(`/private/accesses/${id}/search`, {
       params: args,
     });
+  }
+
+  getById(id: number|string): Observable<Access> {
+    return this.http.get<Access>(`/private/accesses/${id}`);
   }
 
   addSensor(accessId: number, sensorId: number): Observable<void> {

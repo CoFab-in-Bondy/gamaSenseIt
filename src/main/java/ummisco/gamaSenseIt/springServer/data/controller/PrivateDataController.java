@@ -3,7 +3,10 @@ package ummisco.gamaSenseIt.springServer.data.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorDTO;
@@ -11,6 +14,8 @@ import ummisco.gamaSenseIt.springServer.data.model.user.Access;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.services.access.AccessSearch;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -62,33 +67,101 @@ public class PrivateDataController extends DataController {
 
     @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.POST)
     @JsonView(IView.Public.class)
-    public Sensor addSensor(
-            @RequestBody SensorDTO sensorDTO
+    public Node addSensor(
+            @RequestPart(value = "sensor") SensorDTO sensorDTO,
+            @RequestParam(value = "photo", required = false) MultipartFile image
     ) {
+        var sensor = new Sensor();
+
+        if (image != null) {
+            sensor.setPhoto(image);
+        }
+
+        // check if sensorMetadata exist
         var sensorMetadata = sensorsMetadataRepo.findById(sensorDTO.getSensorMetadataId());
         if (sensorMetadata.isEmpty()) {
             System.err.println("Can't find sensor Metadata");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find sensor Metadata");
         }
 
+        // check if name is not already taken
         var selectedSensors = sensorsRepo.findByName(sensorDTO.getName());
         if (!selectedSensors.isEmpty()) {
             System.err.println("Name already exist");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Name already exist");
         }
 
-        Sensor sensor = new Sensor(
-                sensorDTO.getName(),
-                sensorDTO.getDisplayName(),
-                sensorDTO.getSubDisplayName(),
-                sensorDTO.getLongitude(),
-                sensorDTO.getLatitude(),
-                sensorMetadata.get()
-        );
+        sensor.setSensorMetadata(sensorMetadata.get());
+        sensor.setName(sensorDTO.getName());
+        sensor.setDisplayName(sensorDTO.getDisplayName());
+        sensor.setSubDisplayName(sensorDTO.getSubDisplayName());
+        sensor.setLongitude(sensorDTO.getLongitude());
+        sensor.setLatitude(sensorDTO.getLatitude());
+        sensor.setHidden(sensorDTO.isHidden());
         sensor.setHiddenMessage(sensorDTO.getHiddenMessage());
-        sensor.setHidden(sensorDTO.getIsHidden());
-        sensor = sensorsManagement.addSensorForUser(sensor, user().getId());
-        return sensor;
+        sensor.setDescription(sensorDTO.getDescription());
+        sensor.setMaintenanceDescription(sensorDTO.getMaintenanceDescription());
+        sensor = sensorsManagement.addSensorForUser(sensor, currentUser().getId());
+
+        return sensor.toNode(true);
+    }
+
+
+    @RequestMapping(value = IRoute.SENSORS + IRoute.ID, method = RequestMethod.POST)
+    @JsonView(IView.Public.class)
+    public Node patchSensor(
+            @PathVariable(name = "id") long sensorId,
+            @RequestPart(value = "sensor") SensorDTO sensorDTO,
+            @RequestPart(value = "photo", required = false) MultipartFile image
+    ) {
+        var sensor = sensorManage(sensorId);
+
+        if (image != null) {
+            sensor.setPhoto(image);
+        }
+
+        // check if sensorMetadata exist (can't change it)
+        /*
+        var sensorMetadata = sensorsMetadataRepo.findById(sensorDTO.getSensorMetadataId());
+        if (sensorMetadata.isEmpty()) {
+            System.err.println("Can't find sensor Metadata");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find sensor Metadata");
+        }
+        */
+
+        // check if name is not already taken but ignore itself
+        if (sensorDTO.getName() != null) {
+            var selectedSensors = sensorsRepo.findByName(sensorDTO.getName());
+            if (!selectedSensors.isEmpty() && (selectedSensors.size() == 1 && selectedSensors.get(0).getId() != sensorId)) {
+                System.err.println("Name already exist");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Name already exist");
+            }
+            sensor.setName(sensorDTO.getName());
+        }
+
+        if (sensorDTO.getDisplayName() != null)
+            sensor.setDisplayName(sensorDTO.getDescription());
+
+        if (sensorDTO.getLatitude() != null)
+            sensor.setSubDisplayName(sensorDTO.getSubDisplayName());
+
+        if (sensorDTO.getLongitude() != null)
+            sensor.setLongitude(sensorDTO.getLongitude());
+
+        if (sensorDTO.isHidden())
+            sensor.setHidden(sensorDTO.isHidden());
+
+        if (sensorDTO.getHiddenMessage() != null)
+            sensor.setHiddenMessage(sensorDTO.getHiddenMessage());
+
+        if (sensorDTO.getDescription() != null)
+            sensor.setDescription(sensorDTO.getDescription());
+
+        if (sensorDTO.getMaintenanceDescription() != null)
+            sensor.setMaintenanceDescription(sensorDTO.getMaintenanceDescription());
+
+        sensor = sensorsManagement.patchSensor(sensor);
+        return sensor.toNode(true);
     }
 
 
@@ -160,6 +233,14 @@ public class PrivateDataController extends DataController {
         accessManagement.guardManage(accessId, currentUser().getId());
         return accessManagement.search(currentUser().getId(), accessId, query, sensor, user, in, out);
     }
+
+    @RequestMapping(value = IRoute.ACCESSES  + IRoute.ID, method = RequestMethod.GET)
+    @JsonView(IView.AccessCount.class)
+    public Access getAccessById(@PathVariable(name = "id") long accessId) {
+        accessManagement.guardManage(accessId, currentUser().getId());
+        return this.accessRepo.getById(accessId);
+    }
+
 
     @RequestMapping(value = IRoute.ACCESSES  + IRoute.SEARCH, method = RequestMethod.GET)
     @JsonView(IView.AccessCount.class)

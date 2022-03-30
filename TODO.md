@@ -24,3 +24,16 @@ sensor qui n'a jamais emit
 patch: le cursuer lors du survos d'un capteur ajouter
 patch: rechargement pour voir le nouveau capteur
 patch: ERROR Error: Map container not found. après plusieurs chargement 
+
+placer le sensor gris
+bouton pour ajouter un capteur
+
+problème de scroll
+carte plus grande
+mettre les bonnes valeurs
+mettre un titre
+bouton ajout de groupe
+
+zone discution, maintenance, une photo, logo, image carte, ou il est situé, description du capteur, deux description, 
+
+Plusieurs page avec barre de recherche

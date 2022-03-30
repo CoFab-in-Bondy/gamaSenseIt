@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AccessService } from '@guards/services/access.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AccessService } from '@services/access.service';
 import { Subscription } from 'rxjs';
-import { TriEvent } from '@guards/models/tributton';
+import { TriEvent } from '@models/tributton';
 
 @Component({
   selector: 'app-access-single',
@@ -11,14 +11,15 @@ import { TriEvent } from '@guards/models/tributton';
 })
 export class AccessSingleComponent implements OnInit {
   routeSub: Subscription
-  constructor(private accesses: AccessService, private route: ActivatedRoute) { }
+  constructor(private accesses: AccessService, private route: ActivatedRoute, private router: Router) { }
   id: number;
   sensor = true;
   user = true;
   in = true;
   out = true;
   query: string = "";
-  search: AccessSearch = []
+  search: AccessSearch = [];
+  access?: Access;
 
   onSearch(event: Event | string) {
     this.query = event instanceof Event ? (<any>event.target).value || "" : event;
@@ -26,7 +27,7 @@ export class AccessSingleComponent implements OnInit {
   }
 
   updateSearch() {
-    this.accesses.searchAccessById(this.id, {
+    this.accesses.searchById(this.id, {
       sensor: this.sensor,
       user: this.user,
       in: this.in,
@@ -55,7 +56,16 @@ export class AccessSingleComponent implements OnInit {
     this.routeSub = this.route.params.subscribe(params => {
       let id = +params["id"];
       this.id = id;
-      this.accesses.searchAccessById(this.id, {
+      this.accesses.getById(this.id).subscribe(
+        access=>{
+          this.access = access;
+        },
+        err=>{
+          console.error(err);
+          //this.router.navigate(["/accesses"]);
+        }
+      )
+      this.accesses.searchById(this.id, {
         query: ""
       }).subscribe(
         res=> {

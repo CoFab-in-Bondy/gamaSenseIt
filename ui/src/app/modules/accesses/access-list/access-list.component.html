@@ -1,17 +1,23 @@
 <div class="container-fluid box">
 
-  <h1>Gestion des accès</h1>
+  <h1>Gestion des groupes</h1>
   <input type="text" placeholder="Rechercher" (input)="onSearch($event)">
   <div class="wrapper">
     <div *ngFor="let ac of accesses" (click)="onClick(ac)" class="ligne hstack justify-content-between">
       <div>
+        <i class="fas me-2" [ngClass]="{
+          'fa-tools': ac.privilege == 'MAINTENANCE',
+          'fa-users': ac.privilege != 'MAINTENANCE'
+        }"></i>
         <span>{{ ac.name }}</span>
       </div>
       <div>
+        <!--
         <div class="updateAt d-none d-sm-inline-block">
           <span>{{ ac.updatedAt | dateAgo }}</span>
           <i class="far fa-clock"></i>
         </div>
+        -->
         <div class="sizeSensors">
           <span>{{ ac.sizeSensors }}</span>
           <i class="fas fa-hdd"></i>

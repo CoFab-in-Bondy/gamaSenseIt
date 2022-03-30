@@ -10,8 +10,11 @@
   #dialogBg
 >
   <!-- Dialog box -->
-  <div class="modal-content">
-    <span class="close degraded" (click)="onClose()" #close>&times;</span>
+  <div class="modal-content" #modalContent [ngStyle]="{
+    'margin-left.px': - modalContent.offsetWidth / 2,
+    'margin-top.px': - modalContent.offsetHeight / 2
+  }">
+    <span class="close degraded" (click)="onClose()" #close><i class="fas fa-times"></i></span>
     <ng-content select="[body]"></ng-content>
   </div>
 </div>

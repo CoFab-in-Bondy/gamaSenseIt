@@ -33,14 +33,15 @@
         'hstack': true,
         'gap-3': true,
         'col-line': true,
-        'tb-link': routerLinks ? true : false
+        'tb-link': linker ? true : false
       }"
-      *ngFor="let record of data; let iRow = index"
+      *ngFor="let d of data; let iRow = index"
       routerLinkActive="active"
-      [routerLink]="routerLinks === undefined ? undefined : routerLinks[iRow]"
+      [routerLink]="linker? linker(d): undefined"
+      (click)="onSelect(d)"
     >
       <div
-        *ngFor="let value of record; let iCol = index"
+        *ngFor="let value of formater(d); let iCol = index"
         class="col-data"
         [ngStyle]="{ flex: '1 0 ' + minSizes[iCol] + 'px' }"
       >
@@ -48,10 +49,11 @@
           <span  [title]="value">{{ format(value) }}</span>
         </ng-container>
         <ng-container *ngIf="isIcon(format(value))">
-          <img [src]="value.url" [ngStyle]="{'width.px': value.width, 'height.px': value.height}">
+          <img [src]="any(value).url" [ngStyle]="{'width.px': any(value).width, 'height.px': any(value).height}">
         </ng-container>
       </div>
     </div>
+    <div *ngIf="data.length == 0" class="empty" [ngStyle]="{ 'height.px': height, 'line-height.px': height }">{{ empty }}</div>
   </div>
 
   <!-- Footer --->

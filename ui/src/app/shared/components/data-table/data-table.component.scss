@@ -1,16 +1,4 @@
-.sensor {
-  border-radius: 15px;
-}
 
-.sensor h2 {
-  font-size: 28px;
-  margin: 0px;
-}
-
-.sensor h3 {
-  font-size: 18px;
-  margin: 5px;
-}
 
 .vr {
   color: rgb(200, 200, 200);
@@ -103,8 +91,19 @@
     background-color: rgb(200, 200, 200);
   }
 
+  .col-line {
+    height: 25px;
+  }
+
   .col-line:not(:last-child) {
     border-bottom: 1px solid rgb(230, 230, 230);
+  }
+
+  .empty {
+    color: black;
+    background-color: rgba(0, 0, 0, 0.1);
+    text-align: center;
+    vertical-align: middle;
   }
 }
 

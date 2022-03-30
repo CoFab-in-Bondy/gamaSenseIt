@@ -5,10 +5,12 @@ public class SensorDTO {
     private String name;
     private String displayName;
     private String subDisplayName;
-    private double longitude;
-    private double latitude;
+    private Double longitude;
+    private Double latitude;
     private String hiddenMessage;
     private Boolean isHidden;
+    private String description;
+    private String maintenanceDescription;
 
     public long getSensorMetadataId() {
         return sensorMetadataId;
@@ -42,7 +44,7 @@ public class SensorDTO {
         this.subDisplayName = subDisplayName;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
@@ -50,7 +52,7 @@ public class SensorDTO {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
@@ -66,11 +68,27 @@ public class SensorDTO {
         this.hiddenMessage = hiddenMessage;
     }
 
-    public Boolean getIsHidden() {
-        return isHidden;
+    public boolean isHidden() {
+        return isHidden != null && isHidden; // prevent default value as null
     }
 
-    public void setIsHidden(Boolean hidden) {
+    public void setHidden(Boolean hidden) {
         isHidden = hidden;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMaintenanceDescription() {
+        return maintenanceDescription;
+    }
+
+    public void setMaintenanceDescription(String maintenanceDescription) {
+        this.maintenanceDescription = maintenanceDescription;
     }
 }

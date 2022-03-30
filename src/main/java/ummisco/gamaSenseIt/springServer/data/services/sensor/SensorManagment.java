@@ -2,16 +2,19 @@ package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.*;
 import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
 @Service("SensorManagment")
-public class SensorManagment implements ISensorManagment {
+public class SensorManagment implements ISensorManagement {
 
     @Autowired
     IParameterMetadataRepository parameterMetadataRepo;
@@ -39,6 +42,9 @@ public class SensorManagment implements ISensorManagment {
 
     @Autowired
     ISensorDataAnalyser dataAnalyser;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     private Map<Long, Date> cacheLastRecvSensor = new HashMap<>();
 
@@ -150,6 +156,15 @@ public class SensorManagment implements ISensorManagment {
 
     @Override
     public SensorMetadata addSensorMetadata(SensorMetadata smd, Collection<ParameterMetadata> pmds) {
+        if (smd.getIcon() == null) {
+            System.out.println("SET IMAGE ICON");
+            try {
+                var icon = resourceLoader.getResource("classpath:qameleo_icon.png").getInputStream().readAllBytes();
+                smd.setIcon(icon);
+            } catch (IOException err) {
+                err.printStackTrace();
+            }
+        }
         var smdSaved = sensorMetadataRepo.save(smd);
         int idx = Stream.concat(smdSaved.getParametersMetadata().stream(), pmds.stream())
                 .map(ParameterMetadata::getIdx)
@@ -175,6 +190,7 @@ public class SensorManagment implements ISensorManagment {
      * @return The saved sensor with updated default field
      **/
     @Override
+    @Transactional
     public Sensor addSensorForUser(Sensor sensor, long userId) {
         // TODO: qui ajoute les metasensor : les admins
         var sensorSaved = sensorRepo.save(sensor);
@@ -183,6 +199,17 @@ public class SensorManagment implements ISensorManagment {
         accessSensorRepository.save(new AccessSensor(accessId, sensorSaved.getId()));
         accessUserRepository.save(new AccessUser(accessId, userId, AccessUserPrivilege.MANAGE));
         return sensorSaved;
+    }
+
+    /**
+     * Save a sensor to the persistent layer and add access to the creator in a special group owners
+     *
+     * @param sensor Sensor to save in persistent layer
+     * @return The saved sensor with updated default field
+     **/
+    @Override
+    public Sensor patchSensor(Sensor sensor) {
+        return sensorRepo.save(sensor);
     }
 
     @Override

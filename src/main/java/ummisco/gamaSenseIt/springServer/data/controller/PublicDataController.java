@@ -1,27 +1,33 @@
 package ummisco.gamaSenseIt.springServer.data.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import ummisco.gamaSenseIt.springServer.Application;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
-import ummisco.gamaSenseIt.springServer.data.services.record.RecordList;
-import ummisco.gamaSenseIt.springServer.services.formatter.ExportJSON;
+import ummisco.gamaSenseIt.springServer.services.export.ExportJSON;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping(IRoute.PUBLIC)
 public class PublicDataController extends DataController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PublicDataController.class);
 
     @Autowired
     private ExportJSON exportJSON;
@@ -46,18 +52,18 @@ public class PublicDataController extends DataController {
 
     @JsonView(IView.Public.class)
     @RequestMapping(value = IRoute.PARAMETERS, method = RequestMethod.GET)
-    public RecordList parameters(
+    public Node parameters(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
-            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) ParameterMetadata parameterMetadata,
             @RequestParam(value = IParametersRequest.START, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
             @RequestParam(value = IParametersRequest.END, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end,
-            @RequestParam(value = IParametersRequest.SORT, defaultValue = "0") Integer index
+            @RequestParam(name = IParametersRequest.SORT, required = false) Integer sort,
+            @RequestParam(name = IParametersRequest.ASC, required = false) Boolean asc,
+            @RequestParam(name = IParametersRequest.PAGE, required = false) Integer page,
+            @RequestParam(name = IParametersRequest.COUNT, required = false) Integer count
     ) {
-        var records = recordManager.getRecords(sensorRead(sensorId), parameterMetadata, start, end);
-        records.sortBy(index, true);
-        return records;
+        return exportJSON.toNode(sensorRead(sensorId), null, start, end, sort, asc, page, count, false);
     }
 
     @JsonView(IView.Public.class)
@@ -65,7 +71,7 @@ public class PublicDataController extends DataController {
     public ResponseEntity<Resource> downloadParameters(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
             @RequestParam(value = IParametersRequest.TYPE) String type,
-            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) ParameterMetadata parameterMetadata,
+            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false)ParameterMetadata parameterMetadata,
             @RequestParam(value = IParametersRequest.START, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
             @RequestParam(value = IParametersRequest.END, required = false)
@@ -113,18 +119,26 @@ public class PublicDataController extends DataController {
     */
 
     @RequestMapping(value = IRoute.SENSORS + IRoute.ID, method = RequestMethod.GET)
-    public Node sensorByIdExtended(
-            @PathVariable(name = "id") long sensorId,
-            @RequestParam(name = IParametersRequest.START, required = false)
-            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
-            @RequestParam(name = IParametersRequest.END, required = false)
-            @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end,
-            @RequestParam(name = IParametersRequest.SORT, required = false) Integer sort,
-            @RequestParam(name = IParametersRequest.ASC, required = false) Boolean asc,
-            @RequestParam(name = IParametersRequest.PAGE, required = false) Integer page,
-            @RequestParam(name = IParametersRequest.COUNT, required = false) Integer count
-    ) {
-        return exportJSON.toNode(sensorRead(sensorId), null, start, end, sort, asc, page, count);
+    public Node sensor(@PathVariable(name = "id") long sensorId) {
+        try {
+            return sensorManage(sensorId).toNode(true);
+        } catch (ResponseStatusException err) {
+            return sensorRead(sensorId).toNode(false);
+        }
+    }
+
+    @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.IMAGE, method = RequestMethod.GET)
+    public ResponseEntity<?> sensorImage(@PathVariable(name = "id") long sensorId) {
+        var s = sensorRead(sensorId);
+        return img(s.getName(), s.getPhoto());
+    }
+
+    @RequestMapping(value = IRoute.SENSORS + IRoute.METADATA + IRoute.ID + IRoute.IMAGE, method = RequestMethod.GET)
+    public ResponseEntity<?> sensorMetadataImage(@PathVariable(name = "id") long sensorMetadataId) {
+        var s = sensorsMetadataRepo
+                .findById(sensorMetadataId)
+                .orElseThrow((()->new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        return img(s.getName(), s.getIcon());
     }
 
     /* FIXME : Security issue
@@ -180,13 +194,19 @@ public class PublicDataController extends DataController {
 
     @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.GET)
     @JsonView(IView.SensorMetadataExtended.class)
-    public Iterable<SensorMetadata> getAllSensorMetadataExtended() {
+    public Iterable<SensorMetadata> getAllSensorMetadataExtended(@RequestParam(name = IParametersRequest.MANAGEABLE, defaultValue = "false") boolean manageable) {
         var smds = this.sensorsMetadataRepo.findAll();
         var smdsIter = smds.iterator();
-        var sensorsId = this.sensorsRepo.findReadableSensors(user().getId());
-        if (user() != publicUser())
-            sensorsId.addAll(this.sensorsRepo.findReadableSensors(publicUser().getId()));
-        sensorsId.addAll(this.sensorsRepo.findReadableSensors(publicUser().getId()));
+        var sensorsId = new HashSet<>();
+        if (manageable) {
+            sensorsId.addAll(this.sensorsRepo.findManageableSensors(user().getId()));
+            if (user() != publicUser())
+                sensorsId.addAll(this.sensorsRepo.findManageableSensors(publicUser().getId()));
+        } else {
+            sensorsId.addAll(this.sensorsRepo.findReadableSensors(user().getId()));
+            if (user() != publicUser())
+                sensorsId.addAll(this.sensorsRepo.findReadableSensors(publicUser().getId()));
+        }
         while (smdsIter.hasNext()) {
             var smd = smdsIter.next();
             smd.setSensors(smd.getSensors()

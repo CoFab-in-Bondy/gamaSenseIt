@@ -1,67 +1,71 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { ApiService } from "./api.service";
+import { SafeUrl } from "@angular/platform-browser";
+import { SecurePipe } from "@pipes/secure.pipe";
+import { Observable } from "rxjs";
+import { saveAs } from 'file-saver';
 
 @Injectable()
 export class SensorService {
-  private _subject = new Map<number, Subject<SensorExtended>>();
-  private _sensors = new Map<number, SensorExtended>();
-  private _lastLoadBySensorId = new Map<number, Date>();
-  private static EMPTY_SUBJECT = new Subject<SensorExtended>();
 
-  constructor(private api: ApiService, private http: HttpClient) {}
+  constructor(private http: HttpClient, private secure: SecurePipe) {}
 
-  emitBySensorId(id: number): void {
-    let sensor = this.getBySensorId(id);
-    let subject = this.observeById(id);
-    if (subject && sensor)
-      subject.next(sensor);
+  create(sensor: FormData): Observable<SensorExtended> {
+    return this.http.post<SensorExtended>("/private/sensors", sensor);
   }
 
-  lazyLoadById(id: number): void {
-    let lastLoad = this._lastLoadBySensorId.get(id);
-    console.log(
-      `Last load of parameters ${lastLoad} => ${
-        new Date().getTime() - (lastLoad ? lastLoad.getTime() : 0)
-      }`
-    );
-    /*
-    if (
-      lastLoad === undefined ||
-      new Date().getTime() - lastLoad.getTime() > 60000
-    )
-      this.loadBySensorId(id);
-    else this.emitBySensorId(id);
-    */
-   this.loadBySensorId(id);
+  update(id: number, sensor: FormData): Observable<SensorExtended> {
+    return this.http.post<SensorExtended>(`/private/sensors/${id}`, sensor);
   }
 
-  loadBySensorId(id: number): void {
-    this._lastLoadBySensorId.set(id, new Date());
-    this.api.getSensorByIdExtended(id).subscribe(
-      sensor => {
-        this._sensors.set(id, sensor);
-        this.emitBySensorId(id);
-        console.log(sensor);
-      },
-      (err) => console.error(err)
-    );
+  getById(id: number): Observable<SensorExtended> {
+    return this.http.get<SensorExtended>(`/public/sensors/${id}?`);
   }
 
-  getBySensorId(id: number): SensorExtended|null {
-    return this._sensors.get(id) || null;
+  getParametersOfId(id: number, options: ParamsOption = {}): Observable<RecordParameters> {
+    return this.http.get<RecordParameters>(`/public/parameters`, {params: { sensorId: id, ...<any>options} } );
   }
 
-  observeById(id: number): Subject<SensorExtended> {
-    return this._subject.get(id) || SensorService.EMPTY_SUBJECT;
+  buildFilename(params: QueryParams, ext?: string): string {
+    const {parameterMetadataId, start, end, type, sensorId} = params;
+    return (
+      parameterMetadataId == undefined ?
+        "parameters" : parameterMetadataId)
+      + "-"
+      + sensorId
+      + (start != undefined || end != undefined
+      ? "-"
+      + (start == undefined ? "X" : start)
+      + "-"
+      + (end == undefined ? "X" : end)
+      : "")
+      + "."
+      + type
+      + (ext? `.${ext}`: "");
   }
 
   download(params: QueryParams): Observable<void> {
-    return this.api.downloadSensorParameters(params);
+
+    return new Observable(
+      o=>{
+        this.http.get("/public/parameters/download", { params: <any>params, responseType: 'blob'}).subscribe(
+          data=>{
+            const blob = new Blob([data], { type: 'application/zip' });
+            const url = window.URL.createObjectURL(blob);
+            saveAs(url, this.buildFilename(params, "zip"));
+            o.next();
+            o.complete();
+          },
+          err=>{
+            o.error(err);
+            o.complete();
+          }
+        )
+      }
+    );
   }
 
-  addSensor(sensor: PartialSensor): Observable<SensorExtended> {
-    return this.http.post<SensorExtended>("/private/sensors", sensor);
+  getImage(id: number): Observable<SafeUrl> {
+    return this.secure.transform(`/public/sensors/${id}/image`);
   }
 }

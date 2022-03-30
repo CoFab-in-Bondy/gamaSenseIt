@@ -1,7 +1,12 @@
 package ummisco.gamaSenseIt.springServer.data.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,15 +17,20 @@ import ummisco.gamaSenseIt.springServer.data.repositories.*;
 import ummisco.gamaSenseIt.springServer.data.services.access.AccessManagement;
 import ummisco.gamaSenseIt.springServer.data.services.geo.GeoService;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
-import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagment;
-import ummisco.gamaSenseIt.springServer.services.formatter.ExportResolver;
+import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagement;
+import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
+import ummisco.gamaSenseIt.springServer.services.export.ExportResolver;
 
 import java.util.ArrayList;
 import java.util.function.Function;
 
 
 public abstract class DataController {
-    final static String NIL = "nil";
+
+    private static final Logger logger = LoggerFactory.getLogger(DataController.class);
+
+    @Autowired
+    protected SecurityUtils securityUtils;
 
     @Autowired
     protected IAccessRepository accessRepo;
@@ -35,7 +45,7 @@ public abstract class DataController {
     protected ISensorMetadataRepository sensorsMetadataRepo;
 
     @Autowired
-    protected ISensorManagment sensorsManagement;
+    protected ISensorManagement sensorsManagement;
 
     @Autowired
     protected IParameterRepository parametersRepo;
@@ -82,13 +92,39 @@ public abstract class DataController {
     }
 
     public Sensor sensorRead(long sensorId) throws ResponseStatusException {
-        var s = sensorsRepo.findReadableSensor(user().getId(), sensorId);
-        if (s == null && user() != publicUser())
-            s = sensorsRepo.findReadableSensor(publicUser().getId(), sensorId);
+        var user = user();
+        var publicUser = publicUser();
+        var s = sensorsRepo.findReadableSensor(user.getId(), sensorId);
+        if (s == null && user != publicUser)
+            s = sensorsRepo.findReadableSensor(publicUser.getId(), sensorId);
         if (s == null) {
-            System.err.println("Can't find sensors with id " + sensorId);
+            logger.warn("Can't find sensors readable with id " + sensorId + " with " + user.getMail());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
         }
         return s;
+    }
+
+    public Sensor sensorManage(long sensorId) throws ResponseStatusException {
+        var user = user();
+        var publicUser = publicUser();
+        if (user == publicUser) {
+            logger.warn("Public user can't have manageable sensor " + sensorId);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
+        }
+        var s = sensorsRepo.findManageableSensor(user.getId(), sensorId);
+        if (s == null) {
+            logger.warn("Can't find sensors manageable with id " + sensorId + " with " + user.getMail());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
+        }
+        return s;
+    }
+
+    public ResponseEntity<byte[]> img(String filename, byte[] image) {
+        filename = securityUtils.sanitizeFilename(filename);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(image);
     }
 }

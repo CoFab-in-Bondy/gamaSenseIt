@@ -26,6 +26,7 @@ public interface IRoute {
             EXTENDED = "/extended",
             DOWNLOAD = "/download",
             ME = "/me",
+            IMAGE = "/image",
             ACCESSES = "/accesses",
             SENSORS_METADATA = SENSORS + METADATA,
             PARAMETERS_METADATA = PARAMETERS + METADATA,

@@ -26,13 +26,17 @@ export class DialogComponent implements AfterContentInit {
   closeElements: QueryList<ElementRef>;
 
   ngAfterContentInit(): void {
+    if (this.closeElements == undefined) return;
     const close = () => this.onClose();
-    this.closeElements.forEach(e => e.nativeElement.onclick = close);
+    this.closeElements.forEach(e => {
+      if (!e.nativeElement) return;
+      e.nativeElement.onclick = close;
+    });
   }
 
   @HostListener("document:click", ["$event"])
   onOut(event: PointerEvent) {
-    if (this.bg.nativeElement == event.target) {
+    if (this.bg.nativeElement && this.bg.nativeElement == event.target) {
       this.onClose();
     }
   }

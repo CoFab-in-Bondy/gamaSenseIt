@@ -66,6 +66,12 @@ public class SensorMetadata {
     @JsonIgnore
     private Set<Sensor> sensors = new HashSet<>();
 
+    // ----- sensor ----- //
+    @Column(name = "icon")
+    @Basic(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private byte[] icon;
+
     public SensorMetadata() {
     } // for JSON compatibility
 
@@ -143,6 +149,14 @@ public class SensorMetadata {
 
     public void setParametersMetadata(Set<ParameterMetadata> parameterMetadata) {
         this.parametersMetadata = parameterMetadata;
+    }
+
+    public byte[] getIcon() {
+        return icon;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
     }
 
     @JsonView(IView.SensorsOfSensorMetadata.class)

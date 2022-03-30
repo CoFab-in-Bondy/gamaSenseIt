@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
-import { ApiService } from "@services/api.service";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable()
 export class AuthService {
-  constructor(private api: ApiService, private router: Router ) { }
+  constructor(private http: HttpClient, private router: Router ) { }
 
   isAuth(): boolean {
     return this.getToken() != null;
@@ -38,9 +38,23 @@ export class AuthService {
     return sessionStorage.removeItem('token');
   }
 
+  private postLogin(username: string, password: string): Observable<any> {
+    return this.http.post<any>("/auth/login", {
+      username: username,
+      password: password
+    });
+  }
+
+  private postResgister(username: string, password: string): Observable<any> {
+    return this.http.post<any>("/auth/register", {
+      username: username,
+      password: password
+    });
+  }
+
   login(username: string, password: string): Observable<void> {
     return new Observable(o => {
-      this.api.postLogin(username, password).subscribe(
+      this.postLogin(username, password).subscribe(
         res => {
           this.setToken(res['token']);
           o.next();
@@ -53,7 +67,7 @@ export class AuthService {
 
   resgister(username: string, password: string): Observable<void> {
     return new Observable(o => {
-      this.api.postResgister(username, password).subscribe(
+      this.postResgister(username, password).subscribe(
         res => {
           this.setToken(res['token']);
           o.next();

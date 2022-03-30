@@ -1,0 +1,86 @@
+@import "all";
+
+.image-input {
+  padding: 0;
+  position: relative;
+  background-color: $white-light-gray;
+
+  .dialog-image {
+    height: 60vh;
+    position: relative;
+  }
+
+  .label-edit {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  .reset, .remove {
+    width: 200px;
+    height: 60px;
+    z-index: 20;
+    top: 5px;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s;
+    font-size: 28px;
+    &:hover {
+      -webkit-filter: brightness(1.1);
+      filter: brightness(1.1);
+    }
+  }
+
+  .reset {
+    background-color: $white-light-gray;
+  }
+
+  .remove {
+    background-color: $red;
+  }
+
+  input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+  }
+
+  label {
+    position: absolute;
+    z-index: 15;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    .icon-edit {
+      margin: 25%;
+      width: 50%;
+      position: absolute;
+      height: 50%;
+      z-index: 10;
+      transition: all 0.2s;
+      opacity: 0;
+    }
+
+    &:hover, &:active {
+      background-color: rgba(180, 180, 180, 0.507);
+
+      .icon-edit {
+        opacity: 1;
+      }
+    }
+
+  }
+
+  .preview {
+    position: relative;
+    z-index: 10;
+    object-fit: cover;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  .view {
+    border-radius: 10px;
+  }
+}

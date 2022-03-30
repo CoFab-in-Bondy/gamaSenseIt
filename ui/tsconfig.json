@@ -23,7 +23,7 @@
     ],
     "paths": {
       "@components/*": ["src/app/shared/components/*"],
-      "@guards/*": ["src/app/shared//*"],
+      "@guards/*": ["src/app/shared/guards/*"],
       "@interceptors/*": ["src/app/shared/interceptors/*"],
       "@models/*": ["src/app/shared/models/*"],
       "@pipes/*": ["src/app/shared/pipes/*"],

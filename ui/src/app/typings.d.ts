@@ -1,3 +1,10 @@
+type SafeHtml = import('@angular/platform-browser').SafeHtml;
+type SafeResourceUrl = import('@angular/platform-browser').SafeResourceUrl;
+type SafeScript = import('@angular/platform-browser').SafeScript;
+type SafeStyle = import('@angular/platform-browser').SafeStyle;
+type SafeUrl = import('@angular/platform-browser').SafeUrl;
+
+
 type N = 0|1|2|3|4|5|6|7|8|8;
 type DD = (
   "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" |
@@ -83,11 +90,17 @@ declare interface SensorMetadata {
   id: number,
   version: string,
   name: string,
-  measuredDataOrder: string,
-  dataSeparator: string,
   description: string,
   // sensors: Sensor[],
   // parametersMetadata: ParameterMetadata[]
+}
+
+type BypassSecurityOptions = {
+  html: SafeHtml,
+	style: SafeStyle,
+	script: SafeScript,
+	url: SafeUrl,
+	resourceUrl: SafeResourceUrl
 }
 
 declare interface SensorExtended {
@@ -98,23 +111,35 @@ declare interface SensorExtended {
   latitude: number,
   longitude: number,
   lastCaptureDate: number,
+  hiddenMessage: string,
+  isHidden: boolean,
+  description: string,
+  manageable: boolean;
+  maintenanceDescription?: string
+  metadata: SensorMetadata
+}
+
+declare interface Icon {
+  url: string,
+  width: number,
+  height: number
+}
+
+declare type DTValue = string|number|Icon;
+declare type DTFormatter<D> = (d: D) => DTValue[];
+declare type DTLinker<D> = (d: D) => (string|number|null)[];
+
+
+declare interface RecordParameters {
   metadata: {
-    id: number,
-    description: string,
-    name: string,
-    version: string,
+    headers : string[]
+    ids : number[],
+    units : string[],
+    formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
+    width : number
   },
-  parameters: {
-    metadata: {
-      headers : string[]
-      ids : number[],
-      units : string[],
-      formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
-      width : number
-    },
-    values : (string|number)[][],
-    total : number,
-  }
+  values : (string|number)[][],
+  total : number,
 }
 
 declare interface SensorMetadataExtended extends SensorMetadata {
@@ -144,14 +169,15 @@ declare interface ParamsOption {
   count?: number
 }
 
-declare interface DataTableEvent {
+declare interface DataTableNatigateEvent {
   sort?: number
   asc?: boolean
   page?: number
   count?: number
 }
 
-declare interface Pos {
+
+type Pos = {
   lat: number,
   lng: number
 }

@@ -15,3 +15,9 @@ header {
 .btn {
   outline: none;
 }
+.sticky-header {
+  position: fixed;
+  top: 0;
+  z-index: 1020;
+  width: 100%;
+}

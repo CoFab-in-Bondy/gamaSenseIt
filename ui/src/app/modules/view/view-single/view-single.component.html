@@ -1,61 +1,204 @@
-<div class="container-fluid my-3 sensor box">
-  <div class="row m-0 mb-3">
-    <div class="sensor-info col-md-5 col-12 p-0">
-      <div>
-        <h2 class="m-0">{{ sensor?.displayName }}</h2>
-        <h3 class="m-0">{{ sensor?.subDisplayName }}</h3>
+<div class="sensor box mt-3">
+  <form [formGroup]="sensorForm" class="m-0 mb-3" enctype="multipart/form-data">
+    <div class="row p-0">
+      <div class="col-12 col-lg-6 col-xl-8">
         <div>
-          <a class="coords" [href]="coordLink()" target="_blank">
-            {{
-              sensor
-                ? humanService.coordsToHumain(sensor.latitude, sensor.longitude)
-                : ""
-            }}
-          </a>
+          <div class="row m-0">
+            <input
+              class="p-0 col-12 col-md-6 order-0 order-md-1 text-start text-md-end"
+              type="text"
+              id="name"
+              minlength="2"
+              maxlength="255"
+              formControlName="name"
+            />
+            <input
+              class="p-0 col-12 col-md-6 order-1 order-md-0"
+              type="text"
+              id="displayName"
+              minlength="5"
+              maxlength="255"
+              formControlName="displayName"
+            />
+            <input
+              class="p-0 col-12 order-2"
+              type="text"
+              id="subDisplayName"
+              minlength="5"
+              maxlength="255"
+              formControlName="subDisplayName"
+            />
+          </div>
+          <div>
+            <div class="pos">
+              <div class="me-2">
+                <p for="latitude" class="d-block d-sm-none">Lat.</p>
+                <label for="latitude" class="d-none d-sm-block">Latitude</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="latitude"
+                  formControlName="latitude"
+                />
+              </div>
+              <div>
+                <p for="latitude" class="d-block d-sm-none">Lng.</p>
+                <label for="longitude" class="d-none d-sm-block">Longitude</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="longitude"
+                  formControlName="longitude"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <select
+            id="sensorMetadata"
+            class="form-control"
+            formControlName="sensorMetadata"
+            (ngModelChange)="onChangeMetadata($event)"
+          >
+            <option
+              *ngFor="let smd of sensorsMetadata"
+              [ngValue]="smd"
+              [selected]="smd.id == metadata?.id"
+            >
+              {{ smd.name }}
+            </option>
+          </select>
+          <div class="input-align">
+            {{ metadata?.version }}
+          </div>
+          <p class="input-align">{{ metadata?.description }}</p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 col-xl-4 row pb-3 m-0">
+        <div class="col-4 p-0 pe-2">
+          <img
+            class="sensor-metadata-logo"
+            #sensorMetadataImg
+            (window:resize)="(0)"
+            [src]="
+              metadata?.id
+                ? ('/public/sensors/metadata/' + metadata?.id + '/image'
+                  | secure
+                  | async)
+                : undefined
+            "
+            style="width: 100%"
+            [ngStyle]="{ 'height.px': sensorMetadataImg.offsetWidth }"
+          />
+        </div>
+        <div class="col-4 p-0 px-1">
+          <app-input-image
+            (image)="photo = $event"
+            name="photo"
+            [default]="defaultUrl"
+            [editable]="edition"
+          ></app-input-image>
+        </div>
+        <div class="col-4 p-0 ps-2">
+          <div
+            id="map-view-single"
+            [ngStyle]="{
+              'width.px': sensorMetadataImg.offsetWidth,
+              'height.px': sensorMetadataImg.offsetWidth
+            }"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-button
+          width="140"
+          url="/assets/buttons/edit.svg"
+          class="edit col me-3 mb-3"
+          (click)="onEdition(); $event.stopPropagation()"
+          *ngIf="!edition && auth.isUser() && editable"
+        >
+          Editer
+        </app-button>
+
+        <app-button
+          width="140"
+          *ngIf="edition && auth.isUser()"
+          fa="fas fa-cloud-upload"
+          class="edit col me-3 mb-3"
+          (click)="onSave(); $event.stopPropagation()"
+        >
+          Sauvegarder
+        </app-button>
+
+        <app-dialog class="download col mb-3" *ngIf="!create">
+          <app-button width="140" fa="fas fa-cloud-download" trigger>
+            Télécharger
+          </app-button>
+
+          <div body>
+            <div class="buttons">
+              <app-button
+                url="assets/buttons/csv.svg"
+                class="me-3"
+                (click)="onDownloadCSV()"
+                #close
+              >
+                CSV
+              </app-button>
+              <app-button
+                url="assets/buttons/json.svg"
+                (click)="onDownloadJSON()"
+                #close
+              >
+                JSON
+              </app-button>
+            </div>
+          </div>
+        </app-dialog>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12" [ngClass]="{ 'col-md-6': editable }">
+        <strong>Description</strong>
+        <div class="description">
+          <textarea
+            type="text"
+            id="description"
+            formControlName="description"
+          ></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6" *ngIf="editable">
+        <strong>Description de maintenance</strong>
+        <div class="description">
+          <textarea
+            type="text"
+            id="maintenanceDescription"
+            formControlName="maintenanceDescription"
+          ></textarea>
         </div>
       </div>
     </div>
 
-    <div class="sensor-metadata-info col-md-5 col-12 p-0">
-      <div>
-        {{ sensor?.metadata?.name }}
-      </div>
-      <div>
-        {{ sensor?.metadata?.version }}
-      </div>
-      <p>{{ sensor?.metadata?.description }}</p>
+    <div class="m-0 p-0" [ngClass]="{ 'd-none': create }">
+      <app-data-table
+        class="p-0"
+        [length]="parameters?.total"
+        [scales]="[25, 50, 100]"
+        sortable="SERVER"
+        pagable="SERVER"
+        [minSizes]="sizes()"
+        [data]="this.parameters?.values || []"
+        [formater]="formater"
+        [empty]="'Aucune donnée à afficher'"
+        [headers]="parameters?.metadata?.headers || []"
+        (navigate)="onChange($event)"
+        [height]="600"
+      >
+      </app-data-table>
     </div>
-
-    <app-dialog class="col-md-2 col-12 p-0">
-      <app-button class="mb-3 mb-md-0 float-md-end" width="120" url="/assets/buttons/download.svg" trigger>
-        Télécharger
-      </app-button>
-
-      <div body>
-        <div class="buttons">
-          <button class="degraded" (click)="onDownloadCSV();" #close>
-            CSV
-          </button>
-          <button class="degraded" (click)="onDownloadJSON()" #close>
-            JSON
-          </button>
-        </div>
-      </div>
-    </app-dialog>
-
-  <div class="row m-0 p-0">
-    <app-data-table
-      class="p-0"
-      [length]="sensor?.parameters?.total"
-      [scales]="[25, 50, 100]"
-      [sortable]="'SERVER'"
-      [pagable]="'SERVER'"
-      [minSizes]="sizes()"
-      [data]="this.records || []"
-      [empty]="'Aucune donnée à afficher'"
-      [headers]="sensor?.parameters?.metadata?.headers || []"
-      (navigate)="onChange($event)"
-    >
-    </app-data-table>
-  </div>
+  </form>
 </div>

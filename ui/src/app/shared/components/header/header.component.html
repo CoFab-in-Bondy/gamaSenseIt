@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
+<header class="navbar navbar-expand-md navbar-dark bg-primary sticky-header">
   <div class="container-fluid">
     <a class="navbar-brand" [routerLink]="['/']">GamaSenseIt</a>
     <button class="navbar-toggler"
@@ -15,11 +15,11 @@
       <div class="navbar-nav" (click)="collapsed=true">
         <a class="nav-link btn" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/']">Accueil</a>
         <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/view']">Visualisation</a>
-        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/sensors']" *ngIf="auth.isUser()">Gestion des capteurs</a>
-        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/accesses']" *ngIf="auth.isUser()">Gestion des accès</a>
+        <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/accesses']" *ngIf="auth.isUser()">Groupes</a>
         <button class="nav-link btn" (click)="logout()" *ngIf="auth.isAuth()">Déconnexion</button>
         <a class="nav-link btn" routerLinkActive="active" [routerLink]="['/login']" *ngIf="!auth.isAuth()">Connexion</a>
       </div>
     </div>
   </div>
 </header>
+<div style="height: 58px;"></div>

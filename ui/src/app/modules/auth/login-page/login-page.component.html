@@ -3,12 +3,12 @@
     <div class="from-group">
       <label for="mail">Mail</label>
       <input type="text" class="form-control" id="mail"
-             formControlName="mail">
+             formControlName="mail" autocomplete="email">
     </div>
     <div class="from-group">
       <label for="password">Mot de passe</label>
-      <input type="text" class="form-control" id="password"
-             formControlName="password">
+      <input type="password" class="form-control" id="password"
+             formControlName="password" autocomplete="current-password">
     </div>
     <button class="btn btn-primary mt-3" type="submit" [disabled]="userForm.invalid">Se connecter</button>
   </form>

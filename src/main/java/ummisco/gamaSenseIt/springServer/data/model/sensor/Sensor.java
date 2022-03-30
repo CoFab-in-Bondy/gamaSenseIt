@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.vividsolutions.jts.geom.Point;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 @Entity
 public class Sensor {
@@ -77,12 +78,13 @@ public class Sensor {
     @JsonProperty("hiddenMessage")
     @JsonView(IView.Public.class)
     private String hiddenMessage;
+
+    // ----- sensorMetadata ----- //
     @JoinColumn(name = "sensor_metadata_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private SensorMetadata sensorMetadata;
 
-    // ----- sensorMetadata ----- //
     @Column(name = "sensor_metadata_id", nullable = false, insertable = false, updatable = false)
     @JsonProperty("sensorMetadataId")
     @JsonView(IView.Public.class)
@@ -94,6 +96,24 @@ public class Sensor {
     @JsonView(IView.Public.class)
     private Date lastCaptureDate;
 
+    // ----- photo ----- //
+    @Column(name = "photo")
+    @Basic(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private byte[] photo;
+
+    // ----- description ----- //
+    @Column(name = "description", nullable = false)
+    @JsonProperty("description")
+    @JsonView(IView.Public.class)
+    private String description;
+
+    // ----- description ----- //
+    @Column(name = "maintenance_description", nullable = false)
+    @JsonProperty("maintenanceDescription")
+    @JsonIgnore
+    private String maintenanceDescription;
+
     // ----- bulk_data ----- //
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
     @JsonIgnore
@@ -102,27 +122,9 @@ public class Sensor {
     public Sensor() {
     } // for JSON compatibility
 
-    public Sensor(String sensorName, String displayName, Point location, SensorMetadata sensorMetadata) {
-        this(sensorName, displayName, location.getX(), location.getY(), sensorMetadata);
-    }
-
-    public Sensor(String sensorName, String displayName, String subDisplayName, Point location, SensorMetadata sensorMetadata) {
-        this(sensorName, displayName, subDisplayName, location.getX(), location.getY(), sensorMetadata);
-    }
-
-    public Sensor(String sensorName, String displayName, double locationX, double locationY, SensorMetadata sensorMetadata) {
-        this(sensorName, displayName, null, locationX, locationY, sensorMetadata);
-    }
-
-    public Sensor(String sensorName, String displayName, String subDisplayName, double locationX, double locationY,
-                  SensorMetadata sensorType) {
-        this.name = sensorName;
-        this.displayName = displayName;
-        this.subDisplayName = subDisplayName;
-        this.longitude = locationX;
-        this.latitude = locationY;
-        this.sensorMetadata = sensorType;
-        this.isHidden = false;
+    public void setLocation(Point location) {
+        setLongitude(location.getX());
+        setLatitude(location.getY());
     }
 
     /*
@@ -143,6 +145,47 @@ public class Sensor {
     }
     */
 
+    public boolean isNotifier() {
+        return notifier;
+    }
+
+    public void setNotifier(boolean notifier) {
+        this.notifier = notifier;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public void setPhoto(MultipartFile photo) {
+        try {
+            this.photo = photo.getBytes();
+        } catch (IOException err) {
+            System.err.println("Invalid bytes");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid bytes");
+        }
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMaintenanceDescription() {
+        return maintenanceDescription;
+    }
+
+    public void setMaintenanceDescription(String maintenanceDescription) {
+        this.maintenanceDescription = maintenanceDescription;
+    }
+
     public Date getLastCaptureDate() {
         return lastCaptureDate;
     }
@@ -151,7 +194,7 @@ public class Sensor {
         this.lastCaptureDate = lastCaptureDate;
     }
 
-    public Node toNode() {
+    public Node toNode(boolean manager) {
         return new Node() {{
             put("id", getId());
             put("name", getName());
@@ -160,7 +203,17 @@ public class Sensor {
             put("latitude", getLatitude());
             put("longitude", getLongitude());
             put("metadata", getSensorMetadata().toNode());
+            put("description", getDescription());
+            put("isHidden", isHidden());
+            put("hiddenMessage", getHiddenMessage());
+            put("manageable", manager);
+            if (manager)
+                put("maintenanceDescription", getMaintenanceDescription());
         }};
+    }
+
+    public Node toNode() {
+        return toNode(false);
     }
 
     public Long getId() {
@@ -236,14 +289,11 @@ public class Sensor {
 
     public void setSensorMetadata(SensorMetadata sensorMetadata) {
         this.sensorMetadata = sensorMetadata;
+        this.sensorMetadataId = this.sensorMetadata == null? null: this.sensorMetadata.getId();
     }
 
     public Long getSensorMetadataId() {
         return sensorMetadataId;
-    }
-
-    public void setSensorMetadataId(Long sensorMetadataId) {
-        this.sensorMetadataId = sensorMetadataId;
     }
 
     @JsonView(IView.ParametersOfSensor.class)
@@ -262,7 +312,22 @@ public class Sensor {
 
     @Override
     public String toString() {
-        return "Sensor(" + this.getId() + ")";
+        return "Sensor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", subDisplayName='" + subDisplayName + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isHidden=" + isHidden +
+                ", notifier=" + notifier +
+                ", hiddenMessage='" + hiddenMessage + '\'' +
+                ", sensorMetadataId=" + sensorMetadataId +
+                ", lastCaptureDate=" + lastCaptureDate +
+                ", photo.length=" + (photo == null? "null": photo.length) +
+                ", description.length=" + description.length() +
+                ", maintenanceDescription.length=" + maintenanceDescription.length()  +
+                '}';
     }
 
     @Override

@@ -1,0 +1,68 @@
+<div
+  class="image-input"
+  #square (window:resize)="0"
+  [ngStyle]="{'height.px': square.offsetWidth }"
+>
+  <app-dialog class="download col mb-3">
+    <div class="m-0 p-0" [ngStyle]="{'height.px': square.offsetWidth, 'width.px': square.offsetWidth}" trigger>
+      <img
+        *ngIf="imageSrc"
+        (load)="onLoad($event)"
+        [src]="imageSrc"
+        class="preview m-0 p-0"
+        trigger
+      >
+      <p *ngIf="imageSrc"></p>
+    </div >
+
+    <div body>
+      <div class="d-flex justify-content-center dialog-image">
+
+        <label
+          [for]="name"
+          class="label-edit"
+          *ngIf="editable"
+        >
+          <img class="icon-edit" src="assets/buttons/edit.svg">
+        </label>
+        <input
+          type="file"
+          [name]="name"
+          [id]="name"
+          [attr.formControlName]="name"
+          accept="image/png"
+          (change)="onImagePreview()"
+          #imageRef
+        />
+        <img
+          *ngIf="imageSrc"
+          [src]="imageSrc"
+          class="view"
+        >
+      </div>
+
+      <div class="d-flex justify-content-center gap-3 mt-3" *ngIf="editable">
+        <app-button width="140" fa="fas fa-sync-alt" (click)="onImageReset()">
+          Annuller
+        </app-button>
+        <app-button width="140" fa="fas fa-times" (click)="onImageRemove()">
+          Supprimer
+        </app-button>
+      </div>
+
+      <div class="d-flex justify-content-center gap-3 mt-3" *ngIf="!editable && imageSrc">
+        <app-button width="140" fa="fas fa-expand-arrows-alt" [href]="imageSrc" blank="true">
+          Aggrandir
+        </app-button>
+        <app-button width="140" fa="fas fa-cloud-download" (click)="onDownload(); $event.preventDefault(); $event.stopPropagation()">
+          Télécharger
+        </app-button>
+      </div>
+
+    </div>
+  </app-dialog>
+
+
+
+
+</div>

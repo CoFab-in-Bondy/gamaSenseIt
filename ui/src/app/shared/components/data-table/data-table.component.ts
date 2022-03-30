@@ -5,7 +5,6 @@ import {
   Input,
   Output,
 } from "@angular/core";
-import { Icon } from "@models/icon.model";
 
 enum SortEnum {
   SERVER = 2,
@@ -19,19 +18,24 @@ enum PageEnum {
   NO = 0,
 }
 
+
 @Component({
   selector: "app-data-table",
   templateUrl: "./data-table.component.html",
   styleUrls: ["./data-table.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent {
+export class DataTableComponent<D> {
   SortEnum = SortEnum;
   PageEnum = PageEnum;
-  Icon = Icon;
 
-  isIcon(value: string|Icon) {
-    return value instanceof Icon;
+  isIcon(value: any): value is Icon {
+    return value.url != undefined && value.width != undefined && value.height != undefined;
+  }
+
+  /* perfom cast in template */
+  any(v: any): any {
+    return v;
   }
 
   @Input() height: number = 250;
@@ -44,12 +48,13 @@ export class DataTableComponent {
 
   @Input() minSizes: number[] = [];
   @Input() headers: string[] = [];
-  @Input() data: any[][] = [];
+  @Input() data: D[] = [];
+  @Input() formater: (d: D) => DTValue[];
+  @Input() linker: (d: D) => (string|number|null)[];
   @Input() empty = "Aucune données";
 
-  @Input() routerLinks: (number| string)[][];
-
-  @Output() navigate = new EventEmitter<DataTableEvent>();
+  @Output() navigate = new EventEmitter<DataTableNatigateEvent>();
+  @Output() select = new EventEmitter<D>();
 
   loading = true;
   failed = false;
@@ -74,6 +79,10 @@ export class DataTableComponent {
   onScroll(ev: Event) {
     if (!ev.target) return;
     this.scroll = Number((<any>ev).target.scrollLeft);
+  }
+
+  onSelect(d: D) {
+    this.select.emit(d);
   }
 
   onSort(index: number) {
@@ -138,7 +147,7 @@ export class DataTableComponent {
   format(value: any): string | Icon {
     if (value === null || value === undefined || value === NaN)
       return "";
-    if (value instanceof Icon)
+    if (this.isIcon(value))
       return value;
     return value.toString();
   }

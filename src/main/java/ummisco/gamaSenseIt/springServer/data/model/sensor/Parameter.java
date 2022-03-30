@@ -15,19 +15,19 @@ public class Parameter {
     // ----- parameter_id ----- //
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @JsonProperty("id")
     @JsonView(IView.Public.class)
     private Long id;
 
     // ----- data ----- //
     @Lob
-    @Column(name = "data")
+    @Column(name = "data", nullable = false)
     @JsonIgnore
     private byte[] data;
 
     // ----- captureDate ----- //
-    @Column(name = "capture_date")
+    @Column(name = "capture_date", nullable = false)
     @JsonProperty("captureDate")
     @JsonView(IView.Public.class)
     private Date captureDate;

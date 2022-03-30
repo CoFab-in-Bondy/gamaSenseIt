@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AccessService } from '@guards/services/access.service';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { AccessService } from '@services/access.service';
 
 @Component({
   selector: 'app-access-item',
@@ -15,7 +14,7 @@ export class AccessItemComponent implements OnInit {
   @Input() m: AccessMatchSensor|AccessMatchUser;
 
   ngOnInit(): void {
-    
+
   }
 
   isSensor(m: AccessMatch): m is AccessMatchSensor {

@@ -5,11 +5,10 @@ import { Error403Component } from "@components/error403/error403.component";
 
 import { Error404Component } from "@components/error404/error404.component";
 import { Error500Component } from "@components/error500/error500.component";
-import { UserGuard } from "@guards/guards/user.guard";
+import { UserGuard } from "@guards/user.guard";
 import { ViewPageComponent } from "./modules/view/view-page/view-page.component";
 import { ViewSingleComponent } from "./modules/view/view-single/view-single.component";
 import { LoginPageComponent } from "./modules/auth/login-page/login-page.component";
-import { SensorPageComponent } from "./modules/sensors/sensor-page/sensor-page.component";
 import { AccessPageComponent } from "./modules/accesses/access-page/access-page.component";
 import { AccessSingleComponent } from "./modules/accesses/access-single/access-single.component";
 
@@ -25,6 +24,7 @@ const routes: Routes = [
     children: [
       {
         path: ":id",
+        pathMatch: "full",
         component: ViewSingleComponent
       }
     ]
@@ -37,12 +37,6 @@ const routes: Routes = [
     path: "login",
     pathMatch: "full",
     component: LoginPageComponent,
-  },
-  {
-    path: "sensors",
-    canActivate: [UserGuard],
-    pathMatch: "full",
-    component: SensorPageComponent,
   },
   {
     path: "accesses",

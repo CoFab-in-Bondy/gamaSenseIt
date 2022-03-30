@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, OnDestroy, ViewChildren, ElementRef, ViewChild } from "@angular/core";
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as L from "leaflet";
 import { Subscription } from "rxjs";
-import { DELAY_DEAD, DELAY_NO_SIGNAL } from "src/app/constantes";
+import { DELAY_DEAD, DELAY_NO_SIGNAL, LEAFLET_ATTRIBUTION, LEAFLET_URL } from "src/app/constantes";
 import { CLICK_MARKER, GREEN_MARKER, ORANGE_MARKER, RED_MARKER } from "@models/icon.model";
 import { HumanService } from "@services/human.service";
 import { SensorMetadataService } from "@services/sensorMetadata.service";
@@ -14,14 +14,14 @@ import { SensorMetadataService } from "@services/sensorMetadata.service";
 })
 export class ViewMapComponent implements OnInit, OnDestroy {
   private map: L.Map;
-  private sensorsSubscription: Subscription;
   private routeSubscription: Subscription;
   private sensorsMetadata: SensorMetadataExtended[] = [];
   private markers = new Map<number, [Sensor, any]>();
   private markerActive: any;
   private sensorActive: any;
 
-  @Input() height: number = 250;
+  @Input() height: number = 600;
+  @Output() select = new EventEmitter<number>();
 
   constructor(
     private sensorMetadataService: SensorMetadataService,
@@ -37,12 +37,11 @@ export class ViewMapComponent implements OnInit, OnDestroy {
     });
 
     const tiles = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      LEAFLET_URL,
       {
         maxZoom: 18,
         minZoom: 1,
-        attribution:
-          "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+        attribution: LEAFLET_ATTRIBUTION,
       }
     );
 
@@ -51,8 +50,7 @@ export class ViewMapComponent implements OnInit, OnDestroy {
 
   init() {
     this.initMap();
-    this.sensorsSubscription = this.sensorMetadataService
-      .observeAll()
+    this.sensorMetadataService.getAll()
       .subscribe(
         (sensors) => {
 
@@ -75,22 +73,15 @@ export class ViewMapComponent implements OnInit, OnDestroy {
               }
             }
           });
-          
-          setTimeout(()=>{
-            this.map.invalidateSize();
-          }, 0);
 
-          setTimeout(()=>{
-            this.map.invalidateSize();
-          }, 500);
-
-          setTimeout(()=>{
-            this.map.invalidateSize();
-          }, 2000);
+          [0, 100, 500, 2000, 5000].forEach(s => {
+            setTimeout(()=>{
+              this.map.invalidateSize();
+            }, s);
+          });
         },
         (err) => console.error(err)
       );
-    this.sensorMetadataService.lazyLoad();
   }
 
   ngOnInit(): void {
@@ -130,12 +121,13 @@ export class ViewMapComponent implements OnInit, OnDestroy {
     this.markers.set(s.id, [s, marker]);
     marker.addTo(this.map);
     marker.on("click", (e: L.LeafletEvent) => {
+      this.addSensorToMap(s, true);
       this.router.navigate(["/view", s.id]);
+      this.select.emit(s.id);
     });
   }
 
   ngOnDestroy(): void {
-    this.sensorsSubscription?.unsubscribe();
     this.routeSubscription?.unsubscribe();
   }
 

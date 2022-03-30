@@ -1,4 +1,11 @@
 <div class="container-fluid box">
+  <div>
+    <i class="fas me-2" [ngClass]="{
+      'fa-tools': access?.privilege == 'MAINTENANCE',
+      'fa-users': access?.privilege != 'MAINTENANCE'
+    }"></i>
+    <span>{{ access?.name }}</span>
+  </div>
   <input type="text" placeholder="Rechercher" (input)="onSearch($event)" />
   <div class="my-2">
     <app-tributton (swap)="onUserOrSensor($event)" left="fas fa-hdd" right="fas fa-user"></app-tributton>

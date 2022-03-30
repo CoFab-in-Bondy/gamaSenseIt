@@ -2,13 +2,14 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subscriber } from "rxjs";
 import { DEFAULT_LAT, DEFAULT_LNG } from "src/app/constantes";
+import { DatePipe } from "@angular/common";
 
 @Injectable()
 export class HumanService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public datepipe: DatePipe) {}
 
-  coordsToHumain(lat: number, long: number, precision = 3) {
+  coordsToHumain(lat: number, long: number, precision = 3): string {
     return this.coord(lat, "N", "S", precision) + " " + this.coord(long, "E", "W", precision);
   }
 
@@ -69,5 +70,9 @@ export class HumanService {
 
   getApproximateLocation(): Observable<Pos> {
     return new Observable(o=>this.forwardToGetApproximateLocation(o));
+  }
+
+  date(date: Date): string {
+    return this.datepipe.transform(date, "MMddyyyy") || "01012000";
   }
 }

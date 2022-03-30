@@ -48,4 +48,15 @@ public interface ISensorRepository extends CrudRepository<Sensor, Long> {
             """)
     Set<Sensor> findManageableSensors(long userId);
 
+    @Query("""
+                SELECT DISTINCT s FROM Sensor s
+                    JOIN AccessSensor acs ON (acs.sensorId = s.id)
+                    JOIN Access ac ON (ac.id = acs.accessId)
+                    JOIN AccessUser acu ON (acu.accessId = ac.id)
+                        WHERE acu.userId = :userId
+                            AND ac.privilege = 0
+                            AND s.id = :sensorId
+            """)
+    Sensor findManageableSensor(long userId, long sensorId);
+
 }

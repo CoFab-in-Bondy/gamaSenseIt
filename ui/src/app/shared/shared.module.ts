@@ -3,7 +3,6 @@ import { CommonModule, DatePipe, DecimalPipe } from "@angular/common";
 import { Error404Component } from "./components/error404/error404.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { Error500Component } from "./components/error500/error500.component";
-import { ApiService } from "./services/api.service";
 import { AuthGuard } from "./guards/auth.guard";
 import { RouterModule } from "@angular/router";
 import { AuthService } from "./services/auth.service";
@@ -27,6 +26,10 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { JwtInterceptor } from "./interceptors/jwt.interceptor";
 import { XsrfInterceptor } from "./interceptors/xsrf.interceptor";
 import { TributtonComponent } from './components/tributton/tributton.component';
+import { SecurePipe } from "@pipes/secure.pipe";
+import { InputImageComponent } from './components/input-image/input-image.component';
+import { SafePipe } from './pipes/safe.pipe';
+import { UnsafePipe } from './pipes/unsafe.pipe';
 
 @NgModule({
   imports: [CommonModule, RouterModule],
@@ -40,7 +43,9 @@ import { TributtonComponent } from './components/tributton/tributton.component';
     DialogComponent,
     ButtonComponent,
     DateAgoPipe,
+    SecurePipe,
     TributtonComponent,
+    InputImageComponent,
     // global exports
     CommonModule,
     FormsModule,
@@ -61,9 +66,13 @@ import { TributtonComponent } from './components/tributton/tributton.component';
     DialogComponent,
     ButtonComponent,
     DateAgoPipe,
-    TributtonComponent
+    SecurePipe,
+    TributtonComponent,
+    InputImageComponent,
+    SafePipe,
+    UnsafePipe
   ],
-  providers: [ApiService],
+  providers: [],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
@@ -79,12 +88,13 @@ export class SharedModule {
         AdminGuard,
         AuthService,
         HumanService,
-        ApiService,
         // global providers
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: XsrfInterceptor, multi: true },
         DatePipe,
-        DecimalPipe,
+        SecurePipe,
+        DateAgoPipe,
+        DecimalPipe
       ],
     };
   }

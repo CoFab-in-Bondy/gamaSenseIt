@@ -56,6 +56,9 @@ CREATE TABLE sensor (
     sensor_metadata_id BIGINT NOT NULL,
     sub_display_name VARCHAR(255),
     notifier BIT NOT NULL DEFAULT FALSE,
+    photo MEDIUMBLOB,
+    description TEXT NOT NULL DEFAULT '',
+    maintenance_description TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
@@ -71,19 +74,20 @@ CREATE TABLE sensored_bulk_data (
 
 CREATE TABLE sensor_metadata (
     id BIGINT NOT NULL,
-    data_separator VARCHAR(255),
-    description VARCHAR(255),
-    name VARCHAR(255),
-    version VARCHAR(255),
+    data_separator VARCHAR(255) DEFAULT ':',
+    description VARCHAR(255) DEFAULT '',
+    name VARCHAR(255) NOT NULL,
+    version VARCHAR(255) NOT NULL DEFAULT 'v0.0.1',
+    icon MEDIUMBLOB,
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
 CREATE TABLE user (
     id BIGINT NOT NULL,
-    firstname VARCHAR(60),
-    lastname VARCHAR(60),
-    mail VARCHAR(200),
-    password VARCHAR(255),
+    firstname VARCHAR(60) NOT NULL,
+    lastname VARCHAR(60) NOT NULL,
+    mail VARCHAR(200) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     privilege INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY (id)
 ) engine = InnoDB;

@@ -5,8 +5,10 @@
 [minSizes]="[150, 150, 200, 50]"
 [data]="sensors"
 [headers]="['Nom', 'Type', 'DMS', 'Status']"
-[routerLinks]="links"
+[formater]="formater"
+[linker]="linker"
 [empty]="'Aucun capteurs disponible'"
-[height]="250-44-2">
+[height]="600-44-2"
+(select)="select.emit($event[0].id)">
 </app-data-table>
 
