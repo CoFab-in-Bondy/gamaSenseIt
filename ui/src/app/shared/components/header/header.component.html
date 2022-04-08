@@ -21,14 +21,14 @@
         <mat-icon mat-list-icon>how_to_reg</mat-icon>
         <h4 mat-line *ngIf="isOpen()">Connection</h4>
       </mat-list-item>
-      <mat-list-item *ngIf="auth.isAuth()" mat-list-item (click)="auth.logout()">
+      <mat-list-item *ngIf="auth.isAuth()" mat-list-item (click)="logout()">
         <mat-icon mat-list-icon>logout</mat-icon>
         <h4 mat-line *ngIf="isOpen()">Déconnection</h4>
       </mat-list-item>
     </mat-nav-list>
   </mat-drawer>
 
-  <div>
+  <div class="w-100">
     <ng-content></ng-content>
   </div>
 </mat-drawer-container>

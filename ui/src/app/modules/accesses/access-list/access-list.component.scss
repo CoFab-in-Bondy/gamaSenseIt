@@ -20,16 +20,24 @@ i {
   width: 160px;
 }
 
+.name {
+  width: 10px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .sizeSensors, .sizeUsers {
   background-color: lightcyan;
-  border-radius: 15px
+  border-radius: 15px;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .sizeSensors {
-  width: 70px;
+  width: 60px;
 }
 .sizeUsers {
-  width: 70px;
+  width: 60px;
 }
 
 .ligne {

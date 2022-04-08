@@ -28,6 +28,12 @@
 }
 
 
+.name {
+  width: 10px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
 i.sensor, i.user{
   height: 30px;
   width: 30px;
