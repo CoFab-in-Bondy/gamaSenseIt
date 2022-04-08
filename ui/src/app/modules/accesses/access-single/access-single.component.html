@@ -1,4 +1,4 @@
-<div class="container-fluid box">
+<div class="container-fluid box h-100">
   <div>
     <i class="fas me-2" [ngClass]="{
       'fa-tools': access?.privilege == 'MAINTENANCE',
@@ -13,12 +13,12 @@
   <div class="my-2">
     <app-tributton (swap)="onInOrOut($event)" left="fas fa-plus" right="fas fa-times"></app-tributton>
   </div>
-  <div class="wrapper">
+  <div class="wrapper" [ngStyle]="{'height.px': getSize()}">
     <div class="line mx-2" *ngFor="let match of search">
       <app-access-item [accessId]="id" [m]="match"></app-access-item>
     </div>
     <div *ngIf="search.length == 0">
-      Aucuns résulats
+      Aucuns résultats
     </div>
   </div>
 </div>

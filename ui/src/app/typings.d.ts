@@ -18,6 +18,12 @@ type MM = (
 type YYYY = `${20|21}${N}${N}`
 type DDMMYYYY = `${DD}${MM}${YYYY}`;
 
+declare interface ErrorValue {
+  title: string;
+  message: string;
+  status: number|null;
+}
+
 declare interface Parameter {
   id: number,
   value: number | string,

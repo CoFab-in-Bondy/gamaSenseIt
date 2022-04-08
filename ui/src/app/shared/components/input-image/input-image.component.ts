@@ -1,4 +1,16 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SecurityContext, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SecurityContext,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 
@@ -7,7 +19,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './input-image.component.html',
   styleUrls: ['./input-image.component.scss']
 })
-export class InputImageComponent implements OnInit {
+export class InputImageComponent implements AfterContentInit {
 
   @Input()
   default: SafeUrl;
@@ -29,10 +41,14 @@ export class InputImageComponent implements OnInit {
   width = 0;
   height = 0;
 
+  init = false;
   @ViewChild("imageRef", {static: true})
-  public imageRef: ElementRef;
+  imageRef: ElementRef;
 
-  constructor(private sanitizer: DomSanitizer) { }
+  @ViewChild("square")
+  square: ElementRef
+
+  constructor(private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.onImageReset()
@@ -92,5 +108,14 @@ export class InputImageComponent implements OnInit {
 
   get url() {
     return this.imageSrc? this.sanitizer.sanitize(SecurityContext.URL, this.imageSrc) || undefined: undefined;
+  }
+
+  getSize() {
+    return this.init && this.square? this.square.nativeElement.offsetWidth: 1;
+  }
+
+
+  ngAfterContentInit(): void {
+    setTimeout(()=>{this.init = true});
   }
 }

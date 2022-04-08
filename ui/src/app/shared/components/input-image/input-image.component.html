@@ -1,17 +1,17 @@
 <div
   class="image-input"
   #square (window:resize)="0"
-  [ngStyle]="{'height.px': square.offsetWidth }"
+  [ngStyle]="{'height.px': getSize() }"
 >
   <app-dialog class="download col mb-3">
-    <div class="m-0 p-0" [ngStyle]="{'height.px': square.offsetWidth, 'width.px': square.offsetWidth}" trigger>
+    <div class="m-0 p-0" [ngStyle]="{'height.px': getSize(), 'width.px': getSize() }" trigger>
       <img
         *ngIf="imageSrc"
         (load)="onLoad($event)"
         [src]="imageSrc"
         class="preview m-0 p-0"
         trigger
-      >
+        alt="Photo du capteur">
       <p *ngIf="imageSrc"></p>
     </div >
 
@@ -23,7 +23,7 @@
           class="label-edit"
           *ngIf="editable"
         >
-          <img class="icon-edit" src="assets/buttons/edit.svg">
+          <img class="icon-edit" src="assets/buttons/edit.svg" alt="icon simple">
         </label>
         <input
           type="file"
@@ -43,7 +43,7 @@
 
       <div class="d-flex justify-content-center gap-3 mt-3" *ngIf="editable">
         <app-button width="140" fa="fas fa-sync-alt" (click)="onImageReset()">
-          Annuller
+          Anuller
         </app-button>
         <app-button width="140" fa="fas fa-times" (click)="onImageRemove()">
           Supprimer
@@ -52,7 +52,7 @@
 
       <div class="d-flex justify-content-center gap-3 mt-3" *ngIf="!editable && imageSrc">
         <app-button width="140" fa="fas fa-expand-arrows-alt" [href]="imageSrc" blank="true">
-          Aggrandir
+          Agrandir
         </app-button>
         <app-button width="140" fa="fas fa-cloud-download" (click)="onDownload(); $event.preventDefault(); $event.stopPropagation()">
           Télécharger

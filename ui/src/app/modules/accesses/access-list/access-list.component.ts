@@ -16,9 +16,6 @@ export class AccessListComponent implements OnInit {
     this.onSearch('');
   }
 
-  onClick(access: Access) {
-    this.router.navigate(["/accesses", access.id]);
-  }
 
   onSearch(event: Event | string) {
     const query: string =
@@ -26,5 +23,9 @@ export class AccessListComponent implements OnInit {
     this.accessService.search({ query }).subscribe((res) => {
       this.accesses = res;
     }, console.error);
+  }
+
+  getSize() {
+    return window.innerHeight - 160;
   }
 }

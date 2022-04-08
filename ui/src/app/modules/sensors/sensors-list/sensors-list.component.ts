@@ -6,26 +6,27 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ChangeDetectorRef, Input,
 } from "@angular/core";
 import { HumanService } from "@services/human.service";
 
 @Component({
-  selector: "app-view-list",
-  templateUrl: "./view-list.component.html",
-  styleUrls: ["./view-list.component.scss"],
+  selector: "app-sensors-list",
+  templateUrl: "./sensors-list.component.html",
+  styleUrls: ["./sensors-list.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewListComponent implements OnInit, OnDestroy {
+export class SensorsListComponent implements OnInit, OnDestroy {
   sensors: [Sensor, SensorMetadataExtended][] = [];
   links: (number | string)[][] = [];
   GREEN_ICON: Icon = {"url": "assets/lights/light-green.svg", width: 24, height: 24};
   ORANGE_ICON: Icon = {"url": "assets/lights/light-orange.svg", width: 24, height: 24};
   RED_ICON: Icon = {"url": "assets/lights/light-red.svg", width: 24, height: 24};
 
+  @Input() height: number = 600;
   @Output() select = new EventEmitter<number>();
 
-  linker: DTLinker<[Sensor, SensorMetadataExtended]> = ([s, smd]) => ["/view", s.id];
+  linker: DTLinker<[Sensor, SensorMetadataExtended]> = ([s, smd]) => ["/sensors", s.id];
   formater: DTFormatter<[Sensor, SensorMetadataExtended]> = ([s, smd]) => [
       s.displayName,
       `${smd.name} (${smd.version})`,

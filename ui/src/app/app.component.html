@@ -1,4 +1,12 @@
-<app-header></app-header>
-<main>
-  <router-outlet></router-outlet>
-</main>
+<app-header>
+  <main>
+    <app-dialog>
+      <div body>
+        <p> {{ error.getStatus() }} </p>
+        <p> {{ error.getTitle() }} </p>
+        <p> {{ error.getMessage() }} </p>
+      </div>
+    </app-dialog>
+    <router-outlet></router-outlet>
+  </main>
+</app-header>

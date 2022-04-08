@@ -1,5 +1,7 @@
 import {
-  Component,
+  AfterContentChecked,
+  AfterContentInit, AfterViewInit, ChangeDetectorRef,
+  Component, ElementRef,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -19,7 +21,7 @@ import {
   DEFAULT_CENTER,
   DEFAULT_LAT,
   LEAFLET_ATTRIBUTION_SMALL,
-  LEAFLET_URL,
+  LEAFLET_URL, NO_IMG,
 } from "src/app/constantes";
 import { CLICK_MARKER } from "@models/icon.model";
 import { AuthService } from "@services/auth.service";
@@ -32,11 +34,11 @@ const widths = {
 };
 
 @Component({
-  selector: "app-view-single",
-  templateUrl: "./view-single.component.html",
-  styleUrls: ["./view-single.component.scss"],
+  selector: "app-sensors-single",
+  templateUrl: "./sensors-single.component.html",
+  styleUrls: ["./sensors-single.component.scss"],
 })
-export class ViewSingleComponent implements OnInit, OnDestroy {
+export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentChecked {
   id?: number = 0;
   metadata?: SensorMetadata;
   editable: boolean = false;
@@ -52,11 +54,18 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
   photo?: File;
   formater: DTFormatter<(string | number)[]> = (d) => d;
   create: boolean;
+  init: boolean = false;
 
   marker: L.Marker;
+  messageError: string = '';
+
   private map: L.Map;
 
   private routeSub: Subscription;
+  NO_IMG = NO_IMG;
+
+  @ViewChild("sensorMetadataImg")
+  sensorMetadataImg: ElementRef;
 
   @ViewChild(DataTableComponent, { static: true })
   public tb: DataTableComponent<string | number>;
@@ -68,7 +77,8 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     public humanService: HumanService,
     private route: ActivatedRoute,
     private router: Router,
-    public auth: AuthService
+    public auth: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -84,6 +94,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
    */
   dynamicInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
+      this.messageError = '';
       if (params["id"] == "create") {
         this.id = undefined;
         if (this.auth.isUser()) this.dynamicInitCreate();
@@ -123,6 +134,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
   dynamicInitUpdate() {
     if (this.id == undefined) throw Error("Can't Update during creation");
     this.disableMap();
+    this.edition = false;
     this.create = false;
     this.sensorForm.disable();
     this.sensorService
@@ -149,7 +161,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
       },
       (err) => {
         if (err.status == 403) {
-          this.router.navigate(["/view"]);
+          this.router.navigate(["/sensors"]);
         } else {
           console.log("Error during sensor fetch");
           console.log(err);
@@ -189,15 +201,13 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
    * Initalize litle zone for sensor.
    */
   initMap(): void {
-    this.map = L.map("map-view-single", {
+    this.map = L.map("map-sensors-single", {
       center: DEFAULT_CENTER,
-      zoom: 3,
+      zoom: 1,
       zoomControl: false,
     });
     this.disableMap();
-    const tiles = L.tileLayer(LEAFLET_URL, {
-      attribution: LEAFLET_ATTRIBUTION_SMALL,
-    });
+    const tiles = L.tileLayer(LEAFLET_URL);
     tiles.addTo(this.map);
     this.map.on("click", (event: any) => {
       if (!this.create) return;
@@ -209,6 +219,9 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Disable map edition.
+   */
   disableMap() {
     this.map.dragging.disable();
     this.map.touchZoom.disable();
@@ -217,7 +230,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     this.map.boxZoom.disable();
     this.map.keyboard.disable();
     if (this.map.tap) this.map.tap.disable();
-    const mapRef = document.getElementById("map-view-single");
+    const mapRef = document.getElementById("map-sensors-single");
     if (mapRef?.style?.cursor) {
       (<any>mapRef).style.cursor = "default";
     }
@@ -225,7 +238,10 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     this.map.setMinZoom(3);
   }
 
-  enableMap() {
+  /**
+   * Enable map edition.
+   */
+  enableMap(): void {
     this.map.dragging.enable();
     this.map.touchZoom.enable();
     this.map.doubleClickZoom.enable();
@@ -233,7 +249,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     this.map.boxZoom.enable();
     this.map.keyboard.enable();
     if (this.map.tap) this.map.tap.enable();
-    const mapRef = document.getElementById("map-view-single");
+    const mapRef = document.getElementById("map-sensors-single");
     if (mapRef?.style?.cursor) {
       (<any>mapRef).style.cursor = 'url("/assets/markers/marker-gray.png") 12 41, pointer !important';
     }
@@ -276,7 +292,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
    *
    * @param info information about event
    */
-  onChange(info: DataTableNatigateEvent) {
+  onChange(info: DataTableNatigateEvent): void {
     if (this.id == undefined)
       throw Error("Can't change datatable info during create");
     this.sensorService
@@ -286,8 +302,10 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Change sensor metadata.
+   */
   onChangeMetadata(event: SensorMetadata) {
-    console.log(event);
     this.metadata = event;
   }
 
@@ -295,7 +313,6 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
    * Trigger on button after edit for save changes.
    */
   onSave() {
-    this.edition = false;
     this.sensorForm.disable();
     const form = Object.assign({}, this.sensorForm.value);
     const data = new FormData();
@@ -306,7 +323,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
       new Blob(
         [
           JSON.stringify({
-            sensorMetadataId: form["sensorMetadata"].id,
+            sensorMetadataId: form["sensorMetadata"]?.id,
             name: form["name"],
             displayName: form["displayName"],
             subDisplayName: form["subDisplayName"],
@@ -325,20 +342,30 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     );
 
     if (this.create)
-      this.sensorService.create(data).subscribe((sensor) => {
-        console.log(sensor);
-        this.router.navigate(["/view", sensor.id]);
-      }, console.error);
+      this.sensorService.create(data).subscribe(
+        sensor => {
+          console.log(sensor);
+          this.router.navigate(["/sensors", sensor.id]);
+        },
+        err => {
+          this.sensorForm.enable();
+          this.messageError = err?.error?.message || 'Unknow';
+        });
     else
       this.sensorService
         .update(<number>this.id, data)
-        .subscribe(console.log, console.error);
+        .subscribe(res=>{
+          this.edition = false;
+        }, err=>{
+          this.sensorForm.enable();
+          this.messageError = err?.error?.message || 'Unknow';
+        });
   }
 
   /**
    * Switch to edition mode.
    */
-  onEdition() {
+  onEdition(): void {
     this.edition = !this.edition;
     if (this.edition) {
       this.sensorForm.enable();
@@ -363,7 +390,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
   /**
    * Run download for json file.
    */
-  onDownloadJSON() {
+  onDownloadJSON(): void {
     if (this.id == undefined) return;
     this.sensorService
       .download({ sensorId: this.id, type: "json" })
@@ -386,7 +413,7 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
    * Widths of Datatable row.
    * @returns
    */
-  sizes() {
+  sizes(): number[] {
     let width = this.parameters?.metadata.width || 0;
     let type = this.parameters?.metadata.formats || [];
     let arr = [];
@@ -413,5 +440,15 @@ export class ViewSingleComponent implements OnInit, OnDestroy {
     let base = "https://www.google.com/maps/search/?api=1";
     const form = Object.assign({}, this.sensorForm.value);
     return `${base}&query=${form["latitude"]},${form["longitude"]}`;
+  }
+
+  lastWidth = 1;
+
+  getSize() {
+    return this.init && this.sensorMetadataImg? this.sensorMetadataImg.nativeElement.offsetWidth: 1;
+  }
+
+  ngAfterContentChecked(): void {
+    setTimeout(()=>{this.init = true});
   }
 }

@@ -25,7 +25,7 @@ import java.util.Locale;
 public class PowerNotifier {
 
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(PowerNotifier.class);
 
     private final SimpleDateFormat format = new SimpleDateFormat("EEEEE d MMMMM yyyy à H:mm:ss.SSS", new Locale("fr", "FR"));
     @Autowired

@@ -3,8 +3,9 @@ import { AppComponent } from "./app.component";
 import { SharedModule } from "./shared/shared.module";
 import { HomeComponent } from "./modules/home/home.component";
 import { AccessModule } from "./modules/accesses/accesses.module";
-import { ViewModule } from "./modules/view/view.module";
+import { SensorsModule } from "./modules/sensors/sensors.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -14,8 +15,9 @@ import { AuthModule } from "./modules/auth/auth.module";
   imports: [
     SharedModule.forRoot(),
     AccessModule.forRoot(),
-    ViewModule.forRoot(),
-    AuthModule.forRoot()
+    SensorsModule.forRoot(),
+    AuthModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

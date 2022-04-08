@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Pipe, PipeTransform } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Observable } from "rxjs";
-import { DEFAULT_IMG } from "src/app/constantes";
+import {DEFAULT_IMG, NO_IMG} from "src/app/constantes";
 
 @Pipe({
   name: "secure",
@@ -19,14 +19,20 @@ export class SecurePipe implements PipeTransform {
         .get(value, { responseType: "blob" })
         .subscribe(
           (res) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              const url = <string>reader.result;
-              o.next(this.sanitizer.bypassSecurityTrustUrl(url));
-            };
-            reader.readAsDataURL(res);
+            if (res.size == 0) {
+              o.next(NO_IMG);
+            } else {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const url = <string>reader.result;
+                o.next(this.sanitizer.bypassSecurityTrustUrl(url));
+              };
+              reader.readAsDataURL(res);
+            }
           },
-          o.error,
+          err => {
+            o.next(NO_IMG);
+          },
           o.complete
         );
     });

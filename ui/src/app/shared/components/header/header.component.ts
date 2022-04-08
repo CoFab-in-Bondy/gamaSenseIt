@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, ViewChild} from '@angular/core';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
+import {MD} from "../../../constantes";
+import {MatDrawer} from "@angular/material/sidenav";
+
+function isLargeScreen() {
+  return window.innerWidth >= MD;
+}
 
 @Component({
   selector: 'app-header',
@@ -8,12 +14,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  collapsed = true;
+  private openned: boolean = isLargeScreen();
 
-  constructor(public auth: AuthService, private router: Router) { }
+  @ViewChild(MatDrawer)
+  private nav: MatDrawer;
 
-  toggleCollapsed(): void {
-    this.collapsed = !this.collapsed;
+  constructor(public auth: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.cdr.detectChanges();
+  }
+
+  isOpen() {
+    return this.openned && isLargeScreen();
+  }
+
+  swapOpen() {
+    if (isLargeScreen()) {
+      this.openned = !this.openned;
+    }
   }
 
   logout(): void {

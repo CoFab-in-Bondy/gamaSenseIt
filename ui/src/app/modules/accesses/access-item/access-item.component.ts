@@ -60,7 +60,7 @@ export class AccessItemComponent implements OnInit {
 
   onView() {
     if (this.isSensor(this.m)) {
-      this.router.navigate(["/view", this.m.sensor.id])
+      this.router.navigate(["/sensors", this.m.sensor.id])
     }
   }
 

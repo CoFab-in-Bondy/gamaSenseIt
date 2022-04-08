@@ -1,3 +1,5 @@
+@import "all";
+
 header {
   background: rgb(44,167,44);
   background: linear-gradient(110deg, rgb(49, 167, 49) 0%,  rgb(95, 255, 188) 50%, rgb(163, 226, 255) 100%);
@@ -20,4 +22,37 @@ header {
   top: 0;
   z-index: 1020;
   width: 100%;
+}
+
+.main-content {
+  background-color: rgb(226, 230, 235);
+}
+
+mat-sidenav {
+  width: 400px;
+
+  @include respond-below(md) {
+    width: 100%;
+  }
+}
+
+mat-nav-list {
+  justify-content: space-between;
+
+  mat-list-item {
+    font: rgba(255, 255, 255, 0.747);
+    color: black;
+  }
+
+  button {
+    border: 0px;
+    background-color: white;
+  }
+}
+
+#noh {
+  height: 0px;
+  display: inline-block;
+  z-index: 300;
+
 }

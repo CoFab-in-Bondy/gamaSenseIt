@@ -37,8 +37,7 @@ export class AccessSingleComponent implements OnInit {
       res=> {
         this.search = res;
         console.log(res);
-      },
-      console.error
+      }
     );
   }
 
@@ -71,14 +70,17 @@ export class AccessSingleComponent implements OnInit {
         res=> {
           this.search = res;
           console.log(res);
-        },
-        console.error
+        }
       );
     })
   }
 
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
+  }
+
+  getSize() {
+    return window.innerHeight - 200;
   }
 
 

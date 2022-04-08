@@ -6,8 +6,8 @@ import { Error403Component } from "@components/error403/error403.component";
 import { Error404Component } from "@components/error404/error404.component";
 import { Error500Component } from "@components/error500/error500.component";
 import { UserGuard } from "@guards/user.guard";
-import { ViewPageComponent } from "./modules/view/view-page/view-page.component";
-import { ViewSingleComponent } from "./modules/view/view-single/view-single.component";
+import { SensorsPageComponent } from "./modules/sensors/sensors-page/sensors-page.component";
+import { SensorsSingleComponent } from "./modules/sensors/sensors-single/sensors-single.component";
 import { LoginPageComponent } from "./modules/auth/login-page/login-page.component";
 import { AccessPageComponent } from "./modules/accesses/access-page/access-page.component";
 import { AccessSingleComponent } from "./modules/accesses/access-single/access-single.component";
@@ -19,15 +19,12 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: "view",
-    component: ViewPageComponent,
-    children: [
-      {
-        path: ":id",
-        pathMatch: "full",
-        component: ViewSingleComponent
-      }
-    ]
+    path: "sensors",
+    component: SensorsPageComponent
+  },
+  {
+    path: "sensors/:id",
+    component: SensorsSingleComponent
   },
   {
     path: "qameleo",

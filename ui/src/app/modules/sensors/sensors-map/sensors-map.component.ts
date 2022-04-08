@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from "@angular/core";
+import {Component, Input, OnInit, OnDestroy, Output, EventEmitter, SecurityContext} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as L from "leaflet";
 import { Subscription } from "rxjs";
@@ -6,19 +6,23 @@ import { DELAY_DEAD, DELAY_NO_SIGNAL, LEAFLET_ATTRIBUTION, LEAFLET_URL } from "s
 import { CLICK_MARKER, GREEN_MARKER, ORANGE_MARKER, RED_MARKER } from "@models/icon.model";
 import { HumanService } from "@services/human.service";
 import { SensorMetadataService } from "@services/sensorMetadata.service";
+import {SecurePipe} from "@pipes/secure.pipe";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
-  selector: "app-view-map",
-  templateUrl: "./view-map.component.html",
-  styleUrls: ["./view-map.component.scss"],
+  selector: "app-sensors-map",
+  templateUrl: "./sensors-map.component.html",
+  styleUrls: ["./sensors-map.component.scss"],
 })
-export class ViewMapComponent implements OnInit, OnDestroy {
+export class SensorsMapComponent implements OnInit, OnDestroy {
   private map: L.Map;
   private routeSubscription: Subscription;
   private sensorsMetadata: SensorMetadataExtended[] = [];
   private markers = new Map<number, [Sensor, any]>();
   private markerActive: any;
+
   private sensorActive: any;
+  private sensorMetadataActive: any;
 
   @Input() height: number = 600;
   @Output() select = new EventEmitter<number>();
@@ -27,7 +31,9 @@ export class ViewMapComponent implements OnInit, OnDestroy {
     private sensorMetadataService: SensorMetadataService,
     public humanService: HumanService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private secure: SecurePipe,
+    private sanitizer: DomSanitizer
   ) {}
 
   private initMap(): void {
@@ -58,7 +64,7 @@ export class ViewMapComponent implements OnInit, OnDestroy {
           this.sensorsMetadata = sensors;
           for (let sensorMetadata of this.sensorsMetadata) {
             for (let sensor of sensorMetadata.sensors) {
-              this.addSensorToMap(sensor);
+              this.addSensorToMap(sensor, sensorMetadata);
             }
           }
 
@@ -67,7 +73,7 @@ export class ViewMapComponent implements OnInit, OnDestroy {
             for (let sensorMetadata of this.sensorsMetadata) {
               for (let sensor of sensorMetadata.sensors) {
                 if (sensor.id === +params["id"]) {
-                  this.addSensorToMap(sensor, true);
+                  this.addSensorToMap(sensor, sensorMetadata, true);
                   return;
                 }
               }
@@ -88,16 +94,18 @@ export class ViewMapComponent implements OnInit, OnDestroy {
     this.init();
   }
 
-  private deactiveMarker() {
-    if (this.markerActive && this.sensorActive) {
+  private deactivateMarker() {
+    if (this.markerActive && this.sensorActive && this.sensorMetadataActive) {
       const sensorActive = this.sensorActive;
+      const sensorMetadataActive = this.sensorMetadataActive;
       this.markerActive = null;
       this.sensorActive = null;
-      this.addSensorToMap(sensorActive);
+      this.sensorMetadataActive = null;
+      this.addSensorToMap(sensorActive, sensorMetadataActive);
     }
   }
 
-  private addSensorToMap(s: Sensor, clicked: boolean = false) {
+  private addSensorToMap(s: Sensor, smd: SensorMetadataExtended, clicked: boolean = false) {
 
     // generate an icon
     const marker = L.marker(
@@ -107,9 +115,10 @@ export class ViewMapComponent implements OnInit, OnDestroy {
 
     // remove old icon
     if (clicked) {
-      this.deactiveMarker();
+      this.deactivateMarker();
       this.markerActive = marker;
       this.sensorActive = s;
+      this.sensorMetadataActive = smd;
     }
 
     // replace by actual marker if sensor already has an icon
@@ -121,9 +130,24 @@ export class ViewMapComponent implements OnInit, OnDestroy {
     this.markers.set(s.id, [s, marker]);
     marker.addTo(this.map);
     marker.on("click", (e: L.LeafletEvent) => {
-      this.addSensorToMap(s, true);
-      this.router.navigate(["/view", s.id]);
+      this.addSensorToMap(s, smd, true);
+      this.router.navigate(["/sensors", s.id]);
       this.select.emit(s.id);
+    });
+
+    marker.on('mouseover', e => {
+      this.secure.transform(`/public/sensors/${s.id}/image`).subscribe(
+        img=>{
+          const src = this.sanitizer.sanitize(SecurityContext.URL, img);
+          marker.bindPopup('<p>' + s.displayName + '</p>' +
+            '<img src="' + src +'" alt="Image du capteur" width="100px" height="100px">');
+          marker.openPopup();
+        },
+        err=>{}
+      );
+    });
+    marker.on('mouseout', function (e) {
+      setTimeout(()=>marker.closePopup(), 100);
     });
   }
 

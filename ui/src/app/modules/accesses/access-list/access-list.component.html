@@ -1,9 +1,9 @@
-<div class="container-fluid box">
+<div class="box h-100">
 
   <h1>Gestion des groupes</h1>
   <input type="text" placeholder="Rechercher" (input)="onSearch($event)">
-  <div class="wrapper">
-    <div *ngFor="let ac of accesses" (click)="onClick(ac)" class="ligne hstack justify-content-between">
+  <div class="wrapper" [ngStyle]="{'height.px': getSize()}">
+    <div *ngFor="let ac of accesses" [routerLink]="['/accesses', ac.id]" class="ligne hstack justify-content-between">
       <div>
         <i class="fas me-2" [ngClass]="{
           'fa-tools': ac.privilege == 'MAINTENANCE',

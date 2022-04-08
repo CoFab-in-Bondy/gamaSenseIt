@@ -99,7 +99,7 @@ public abstract class DataController {
             s = sensorsRepo.findReadableSensor(publicUser.getId(), sensorId);
         if (s == null) {
             logger.warn("Can't find sensors readable with id " + sensorId + " with " + user.getMail());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Capteur inexistant ou inaccessible");
         }
         return s;
     }
@@ -108,13 +108,12 @@ public abstract class DataController {
         var user = user();
         var publicUser = publicUser();
         if (user == publicUser) {
-            logger.warn("Public user can't have manageable sensor " + sensorId);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous devez vous connecter");
         }
         var s = sensorsRepo.findManageableSensor(user.getId(), sensorId);
         if (s == null) {
             logger.warn("Can't find sensors manageable with id " + sensorId + " with " + user.getMail());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "can't find sensor");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Capteur inexistant ou mauvaises permissions");
         }
         return s;
     }

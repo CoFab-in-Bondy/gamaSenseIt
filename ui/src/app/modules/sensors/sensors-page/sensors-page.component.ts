@@ -1,5 +1,7 @@
 import { ViewportScroller } from "@angular/common";
 import {
+  AfterContentInit,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   HostListener,
@@ -8,17 +10,19 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AuthService } from "@services/auth.service";
-import { ViewMapComponent } from "../view-map/view-map.component";
+import { SensorsMapComponent } from "../sensors-map/sensors-map.component";
+import {MD, SM} from "../../../constantes";
 
 @Component({
-  selector: "app-view-page",
-  templateUrl: "./view-page.component.html",
-  styleUrls: ["./view-page.component.scss"],
+  selector: "app-sensors-page",
+  templateUrl: "./sensors-page.component.html",
+  styleUrls: ["./sensors-page.component.scss"],
 })
-export class ViewPageComponent implements OnInit {
+export class SensorsPageComponent implements OnInit {
   id: number = NaN;
   state: "map" | "list" = "map";
   width: number;
+  init: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +35,7 @@ export class ViewPageComponent implements OnInit {
     this.id = +this.route.snapshot.params["id"];
   }
 
-  @ViewChild(ViewMapComponent) map: ViewMapComponent;
+  @ViewChild(SensorsMapComponent) map: SensorsMapComponent;
 
   @HostListener("window:resize", ["$event"])
   onResize(event: any) {
@@ -58,5 +62,9 @@ export class ViewPageComponent implements OnInit {
 
   onList() {
     this.state = "list";
+  }
+
+  getSize() {
+    return window.innerWidth >= SM? (window.innerHeight - 200): (window.innerHeight - 240);
   }
 }

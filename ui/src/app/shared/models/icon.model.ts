@@ -9,7 +9,7 @@ const MarkerIcon: any = L.Icon.extend({
     shadowSize: [41, 41], // size of the shadow
     iconAnchor: [12, 40], // point of the icon which will correspond to marker's location
     shadowAnchor: [13, 40], // the same for the shadow
-    popupAnchor: [13, 40], // point from which the popup should open relative to the iconAnchor
+    popupAnchor: [0, -25], // point from which the popup should open relative to the iconAnchor
   },
 });
 

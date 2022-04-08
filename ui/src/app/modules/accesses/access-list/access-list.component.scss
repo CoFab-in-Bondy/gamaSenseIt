@@ -1,3 +1,5 @@
+@import "all";
+
 .updateAt, .sizeSensors, .sizeUsers {
   display: inline-block;
   text-align: right;
@@ -7,7 +9,6 @@
 }
 
 .wrapper{
-  height: 60vh;
   overflow-y: auto;
 }
 
@@ -36,4 +37,9 @@ i {
   padding-bottom: 5px;
   border-bottom: 1px solid gray;
   border-top: 1px solid gray;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $white-light-gray;
+  }
 }
