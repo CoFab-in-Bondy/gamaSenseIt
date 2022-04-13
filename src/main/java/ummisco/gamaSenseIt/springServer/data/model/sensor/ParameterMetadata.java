@@ -232,6 +232,7 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
         INTEGER, DOUBLE, STRING;
 
         public Object convertToObject(byte[] data) {
+            if (data == null) return null;
             ByteBuffer buffer = ByteBuffer.wrap(data);
             Object obj = switch (ordinal()) {
                 case 0 -> buffer.getInt();
