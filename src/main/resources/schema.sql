@@ -57,8 +57,8 @@ CREATE TABLE sensor (
     sub_display_name VARCHAR(255),
     notifier BIT NOT NULL DEFAULT FALSE,
     photo MEDIUMBLOB,
-    description TEXT NOT NULL DEFAULT '',
-    maintenance_description TEXT NOT NULL DEFAULT '',
+    description TEXT,
+    maintenance_description TEXT,
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
