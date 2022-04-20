@@ -9,9 +9,13 @@
         <mat-icon mat-list-icon>home</mat-icon>
         <h4 mat-line *ngIf="isOpen()">Accueil</h4>
       </mat-list-item>
-      <mat-list-item routerLinkActive="active" [routerLink]="['/sensors']">
-        <mat-icon mat-list-icon>settings_input_antenna</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Capteurs</h4>
+      <mat-list-item routerLinkActive="active" [routerLink]="['/sensors/map']">
+        <mat-icon mat-list-icon>map</mat-icon>
+        <h4 mat-line *ngIf="isOpen()">Carte</h4>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" [routerLink]="['/sensors/list']">
+        <mat-icon mat-list-icon>list</mat-icon>
+        <h4 mat-line *ngIf="isOpen()">Liste</h4>
       </mat-list-item>
       <mat-list-item *ngIf="auth.isAuth()" routerLinkActive="active" [routerLink]="['/accesses']">
         <mat-icon mat-list-icon>group</mat-icon>

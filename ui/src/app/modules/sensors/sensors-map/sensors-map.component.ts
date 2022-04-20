@@ -2,12 +2,13 @@ import {Component, Input, OnInit, OnDestroy, Output, EventEmitter, SecurityConte
 import { ActivatedRoute, Router } from "@angular/router";
 import * as L from "leaflet";
 import { Subscription } from "rxjs";
-import { DELAY_DEAD, DELAY_NO_SIGNAL, LEAFLET_ATTRIBUTION, LEAFLET_URL } from "src/app/constantes";
+import {DELAY_DEAD, DELAY_NO_SIGNAL, LEAFLET_ATTRIBUTION, LEAFLET_URL, SM} from "src/app/constantes";
 import { CLICK_MARKER, GREEN_MARKER, ORANGE_MARKER, RED_MARKER } from "@models/icon.model";
 import { HumanService } from "@services/human.service";
 import { SensorMetadataService } from "@services/sensorMetadata.service";
 import {SecurePipe} from "@pipes/secure.pipe";
 import {DomSanitizer} from "@angular/platform-browser";
+import {AuthService} from "@services/auth.service";
 
 @Component({
   selector: "app-sensors-map",
@@ -33,7 +34,8 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private secure: SecurePipe,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    public auth: AuthService
   ) {}
 
   private initMap(): void {
@@ -169,5 +171,9 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
         return RED_MARKER;
       }
     }
+  }
+
+  getSize() {
+    return this.auth.isUser()? window.innerHeight - 190: window.innerHeight - 130;
   }
 }

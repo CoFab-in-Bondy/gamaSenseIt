@@ -1,6 +1,12 @@
 # Setup MySQL
 
-Install for Manjaro.
+## Install for Windows
+
+Go to MariaDB [download page](https://mariadb.org/download).
+
+Then search for MySQL Client and run it.
+
+## Install for Manjaro.
 ```sh
 yay -S mysql
 sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
@@ -8,20 +14,20 @@ sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 sudo systemctl enable mysqld
 sudo systemctl restart mysqld
 systemctl status mysqld
+sudo mysql_secure_installation
+sudo mysql
 ```
 
-Install for Ubuntu.
+## Install for Ubuntu.
 ```sh
 sudo apt install mysql-server
+sudo mysql_secure_installation
+sudo mysql
 ```
 
 ***
 
-Install and login as root.
-```sh
-sudo mysql_secure_installation
-sudo mysql
-```
+## Create gamasenseit user
 
 Create user and database for **GamaSenseIt**.
 ```sql
@@ -34,7 +40,7 @@ FLUSH PRIVILEGES;
 
 Then try to connect to the database as gamasenseit.
 ```sh
-mysql -u gamasenseit -pgamasenseit -h localhost -P 3306 -D gamasenseit [--skip-ssl]
+mysql[.exe] -u gamasenseit -pgamasenseit -h localhost -P 3306 -D gamasenseit [--skip-ssl]
 ```
 
 Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables.

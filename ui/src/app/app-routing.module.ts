@@ -6,11 +6,12 @@ import { Error403Component } from "@components/error403/error403.component";
 import { Error404Component } from "@components/error404/error404.component";
 import { Error500Component } from "@components/error500/error500.component";
 import { UserGuard } from "@guards/user.guard";
-import { SensorsPageComponent } from "./modules/sensors/sensors-page/sensors-page.component";
 import { SensorsSingleComponent } from "./modules/sensors/sensors-single/sensors-single.component";
 import { LoginPageComponent } from "./modules/auth/login-page/login-page.component";
 import { AccessPageComponent } from "./modules/accesses/access-page/access-page.component";
 import { AccessSingleComponent } from "./modules/accesses/access-single/access-single.component";
+import {SensorsMapComponent} from "./modules/sensors/sensors-map/sensors-map.component";
+import {SensorsListComponent} from "./modules/sensors/sensors-list/sensors-list.component";
 
 const routes: Routes = [
   {
@@ -20,7 +21,16 @@ const routes: Routes = [
   },
   {
     path: "sensors",
-    component: SensorsPageComponent
+    pathMatch: "full",
+    redirectTo: "/sensors/map"
+  },
+  {
+    path: "sensors/map",
+    component: SensorsMapComponent
+  },
+  {
+    path: "sensors/list",
+    component: SensorsListComponent
   },
   {
     path: "sensors/:id",

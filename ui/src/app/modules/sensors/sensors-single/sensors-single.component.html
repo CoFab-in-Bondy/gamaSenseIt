@@ -10,7 +10,7 @@
           <div>
             <div class="row m-0">
               <input
-                class="p-0 col-12 col-md-6 order-0 order-md-1 text-start text-md-end"
+                class="p-0 col-12 col-md-4 order-0 order-md-1 text-start text-md-end"
                 type="text"
                 id="name"
                 minlength="2"
@@ -18,7 +18,7 @@
                 formControlName="name"
               />
               <input
-                class="p-0 col-12 col-md-6 order-1 order-md-0"
+                class="p-0 col-12 col-md-8 order-1 order-md-0"
                 type="text"
                 id="displayName"
                 minlength="5"
@@ -204,7 +204,7 @@
           sortable="SERVER"
           pagable="SERVER"
           [minSizes]="sizes()"
-          [data]="this.parameters?.values || []"
+          [data]="parameters?.values || []"
           [formater]="formater"
           [empty]="'Aucune donnée à afficher'"
           [headers]="parameters?.metadata?.headers || []"

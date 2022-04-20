@@ -70,7 +70,7 @@ public class Parameter {
     }
 
     public Parameter(long data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
-        this(ByteBuffer.allocate(Integer.BYTES).putLong(data).array(), captureDate, parameterMetadata, sensor);
+        this(ByteBuffer.allocate(Long.BYTES).putLong(data).array(), captureDate, parameterMetadata, sensor);
     }
 
     public Parameter(String data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {

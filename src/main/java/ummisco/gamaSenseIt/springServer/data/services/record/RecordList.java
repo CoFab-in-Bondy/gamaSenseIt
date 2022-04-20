@@ -3,6 +3,7 @@ package ummisco.gamaSenseIt.springServer.data.services.record;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.comparator.Comparators;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 
@@ -20,9 +21,10 @@ public class RecordList extends ArrayList<Record> {
         this.metadata = new RecordListMetadata(parameterMetadata);
         for (var e : captured.entrySet()) {
             var values = new ArrayList<Object>();
-            parameterMetadata.forEach(pmd ->
-                    values.add(pmd.getDataType().convertToObject(e.getValue().getOrDefault(pmd.getId(), null)))
-            );
+            parameterMetadata.forEach(pmd -> {
+                var data = e.getValue().getOrDefault(pmd.getId(), null);
+                values.add(pmd.getDataType().convertToObject(data));
+            });
             super.add(new Record(e.getKey(), values));
         }
         this.total = size();
@@ -46,14 +48,22 @@ public class RecordList extends ArrayList<Record> {
     }
 
     @SuppressWarnings("unchecked")
-    public void sortBy(final int index, boolean asc) {
+    public void sortBy(final int index, final boolean asc) {
         if (0 > index || index >= metadata.width())
             return;
         try {
-            Comparator<Record> cmp = Comparator.comparing(r -> ((Comparable<Object>)r.get(index)));
-            if (asc)
-                cmp = cmp.reversed();
-            sort(cmp);
+            // null-friendly comparator
+            sort((r1, r2) -> {
+                var v1 = (Comparable<Object>)r1.get(index);
+                var v2 = (Comparable<Object>)r2.get(index);
+                if (v1 == null) {
+                    return (v2 == null) ? 0 : 1;
+                } else if (v2 == null) {
+                    return -1;
+                } else {
+                    return asc? v2.compareTo(v1): v1.compareTo(v2);
+                }
+            });
         } catch (ClassCastException ignored) {
             logger.error("Error during casting for record");
         }

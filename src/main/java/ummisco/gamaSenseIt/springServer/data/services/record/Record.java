@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class Record extends ArrayList<Object> implements Comparable<Record> {
 
-    protected final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    protected final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Date date;
 

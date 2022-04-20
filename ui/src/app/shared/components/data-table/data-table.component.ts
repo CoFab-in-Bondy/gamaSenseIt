@@ -61,7 +61,7 @@ export class DataTableComponent<D> {
   scroll = 0;
 
   sort = 0;
-  asc = false;
+  asc = true;
   page = 0;
   count = 0;
 

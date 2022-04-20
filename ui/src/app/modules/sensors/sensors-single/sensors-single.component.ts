@@ -53,7 +53,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   defaultUrl: SafeUrl;
   photo?: File;
   formater: DTFormatter<(string | number)[]> = (d) => d;
-  create: boolean;
+  create: boolean = false;
   init: boolean = false;
 
   marker: L.Marker;

@@ -63,9 +63,9 @@ $body-color: $dark;
 }
 */
 
-.degraded {
-  background-color: rgb(98, 218, 98) !important;
-  box-shadow: 0 48px 40px -40px rgb(110, 221, 255) inset !important;
+.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent, .degraded {
+  box-shadow: 0 48px 40px -40px rgb(110, 221, 255) inset;
+  background-color: rgb(98, 218, 98);
   transition: box-shadow 0.3s, background-color 0.3s;
   color: black;
   border: 1px solid rgb(185, 185, 185);
@@ -76,7 +76,7 @@ $body-color: $dark;
   box-shadow: 0 48px 40px -40px rgb(79, 188, 231) inset;
 }
 
-.degraded:active {
+ .degraded:active {
   background-color: rgb(79, 188, 231);
   box-shadow: 0 48px 40px -40px rgb(98, 218, 98) inset;
 }
@@ -94,6 +94,7 @@ $body-color: $dark;
   background-color: white;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .unselectable {
@@ -127,3 +128,5 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+h1 { overflow: hidden}

@@ -37,8 +37,6 @@ public class SensorDataAnalyser implements ISensorDataAnalyser {
 
         // need to use a repository because hibernate proxy is disabled here
         var pmds = pmdRepo.findBySensorMetadataIdOrderByIdx(smd.getId());
-        for (var pmd : pmds)
-            logger.info("meta_" + pmd.getId() + "_");
 
         var res = new ArrayList<Parameter>();
         int i = 0;

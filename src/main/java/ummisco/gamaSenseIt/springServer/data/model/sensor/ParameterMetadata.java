@@ -227,6 +227,16 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
         HUMIDITY
     }
 
+
+    public static String bytesToHex(byte[] bytes) {
+        var sb = new StringBuilder("\"");
+        for (byte b : bytes)
+            sb.append(String.format("\\x%02X", b));
+        sb.append('"');
+        return sb.toString();
+    }
+
+
     public enum DataFormat {
         // abbreviation <=> ordinal()
         INTEGER, DOUBLE, STRING;
@@ -235,13 +245,15 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
             if (data == null) return null;
             ByteBuffer buffer = ByteBuffer.wrap(data);
             Object obj = switch (ordinal()) {
-                case 0 -> buffer.getInt();
+                case 0 -> buffer.getLong();
                 case 1 -> buffer.getDouble();
                 case 2 -> new String(data);
                 default -> null;
             };
-            if (buffer.hasRemaining() && ordinal() != 2)
-                logger.warn("Cast an object who could not use all these bytes");
+            if (buffer.hasRemaining() && ordinal() != 2) {
+                logger.warn("Cast an object who could not use all these bytes : " + this.name() + " got " + bytesToHex(data));
+                return null;
+            }
             return obj;
         }
 
@@ -251,6 +263,7 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
         }
 
         public Parameter createParameterFromMorsel(String morsel, Date captureDate, ParameterMetadata pmd, Sensor s) {
+            logger.info("Create parameter from " + morsel + " (" + bytesToHex(morsel.getBytes()) + ")");
             return switch (ordinal()) {
                 case 0 -> new Parameter(Long.parseLong(morsel), captureDate, pmd, s);
                 case 1 -> new Parameter("NAN".equalsIgnoreCase(morsel.strip()) ? Double.NaN : Double.parseDouble(morsel), captureDate, pmd, s);

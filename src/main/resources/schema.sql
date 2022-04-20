@@ -24,7 +24,7 @@ VALUES
     (1);
 
 CREATE TABLE parameter (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     capture_date DATETIME,
     data LONGBLOB,
     parameter_metadata_id BIGINT NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE parameter (
 ) engine = InnoDB;
 
 CREATE TABLE parameter_metadata (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     data_type INTEGER,
     depreciated_parameter INTEGER,
     icon VARCHAR(255),
@@ -45,7 +45,7 @@ CREATE TABLE parameter_metadata (
 ) engine = InnoDB;
 
 CREATE TABLE sensor (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     display_name VARCHAR(255),
     hidden_message VARCHAR(255),
     is_hidden BIT,
@@ -73,7 +73,7 @@ CREATE TABLE sensored_bulk_data (
 ) engine = InnoDB;
 
 CREATE TABLE sensor_metadata (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     data_separator VARCHAR(255) DEFAULT ':',
     description VARCHAR(255) DEFAULT '',
     name VARCHAR(255) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE sensor_metadata (
 ) engine = InnoDB;
 
 CREATE TABLE user (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     firstname VARCHAR(60) NOT NULL,
     lastname VARCHAR(60) NOT NULL,
     mail VARCHAR(200) NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE user (
 ) engine = InnoDB;
 
 CREATE TABLE access (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

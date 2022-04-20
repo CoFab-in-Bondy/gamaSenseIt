@@ -6,9 +6,11 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
-  ChangeDetectorRef, Input,
+  ChangeDetectorRef, Input, HostListener,
 } from "@angular/core";
 import { HumanService } from "@services/human.service";
+import {AuthService} from "@services/auth.service";
+import {DateAgoPipe} from "@pipes/date-ago.pipe";
 
 @Component({
   selector: "app-sensors-list",
@@ -28,16 +30,20 @@ export class SensorsListComponent implements OnInit, OnDestroy {
 
   linker: DTLinker<[Sensor, SensorMetadataExtended]> = ([s, smd]) => ["/sensors", s.id];
   formater: DTFormatter<[Sensor, SensorMetadataExtended]> = ([s, smd]) => [
+      s.name,
       s.displayName,
       `${smd.name} (${smd.version})`,
       this.humanService.coordsToHumain(s.latitude, s.longitude),
+      this.ago.transform(s.lastCaptureDate) + ` (${s.lastCaptureDate})`,
       this.state(s),
   ];
 
   constructor(
     private sensorMetadataService: SensorMetadataService,
     public humanService: HumanService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private ago: DateAgoPipe,
+    public auth: AuthService
   ) {
 
   }
@@ -60,6 +66,12 @@ export class SensorsListComponent implements OnInit, OnDestroy {
         (err) => console.error(err)
       );
   }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.ref.detectChanges();
+  }
+
 
   ngOnDestroy(): void {
 
@@ -88,5 +100,9 @@ export class SensorsListComponent implements OnInit, OnDestroy {
       case this.RED_ICON: return 2;
       default: return 3;
     }
+  }
+
+  getSize() {
+    return this.auth.isUser()? window.innerHeight - 190: window.innerHeight - 130;
   }
 }

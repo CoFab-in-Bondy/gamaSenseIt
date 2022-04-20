@@ -31,6 +31,10 @@ bin/
 *.p12
 *.crt
 
+# Ignore Data
+src/main/resources/data.sql
+.angular
+
 # GeoLite
 GeoLite2-ASN.mmdb
 GeoLite2-City.mmdb
