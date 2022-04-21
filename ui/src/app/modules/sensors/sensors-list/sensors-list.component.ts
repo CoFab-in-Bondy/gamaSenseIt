@@ -21,9 +21,9 @@ import {DateAgoPipe} from "@pipes/date-ago.pipe";
 export class SensorsListComponent implements OnInit, OnDestroy {
   sensors: [Sensor, SensorMetadataExtended][] = [];
   links: (number | string)[][] = [];
-  GREEN_ICON: Icon = {"url": "assets/lights/light-green.svg", width: 24, height: 24};
-  ORANGE_ICON: Icon = {"url": "assets/lights/light-orange.svg", width: 24, height: 24};
-  RED_ICON: Icon = {"url": "assets/lights/light-red.svg", width: 24, height: 24};
+  GREEN_ICON: Icon = {"url": "assets/lights/light-green.svg", width: 20, height: 20};
+  ORANGE_ICON: Icon = {"url": "assets/lights/light-orange.svg", width: 20, height: 20};
+  RED_ICON: Icon = {"url": "assets/lights/light-red.svg", width: 20, height: 20};
 
   @Input() height: number = 600;
   @Output() select = new EventEmitter<number>();

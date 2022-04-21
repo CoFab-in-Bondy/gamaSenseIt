@@ -141,9 +141,10 @@ public class SensorMetadata {
     public Node toNode() {
         return new Node() {{
             put("id", getId());
-            put("description", getDescription());
-            put("name", getName());
             put("version", getVersion());
+            put("name", getName());
+            put("dataSeparator", getDataSeparator());
+            put("description", getDescription());
         }};
     }
 

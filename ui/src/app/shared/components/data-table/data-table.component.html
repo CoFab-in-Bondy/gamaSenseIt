@@ -33,13 +33,14 @@
         'hstack': true,
         'gap-3': true,
         'col-line': true,
-        'tb-link': linker ? true : false
+        'tb-link': !!linker
       }"
       *ngFor="let d of data; let iRow = index"
       routerLinkActive="active"
       [routerLink]="linker? linker(d): undefined"
       (click)="onSelect(d)"
     >
+
       <div
         *ngFor="let value of formater(d); let iCol = index"
         class="col-data"

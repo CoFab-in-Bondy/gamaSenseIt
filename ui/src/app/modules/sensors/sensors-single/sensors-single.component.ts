@@ -48,7 +48,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   parameters?: RecordParameters;
   records: (string | number)[][];
   edition: boolean = false;
-  sensorsMetadata: SensorMetadata[] = [];
+  sensorsMetadata: SensorMetadataExtended[] = [];
   sensorForm: FormGroup;
   defaultUrl: SafeUrl;
   photo?: File;
@@ -81,12 +81,8 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     private cdr: ChangeDetectorRef
   ) {}
 
-  /**
-   * All static initializations
-   */
-  staticInit(): void {
-    this.initForm();
-    this.initMap();
+  resolveSensorMetadataExtended(smd: SensorMetadata): SensorMetadataExtended|undefined {
+    return this.sensorsMetadata.find(it => it.id == smd.id);
   }
 
   /**
@@ -146,8 +142,10 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
         this.markMap({ lat: sensor.latitude, lng: sensor.longitude });
         this.metadata = sensor.metadata;
         this.editable = sensor.manageable;
+        const metadata = this.resolveSensorMetadataExtended(sensor.metadata);
+        console.log(metadata, this.metadata);
         this.sensorForm.patchValue({
-          sensorMetadataId: sensor.metadata.id,
+          sensorMetadata: metadata,
           name: sensor.name,
           displayName: sensor.displayName,
           subDisplayName: sensor.subDisplayName,
@@ -158,6 +156,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
           description: sensor.description,
           maintenanceDescription: sensor.maintenanceDescription,
         });
+        this.cdr.detectChanges();
       },
       (err) => {
         if (err.status == 403) {
@@ -176,6 +175,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     this.sensorMetadataService.getAll().subscribe(
       (res) => {
         res.forEach((smd) => this.sensorsMetadata.push(smd));
+        this.dynamicInit();
       },
       (err) => {
         console.error("Error during sensorMetdata fetch");
@@ -275,8 +275,8 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * Initalize component.
    */
   ngOnInit(): void {
-    this.staticInit();
-    this.dynamicInit();
+    this.initForm();
+    this.initMap();
   }
 
   /**

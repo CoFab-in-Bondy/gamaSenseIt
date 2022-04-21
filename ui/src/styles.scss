@@ -113,6 +113,14 @@ $body-color: $dark;
   height: 50vh !important;
 }
 
+.text-ellipsis {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 // Leaflet & OpenStreetMAp
 @import "../node_modules/leaflet/dist/leaflet.css";
@@ -130,3 +138,4 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 h1 { overflow: hidden}
+

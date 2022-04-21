@@ -11,8 +11,8 @@
 >
   <!-- Dialog box -->
   <div class="modal-content" #modalContent [ngStyle]="{
-    'margin-left.px': - modalContent.offsetWidth / 2,
-    'margin-top.px': - modalContent.offsetHeight / 2
+    'margin-left.px': (- modalContent.offsetWidth / 2 + this.state.widthNav() / 2 | number: '1.0-0'),
+    'margin-top.px': - modalContent.offsetHeight / 2 | number: '1.0-0'
   }">
     <span class="close degraded" (click)="onClose()" #close><i class="fas fa-times"></i></span>
     <ng-content select="[body]"></ng-content>

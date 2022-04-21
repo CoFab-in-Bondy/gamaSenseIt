@@ -1,4 +1,4 @@
-
+@import "all";
 
 .vr {
   color: rgb(200, 200, 200);
@@ -35,6 +35,14 @@
   padding: 0;
 }
 
+.col-data {
+  display: inline-block;
+  padding-left: 30px;
+  margin-left: -16px;
+  height: 20px;
+}
+
+
 .tb-header {
   height: 44px;
   padding-top: 10px;
@@ -56,11 +64,6 @@
     background-color: #24c791;
   }
 
-  .col-data:first-child {
-    margin-left: 10px;
-  }
-
-
   .col-data:last-child {
     margin-right: 15px;
   }
@@ -69,34 +72,32 @@
 .tb-body {
   overflow-y: scroll;
   overflow-x: auto;
+  position: relative;
 
-  .col-data:first-child {
-    margin-left: 10px;
+  .col-line:nth-child(2n) .col-data{
+    background-color: $white-light-gray;
+  }
+
+  .col-line {
+    height: 25px;
+    width: 100%;
+  }
+
+  .tb-link:hover .col-data {
+    background-color: rgb(200, 200, 200);
+  }
+
+  .tb-link:hover.active .col-data {
+    background-color: rgb(210, 210, 210);
+  }
+
+  .tb-link:hover.active .col-data {
+    background-color: rgb(200, 200, 200);
   }
 
   .tb-link {
     cursor: pointer;
     background-color: white;
-  }
-
-  .tb-link:hover {
-    background-color: rgb(220, 220, 220);
-  }
-
-  .tb-link.active {
-    background-color: rgb(210, 210, 210);
-  }
-
-  .tb-link:hover.active {
-    background-color: rgb(200, 200, 200);
-  }
-
-  .col-line {
-    height: 25px;
-  }
-
-  .col-line:not(:last-child) {
-    border-bottom: 1px solid rgb(230, 230, 230);
   }
 
   .empty {

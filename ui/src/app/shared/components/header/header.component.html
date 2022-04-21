@@ -1,38 +1,38 @@
 <mat-drawer-container class="main-content mat-typography" autosize="true" style="height: 100vh">
-  <mat-drawer #drawer mode="side" disableClose="true" opened="true" [ngStyle]="{'width.px': isOpen()? 190: 65}">
-    <button mat-mini-fab (click)="swapOpen()" class="degraded" style="margin: 12px;">
+  <mat-drawer #drawer mode="side" disableClose="true" opened="true" [ngStyle]="{'width.px': state.widthNav()}">
+    <button mat-mini-fab (click)="state.swapOpen()" class="degraded" style="margin: 12px;">
       <mat-icon aria-label="Menu">menu</mat-icon>
     </button>
 
     <mat-nav-list>
       <mat-list-item routerLinkActive="active" [routerLink]="['']">
         <mat-icon mat-list-icon>home</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Accueil</h4>
+        <h4 mat-line *ngIf="state.isOpen()">Accueil</h4>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLink]="['/sensors/map']">
         <mat-icon mat-list-icon>map</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Carte</h4>
+        <h4 mat-line *ngIf="state.isOpen()">Carte</h4>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLink]="['/sensors/list']">
         <mat-icon mat-list-icon>list</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Liste</h4>
+        <h4 mat-line *ngIf="state.isOpen()">Liste</h4>
       </mat-list-item>
       <mat-list-item *ngIf="auth.isAuth()" routerLinkActive="active" [routerLink]="['/accesses']">
         <mat-icon mat-list-icon>group</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Groupes</h4>
+        <h4 mat-line *ngIf="state.isOpen()">Groupes</h4>
       </mat-list-item>
       <mat-list-item *ngIf="!auth.isAuth()" routerLinkActive="active" [routerLink]="['/login']">
         <mat-icon mat-list-icon>how_to_reg</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Connection</h4>
+        <h4 mat-line *ngIf="state.isOpen()">Connection</h4>
       </mat-list-item>
       <mat-list-item *ngIf="auth.isAuth()" mat-list-item (click)="logout()">
         <mat-icon mat-list-icon>logout</mat-icon>
-        <h4 mat-line *ngIf="isOpen()">Déconnection</h4>
+        <h4 mat-line *ngIf="state.isOpen()">Déconnection</h4>
       </mat-list-item>
     </mat-nav-list>
   </mat-drawer>
 
-  <div class="w-100">
+  <div class="w-100 m-0">
     <ng-content></ng-content>
   </div>
 </mat-drawer-container>

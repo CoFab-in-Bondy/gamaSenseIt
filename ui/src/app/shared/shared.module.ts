@@ -16,6 +16,7 @@ import { AdminGuard } from "@guards/admin.guard";
 import { UserGuard } from "@guards/user.guard";
 import { ButtonComponent } from "@components/button/button.component";
 import { AccessService } from "@services/access.service";
+import { StateService } from "@services/state.service";
 import { DateAgoPipe } from "@pipes/date-ago.pipe";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -110,6 +111,7 @@ export class SharedModule {
         AuthService,
         HumanService,
         ErrorService,
+        StateService,
         // global providers
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: XsrfInterceptor, multi: true },

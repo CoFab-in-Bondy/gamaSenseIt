@@ -1,12 +1,12 @@
-<div class="box-wrapper w-100">
-  <div class="sensor box">
+<div class="box-wrapper">
+  <div class="sensor box w-100">
     <form
       [formGroup]="sensorForm"
       class="m-0 mb-3"
       enctype="multipart/form-data"
     >
       <div class="row p-0">
-        <div class="col-12 col-lg-6 col-xl-8">
+        <div class="col-12 col-lg-7 col-xl-8">
           <div>
             <div class="row m-0">
               <input
@@ -39,7 +39,7 @@
                 <div class="me-2">
                   <p for="latitude" class="d-block d-sm-none">Lat.</p>
                   <label for="latitude" class="d-none d-sm-block"
-                    >Latitude</label
+                  >Latitude</label
                   >
                   <input
                     type="text"
@@ -51,7 +51,7 @@
                 <div>
                   <p for="latitude" class="d-block d-sm-none">Lng.</p>
                   <label for="longitude" class="d-none d-sm-block"
-                    >Longitude</label
+                  >Longitude</label
                   >
                   <input
                     type="text"
@@ -73,18 +73,14 @@
               <option
                 *ngFor="let smd of sensorsMetadata"
                 [ngValue]="smd"
-                [selected]="smd.id == metadata?.id"
               >
-                {{ smd.name }}
+                {{ smd.name }} ({{smd.version}})
               </option>
             </select>
-            <div class="input-align">
-              {{ metadata?.version }}
-            </div>
             <p class="input-align">{{ metadata?.description }}</p>
           </div>
         </div>
-        <div class="col-12 col-lg-6 col-xl-4 row pb-3 m-0">
+        <div class="col-12 col-lg-5 col-xl-4 row pb-3 m-0">
           <div class="col-4 p-0 pe-2">
             <img
               class="sensor-metadata-logo"
@@ -98,7 +94,6 @@
                 : NO_IMG
               "
               style="width: 100%"
-              [ngStyle]="{ 'height.px': getSize() }"
             />
           </div>
           <div class="col-4 p-0 px-1">
@@ -209,7 +204,7 @@
           [empty]="'Aucune donnée à afficher'"
           [headers]="parameters?.metadata?.headers || []"
           (navigate)="onChange($event)"
-          [height]="600"
+          [height]="525"
         >
         </app-data-table>
       </div>

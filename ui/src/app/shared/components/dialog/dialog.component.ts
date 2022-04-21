@@ -8,6 +8,7 @@ import {
   QueryList,
   ViewChild,
 } from "@angular/core";
+import {StateService} from "@services/state.service";
 
 @Component({
   selector: "app-dialog",
@@ -16,7 +17,7 @@ import {
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DialogComponent implements AfterContentInit {
-  constructor() {}
+  constructor(public state: StateService) {}
 
   public displayed = false;
 

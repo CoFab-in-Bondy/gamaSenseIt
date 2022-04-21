@@ -2,6 +2,7 @@
 
 
 .sensor {
+  position: relative;
 
   #displayName, #subDisplayName, #name {
     display: inline;
@@ -23,7 +24,7 @@
   }
 
   #sensorMetadata {
-    margin-left: -4px ;
+    margin-left: 0 ;
     padding: 0;
   }
 
@@ -40,7 +41,7 @@
     white-space: pre-line;
 
     > textarea {
-      height: 300px;
+      height: 100px;
       width: 100%;
       resize: none;
     }
@@ -60,8 +61,8 @@
 
 
   input, textarea, select {
-    padding: 1px, 2px;
-    margin: 0px;
+    padding: 1px 2px;
+    margin: 0;
     border: solid 1px rgb(0, 0, 0);
   }
 
@@ -131,7 +132,7 @@
     display: inline-block;
     height: 30px;
     border-radius: 0 5px 5px 0;
-    width: 100px;
+    width: 70px;
     border: 1px solid $light-gray !important;
     padding: 0 5px;
   }

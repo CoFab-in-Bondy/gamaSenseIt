@@ -32,8 +32,15 @@ problème de scroll
 carte plus grande
 mettre les bonnes valeurs
 mettre un titre
-bouton ajout de groupe
 
 zone discution, maintenance, une photo, logo, image carte, ou il est situé, description du capteur, deux description, 
 
 Plusieurs page avec barre de recherche
+
+
+numéro du capteur
+bouton ajout de groupe
+support pour les grand capteur
+courbe des données
+barre css plus longues
+supprimer un capteur 
