@@ -7,7 +7,7 @@
   }"></i>
   <span class="name">{{
     isSensor(m)
-    ? m.sensor.displayName
+    ? m.sensor.id + ' ' + m.sensor.name + ' ' +  m.sensor.displayName
     : m.user.firstname + ' ' + m.user.lastname
   }}</span>
   <div class="cmd">
