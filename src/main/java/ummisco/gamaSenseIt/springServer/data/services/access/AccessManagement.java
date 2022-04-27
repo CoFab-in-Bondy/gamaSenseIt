@@ -5,11 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import ummisco.gamaSenseIt.springServer.data.classes.Node;
+import ummisco.gamaSenseIt.springServer.data.controller.IParametersRequest;
 import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
-import java.util.HashSet;
+import java.util.*;
 
 @Service
 public class AccessManagement {
@@ -29,6 +32,18 @@ public class AccessManagement {
     @Autowired
     private IUserRepository userRepo;
 
+    public Access createAccess(long userId, String name, AccessPrivilege privilege) {
+        var access = new Access();
+        access.setPrivilege(privilege);
+        access.setName(name);
+        access = accessRepo.save(access);
+        var acu = new AccessUser();
+        acu.setPrivilege(AccessUserPrivilege.MANAGE);
+        acu.setUserId(userId);
+        acu.setAccessId(access.getId());
+        accessUserRepo.save(acu);
+        return access;
+    }
 
     public AccessUser addAccessUser(long accessId, long userId) {
         var pk = new AccessUser.AccessUserPK(accessId, userId);
@@ -76,55 +91,88 @@ public class AccessManagement {
         accessSensorRepo.delete(acs);
     }
 
-    public AccessSearch search(long userId, long accessId, String mixedCaseQuery, boolean sensor, boolean user, boolean in, boolean out) {
+    public List<Access> search(User user, String query) {
+        query = query.toLowerCase();
+        var accesses = new ArrayList<Access>();
+        for (var accessOfUser : user.getAccessUsers()) {
+            var access = accessOfUser.getAccess();
+            if (accessOfUser.getPrivilege() == AccessUserPrivilege.MANAGE
+                    && access.getName().toLowerCase().contains(query)){
+                accesses.add(access);
+            }
+        }
+
+        Comparator<Access> cmp = Comparator.comparing(access -> access.getDateInteractWithUser(user.getId()));
+        accesses.sort(cmp.reversed());
+        return accesses;
+    }
+
+    public List<Node> search(long userId, long accessId, String mixedCaseQuery, boolean sensor, boolean user, boolean in, boolean out) {
         final var query = mixedCaseQuery.toLowerCase();
-        var ac = accessRepo
+        var access = accessRepo
                 .findById(accessId)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find access"));
-
 
         var currentUser = userRepo
                 .findById(userId)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid User"));
 
+        if (!in && !out) return Collections.emptyList();
+
         var res = new AccessSearch();
 
-        if (!in && !out) return res;
-
         if (sensor) {
-            var sensors = ac.getSensors();
+            var sensors = access.getSensors();
             if (in) {
                 for (var s: sensors)
-                    if ((s.getName().toLowerCase().contains(query) || s.getDisplayName().toLowerCase().contains(query)))
+                    if ((s.getName().toLowerCase().contains(query)
+                            || s.getDisplayName().toLowerCase().contains(query)))
                         res.put(s, true);
             }
             if (out) {
-                for (var acu: currentUser.getAccessUsers())
-                    if (acu.getAccess().getPrivilege() == AccessPrivilege.MAINTENANCE)
-                        for (var s: acu.getAccess().getSensors())
-                            if ((s.getName().toLowerCase().contains(query) || s.getDisplayName().toLowerCase().contains(query)) && !sensors.contains(s))
-                                res.put(s, false);
+                // avoid duplicate
+                var addedSensorsId = new HashSet<Long>();
+
+                for (var accessUser: currentUser.getAccessUsers()) {
+
+                    var otherAccess = accessUser.getAccess();
+                    if (otherAccess.getPrivilege() != AccessPrivilege.MAINTENANCE)
+                        continue;
+
+                    for (var s: otherAccess.getSensors()) {
+                        if ((s.getName().toLowerCase().contains(query)
+                                || s.getDisplayName().toLowerCase().contains(query))
+                                && !sensors.contains(s)
+                                && !addedSensorsId.contains(s.getId())) {
+                            addedSensorsId.add(s.getId());
+                            res.put(s, false);
+                        }
+                    }
+                }
             }
         }
 
         if (user) {
-            var users = ac.getUsers();
+            var users = access.getUsers();
             if (in) {
-                var usersAccesses = ac.getAccessUsers();
+                var usersAccesses = access.getAccessUsers();
                 for (var acu : usersAccesses) {
                     var u = acu.getUser();
-                    if (u.getFirstname().toLowerCase().contains(query) || u.getLastname().toLowerCase().contains(query))
+                    if (u.getFirstname().toLowerCase().contains(query)
+                            || u.getLastname().toLowerCase().contains(query))
                         res.put(u, true, acu.getPrivilege());
                 }
             }
             if (out) {
                 for (var u : userRepo.findAll())
-                    if ((u.getFirstname().toLowerCase().contains(query) || u.getLastname().toLowerCase().contains(query)) && !users.contains(u))
+                    if ((u.getFirstname().toLowerCase().contains(query)
+                            || u.getLastname().toLowerCase().contains(query))
+                            && !users.contains(u))
                         res.put(u, false, null);
             }
         }
 
-        return res;
+        return res.toNodeForUser(currentUser);
     }
 
     public void guardManage(long accessId, long userId) {
@@ -134,6 +182,4 @@ public class AccessManagement {
         if (!access.manageableBy(userId))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid permission");
     }
-
-
 }

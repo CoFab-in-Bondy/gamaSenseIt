@@ -103,6 +103,6 @@ export class SensorsListComponent implements OnInit, OnDestroy {
   }
 
   getSize() {
-    return this.auth.isUser()? window.innerHeight - 190: window.innerHeight - 130;
+    return this.auth.isUser()? window.innerHeight - 200: window.innerHeight - 140;
   }
 }

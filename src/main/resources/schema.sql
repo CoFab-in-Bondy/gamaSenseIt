@@ -4,6 +4,9 @@ DROP TRIGGER IF EXISTS sensor.trig_sensor_last_capture_date;
 DROP VIEW IF EXISTS view_access_user_sensor;
 
 DROP TABLE IF EXISTS hibernate_sequence;
+DROP TABLE IF EXISTS interact_user;
+DROP TABLE IF EXISTS interact_sensor;
+DROP TABLE IF EXISTS interact_access;
 DROP TABLE IF EXISTS parameter;
 DROP TABLE IF EXISTS parameter_metadata;
 DROP TABLE IF EXISTS sensor;
@@ -116,6 +119,26 @@ CREATE TABLE access_user (
     PRIMARY KEY (access_id, user_id)
 ) engine=InnoDB;
 
+CREATE TABLE interact_user (
+    user_id BIGINT NOT NULL,
+    target_id BIGINT NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY (user_id, target_id)
+) engine=InnoDB;
+
+CREATE TABLE interact_sensor (
+    user_id BIGINT NOT NULL,
+    sensor_id BIGINT NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY (user_id, sensor_id)
+) engine=InnoDB;
+
+CREATE TABLE interact_access (
+     user_id BIGINT NOT NULL,
+     access_id BIGINT NOT NULL,
+     date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+     PRIMARY KEY (user_id, access_id)
+) engine=InnoDB;
 
 ALTER TABLE
     parameter_metadata
@@ -172,6 +195,36 @@ ALTER TABLE
     access_user
 ADD
     CONSTRAINT fk_au_to_a FOREIGN KEY (access_id) REFERENCES access (id);
+
+ALTER TABLE
+    interact_sensor
+ADD
+    CONSTRAINT fk_is_to_u FOREIGN KEY (user_id) REFERENCES user (id);
+
+ALTER TABLE
+    interact_sensor
+ADD
+    CONSTRAINT fk_is_to_s FOREIGN KEY (sensor_id) REFERENCES sensor (id);
+
+ALTER TABLE
+    interact_user
+ADD
+    CONSTRAINT fk_iu_to_u FOREIGN KEY (user_id) REFERENCES user (id);
+
+ALTER TABLE
+    interact_user
+ADD
+    CONSTRAINT fk_iu_to_t FOREIGN KEY (target_id) REFERENCES user (id);
+
+ALTER TABLE
+    interact_access
+    ADD
+        CONSTRAINT fk_ia_to_u FOREIGN KEY (user_id) REFERENCES user (id);
+
+ALTER TABLE
+    interact_access
+    ADD
+        CONSTRAINT fk_ia_to_t FOREIGN KEY (access_id) REFERENCES access (id);
 
 CREATE TRIGGER trig_sensor_last_capture_date AFTER INSERT ON parameter
     FOR EACH ROW

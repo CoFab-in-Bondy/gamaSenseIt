@@ -10,13 +10,14 @@
         (load)="onLoad($event)"
         [src]="imageSrc"
         class="preview m-0 p-0"
-        trigger
-        alt="Photo du capteur">
-      <p *ngIf="imageSrc"></p>
+        style="width: 100%; height: 100%"
+        alt="Photo du capteur"
+        trigger>
     </div >
 
     <div body>
-      <div class="d-flex justify-content-center dialog-image" [ngStyle]="{'height.vh': 50, 'width.vh': 50 }">
+      <div class="d-flex justify-content-center dialog-image"
+           [ngStyle]="{'height.px': getSizeSquare(), 'width.px': getSizeSquare() }">
 
         <label
           [for]="name"
@@ -24,39 +25,47 @@
           *ngIf="editable"
         >
           <img class="icon-edit" src="assets/buttons/edit.svg" alt="icon simple">
+          <input
+            type="file"
+            [name]="name"
+            [id]="name"
+            [attr.formControlName]="name"
+            accept="image/png"
+            (change)="onImagePreview()"
+            #imageRef
+          />
         </label>
-        <input
-          type="file"
-          [name]="name"
-          [id]="name"
-          [attr.formControlName]="name"
-          accept="image/png"
-          (change)="onImagePreview()"
-          #imageRef
-        />
         <img
           *ngIf="imageSrc"
           [src]="imageSrc"
           class="view"
-        >
+          alt="Vu de l'image">
       </div>
 
-      <div class="d-flex justify-content-center gap-3 mt-3" *ngIf="editable">
-        <app-button width="140" fa="fas fa-sync-alt" (click)="onImageReset()">
-          Anuller
-        </app-button>
-        <app-button width="140" fa="fas fa-times" (click)="onImageRemove()">
-          Supprimer
-        </app-button>
+      <div *ngIf="editable">
+        <div class="d-flex justify-content-center my-3">
+          <app-button width="140" fa="fas fa-sync-alt" (click)="onImageReset()">
+            Anuller
+          </app-button>
+        </div>
+        <div class="d-flex justify-content-center">
+          <app-button width="140" fa="fas fa-times" (click)="onImageRemove()">
+            Supprimer
+          </app-button>
+        </div>
       </div>
 
-      <div class="d-flex justify-content-center gap-3 mt-3" *ngIf="!editable && imageSrc">
-        <app-button width="140" fa="fas fa-expand-arrows-alt" [href]="imageSrc" blank="true">
-          Agrandir
-        </app-button>
-        <app-button width="140" fa="fas fa-cloud-download" (click)="onDownload(); $event.preventDefault(); $event.stopPropagation()">
-          Télécharger
-        </app-button>
+      <div *ngIf="!editable && imageSrc">
+        <div class="d-flex justify-content-center my-3">
+          <app-button width="140" fa="fas fa-expand-arrows-alt" [href]="imageSrc" blank="true">
+            Agrandir
+          </app-button>
+        </div>
+        <div class="d-flex justify-content-center ">
+          <app-button width="140" fa="fas fa-cloud-download" (click)="onDownload(); $event.preventDefault(); $event.stopPropagation()">
+            Télécharger
+          </app-button>
+        </div>
       </div>
 
     </div>

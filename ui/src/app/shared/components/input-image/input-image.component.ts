@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
+import {DEFAULT_IMG} from "../../../constantes";
 
 @Component({
   selector: 'app-input-image',
@@ -24,7 +25,7 @@ export class InputImageComponent implements AfterContentInit {
   @Input()
   default: SafeUrl;
 
-  defaultSrc: SafeUrl;
+  defaultSrc: SafeUrl = DEFAULT_IMG;
 
   @Output()
   image = new EventEmitter<File|undefined>();
@@ -99,6 +100,7 @@ export class InputImageComponent implements AfterContentInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     if (changes['default']) {
       if (this.imageSrc == changes.default.previousValue || this.imageSrc == undefined) {
         this.imageSrc = changes.default.currentValue;
@@ -112,6 +114,13 @@ export class InputImageComponent implements AfterContentInit {
 
   getSize() {
     return this.init && this.square? this.square.nativeElement.offsetWidth: 1;
+  }
+
+  getSizeSquare() {
+    if (window.innerHeight > window.innerWidth)
+      return window.innerWidth / 2;
+    else
+      return window.innerHeight / 2;
   }
 
 

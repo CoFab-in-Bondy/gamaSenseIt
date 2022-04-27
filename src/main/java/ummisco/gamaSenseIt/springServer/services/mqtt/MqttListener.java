@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
-import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagment;
+import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagement;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,7 +16,7 @@ public class MqttListener implements MessageHandler {
     private static final Logger logger = LoggerFactory.getLogger(MqttListener.class);
 
     @Autowired
-    private SensorManagment sensorManagment;
+    private SensorManagement sensorManagment;
 
     private String filename;
 

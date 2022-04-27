@@ -41,7 +41,6 @@ public class SensorDataAnalyser implements ISensorDataAnalyser {
         var res = new ArrayList<Parameter>();
         int i = 0;
         for (var pmd : pmds) {
-            logger.info("SID/" + pmd.getId() + "/");
             var p = pmd.createParameter(morsels[i], captureDate, sensor);
             if (p != null)
                 res.add(p);

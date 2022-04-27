@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractAccess;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractBase;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractSensor;
+import ummisco.gamaSenseIt.springServer.data.model.preference.Interactible;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Parameter;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 
@@ -14,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "access")
-public class Access {
+public class Access extends Interactible {
 
     // ----- users ----- //
     // @ManyToMany(cascade = {CascadeType.ALL})
@@ -77,6 +81,12 @@ public class Access {
     @JsonProperty("privilege")
     @JsonView(IView.Public.class)
     private AccessPrivilege privilege;
+
+
+    // ----- interacts ----- //
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "access")
+    @JsonIgnore
+    private final Set<InteractAccess> interacts = new HashSet<>();
 
     public Access() {
     }
@@ -165,5 +175,10 @@ public class Access {
             if (acu.getUserId() == userId)
                 return acu.getPrivilege() == AccessUserPrivilege.MANAGE;
         return false;
+    }
+
+    @Override
+    public Set<? extends InteractBase> getInteracts() {
+        return interacts;
     }
 }

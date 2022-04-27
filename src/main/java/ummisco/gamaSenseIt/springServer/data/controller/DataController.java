@@ -15,6 +15,7 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 import ummisco.gamaSenseIt.springServer.data.services.access.AccessManagement;
+import ummisco.gamaSenseIt.springServer.data.services.access.InteractionManagement;
 import ummisco.gamaSenseIt.springServer.data.services.geo.GeoService;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagement;
@@ -64,6 +65,9 @@ public abstract class DataController {
 
     @Autowired
     protected AccessManagement accessManagement;
+
+    @Autowired
+    protected InteractionManagement interactionManagement;
 
     private User publicUser;
 

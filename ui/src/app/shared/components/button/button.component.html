@@ -1,5 +1,5 @@
 <a [attr.href]="href" [attr.target]="blank == 'true' || blank == true? '_blank': undefined"  rel="noopener noreferrer">
-<button [type]="type" class="degraded">
+<button [type]="type" [disabled]="disabled" class="degraded">
 
   <i [ngStyle]="{'background-image': url? 'url(' + url + ')': undefined }" [ngClass]="fa"></i>
   <span [ngStyle]="{'width.px': +width || 80}" class="">

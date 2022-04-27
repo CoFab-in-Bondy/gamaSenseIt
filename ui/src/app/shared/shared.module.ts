@@ -42,6 +42,10 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from '@angular/material/list';
 import {MatButtonModule} from "@angular/material/button";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
     imports: [
@@ -52,8 +56,8 @@ import {MatButtonModule} from "@angular/material/button";
         MatToolbarModule,
         MatIconModule,
         MatListModule,
-        MatButtonModule
-
+        MatButtonModule,
+        MatTooltipModule
     ],
   exports: [
     // shared exports
@@ -78,6 +82,12 @@ import {MatButtonModule} from "@angular/material/button";
     BrowserAnimationsModule,
     HttpClientXsrfModule,
     FontAwesomeModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
   ],
   declarations: [
     HeaderComponent,
@@ -116,6 +126,7 @@ export class SharedModule {
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: XsrfInterceptor, multi: true },
         { provide: ErrorHandler, useClass: ErrorInterceptor },
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'} },
         DatePipe,
         SecurePipe,
         DateAgoPipe,

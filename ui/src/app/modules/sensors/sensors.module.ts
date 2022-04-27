@@ -5,9 +5,9 @@ import { SensorsMapComponent } from "./sensors-map/sensors-map.component";
 import { SensorsSingleComponent } from "./sensors-single/sensors-single.component";
 
 @NgModule({
-  imports: [
-    SharedModule.forRoot()
-  ],
+    imports: [
+        SharedModule.forRoot()
+    ],
   exports: [
   ],
   declarations: [

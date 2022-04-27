@@ -1,24 +1,25 @@
-<div class="box h-100">
-
-  <h1>Gestion des groupes</h1>
-  <input type="text" placeholder="Rechercher" (input)="onSearch($event)">
-  <div class="wrapper" [ngStyle]="{'height.px': getSize()}">
-    <div *ngFor="let ac of accesses" [routerLink]="['/accesses', ac.id]" class="ligne hstack justify-content-between">
-      <div>
-        <i class="fas me-2" [ngClass]="{
-          'fa-tools': ac.privilege == 'MAINTENANCE',
-          'fa-users': ac.privilege != 'MAINTENANCE'
-        }"></i>
-        <span class="name">{{ ac.name }}</span>
-      </div>
-      <div>
-        <div class="sizeSensors">
-          <span>{{ ac.sizeSensors }}</span>
-          <i class="fas fa-hdd"></i>
+<div class="box-wrapper vh-100">
+  <div class="box">
+    <h1>Gestion des groupes</h1>
+    <input type="text" placeholder="Rechercher" (input)="onSearch($event)">
+    <div class="wrapper" [ngStyle]="{'height.px': getSize()}">
+      <div *ngFor="let ac of accesses" [routerLink]="['/accesses', ac.id]" class="ligne hstack justify-content-between">
+        <div>
+          <i class="fas me-2" [ngClass]="{
+            'fa-tools': ac.privilege == 'MAINTENANCE',
+            'fa-users': ac.privilege != 'MAINTENANCE'
+          }"></i>
+          <span class="name">{{ ac.name }}</span>
         </div>
-        <div class="sizeUsers">
-          <span>{{ ac.sizeUsers }}</span>
-          <i class="fas fa-user"></i>
+        <div>
+          <div class="sizeSensors">
+            <span>{{ ac.sizeSensors }}</span>
+            <i class="fas fa-hdd"></i>
+          </div>
+          <div class="sizeUsers">
+            <span>{{ ac.sizeUsers }}</span>
+            <i class="fas fa-user"></i>
+          </div>
         </div>
       </div>
     </div>

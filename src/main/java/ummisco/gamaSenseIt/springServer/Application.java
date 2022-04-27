@@ -15,19 +15,6 @@ public class Application {
 
     public static void main(String[] args) {
         logger.info("Starting server ...");
-
-        // GeometryFactory gf=new GeometryFactory();
-        // ApplicationContext context = new
-        // ClassPathXmlApplicationContext("classpath:application-config.xml");
-
         ApplicationContext context = SpringApplication.run(Application.class, args);
-
-        // Question 1
-        ISensorManagement saver = (ISensorManagement) context.getBean("SensorManagment");
-        saver.saveDefaultSensorInit();
-        // System.out.println(formater.formatMessage(initialMessage));
-
     }
-
-
 }

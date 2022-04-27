@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
-@Service("SensorManagment")
-public class SensorManagment implements ISensorManagement {
+@Service
+public class SensorManagement implements ISensorManagement {
 
     @Autowired
     IParameterMetadataRepository parameterMetadataRepo;
@@ -45,51 +45,6 @@ public class SensorManagment implements ISensorManagement {
 
     @Autowired
     private ResourceLoader resourceLoader;
-
-    private Map<Long, Date> cacheLastRecvSensor = new HashMap<>();
-
-    @Override
-    public void saveDefaultSensorInit() {
-/*
-    GeometryFactory gf = new GeometryFactory();
-
-    SensorMetadata mtype = new SensorMetadata(DEFAULT_SENSOR_TYPE_NAME, DEFAULT_SENSOR_VERSION);
-    SensorMetadata qamelio = new SensorMetadata("Qamelio", "1", ":",DEFAULT_DESCRIPTION);
-    sensorMetadataRepo.save(mtype);
-
-    qamelio = addSensorMetadata(qamelio);
-    ParameterMetadata pp1 = new ParameterMetadata("pm 1", "mg/m3", DataFormat.DOUBLE, DataParameter.PM1);
-    ParameterMetadata pp2 = new ParameterMetadata("pm 2.5", "mg/m3", DataFormat.DOUBLE, DataParameter.PM2_5);
-    ParameterMetadata pp10 = new ParameterMetadata("pm 10", "mg/m3", DataFormat.DOUBLE, DataParameter.PM10);
-
-    ParameterMetadata t1 = new ParameterMetadata("temperature", "c", DataFormat.DOUBLE, DataParameter.TEMPERATURE);
-    ParameterMetadata h1 = new ParameterMetadata("humidity", "%", DataFormat.DOUBLE, DataParameter.HUMIDITY);
-    addParameterToSensorMetadata(qamelio, pp1);
-    addParameterToSensorMetadata(qamelio, pp2);
-    addParameterToSensorMetadata(qamelio, pp10);
-    addParameterToSensorMetadata(qamelio, h1);
-    addParameterToSensorMetadata(qamelio, t1);
-
-    Point p = gf.createPoint(new Coordinate(45, 3));
-    Sensor s1 = new Sensor(DEFAULT_SENSOR_NAME, DEFAULT_SENSOR_DISPLAY_NAME, DEFAULT_SENSOR_PLACE, p, mtype);
-    String slogan = "La recherche scientifique au service de la qualité de l'air que vous respirez.";
-    String subDisplayName = "IRD";
-    Sensor s2 = new Sensor("SENSOR_2", slogan, subDisplayName, p, qamelio);
-    sensorRepo.save(s1);
-    sensorRepo.save(s2);
-
-    String description = "comment utiliser le capteur";
-    SensorMetadata smd = new SensorMetadata("capMetadata", "v0", ":",description);
-    smd = addSensorMetadata(smd);
-    ParameterMetadata p1 = new ParameterMetadata("temperature", "c", DataFormat.DOUBLE, DataParameter.TEMPERATURE);
-    ParameterMetadata p2 = new ParameterMetadata("humidity", "%", DataFormat.DOUBLE, DataParameter.HUMIDITY);
-    addParameterToSensorMetadata(smd, p2);
-    addParameterToSensorMetadata(smd, p1);
-
-    Sensor sx = new Sensor("node_1", DEFAULT_SENSOR_DISPLAY_NAME, DEFAULT_SENSOR_PLACE, p, smd);
-    sensorRepo.save(sx);
-*/
-    }
 
     @Override
     public void saveData(String message, Date date) {

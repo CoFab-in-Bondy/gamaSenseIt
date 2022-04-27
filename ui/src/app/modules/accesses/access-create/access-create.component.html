@@ -1,0 +1,25 @@
+<div class="box-wrapper vh-100">
+    <div class="little-box" [formGroup]="accessForm">
+    <h1>Création d'un Groupe</h1>
+    <div class="mb-2">
+      <mat-form-field appearance="fill">
+        <mat-label>Nom du groupe</mat-label>
+        <input matInput [formControl]="name" required>
+        <mat-error *ngIf="getErrorName()">{{getErrorName()}}</mat-error>
+      </mat-form-field>
+    </div>
+      <div class="mb-3">
+      <mat-slide-toggle formControlName="maintenance" color="green">Maintenance</mat-slide-toggle>
+    </div>
+
+    <app-button
+      width="100"
+      fa="fas fa-plus-circle"
+      class="edit col mb-3 me-3"
+      (click)="onCreate(); $event.stopPropagation()"
+      [disabled]="accessForm.invalid"
+    >
+      Créer
+    </app-button>
+  </div>
+</div>

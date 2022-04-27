@@ -22,8 +22,6 @@ public interface ISensorManagement {
 
     SensorMetadata addSensorMetadata(SensorMetadata smd);
 
-    void saveDefaultSensorInit();
-
     void saveData(String message, Date date);
 
     Sensor addSensorForUser(Sensor sensor, long userId);

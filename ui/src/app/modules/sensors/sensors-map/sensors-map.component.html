@@ -2,7 +2,7 @@
   <div class="box">
     <h1>Carte des capteurs</h1>
     <div [ngStyle]="{'height.px': getSize()}" id="map-view-map"></div>
-    <div class="row m-0 mt-3" *ngIf="auth.isUser()">
+    <div class="m-0 mt-3" *ngIf="auth.isUser()">
       <app-button
         width="100"
         [routerLink]="['/sensors', 'create']"

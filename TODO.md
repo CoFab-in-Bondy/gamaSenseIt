@@ -39,8 +39,9 @@ Plusieurs page avec barre de recherche
 
 
 numéro du capteur
-bouton ajout de groupe
-support pour les grand capteur
 courbe des données
-barre css plus longues
 supprimer un capteur 
+
+
+
+server en block

@@ -13,5 +13,16 @@ export const
   MD = 768,
   LG = 992,
   XL = 1200,
-  XXL = 1400
+  XXL = 1400;
+
+export enum AccessUserPrivilege {
+  MANAGE = 0, // peut ajouter des capteurs et utilisateur mais pas les modifiers
+  VIEW = 1  // peut lire les capteurs
+}
+
+export enum AccessPrivilege {
+  MAINTENANCE = 0, // modifié le capteur (propriétaire)
+  SOCIAL = 1 // lire les données
+}
+
 

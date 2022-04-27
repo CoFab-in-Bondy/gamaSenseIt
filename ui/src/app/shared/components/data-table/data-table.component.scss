@@ -18,7 +18,7 @@
   border-radius: 15px;
   border: 1px solid rgb(220, 220, 220);
   padding: 0;
-  overflow: none;
+  overflow: hidden;
 }
 
 .tb:not(.no-footer) {
@@ -26,7 +26,7 @@
 }
 
 .tb.no-footer {
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 15px 15px 0 0;
 }
 
 .tb-body, .tb-header, .tb-footer {
@@ -49,7 +49,7 @@
   padding-bottom: 10px;
   background-color: rgb(27, 148, 108);
   color: white;
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 15px 15px 0 0;
   overflow: hidden;
 
   .sort {
@@ -79,7 +79,7 @@
   }
 
   .col-line {
-    height: 25px;
+    height: 20px;
     width: 100%;
   }
 
@@ -138,9 +138,9 @@
   }
 
   button {
-    border: 0px;
+    border: 0;
     background-color: rgb(230, 230, 230);
-    padding: 0px;
+    padding: 0;
   }
 
   button:hover {

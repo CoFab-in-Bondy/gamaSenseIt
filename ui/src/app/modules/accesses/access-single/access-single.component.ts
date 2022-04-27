@@ -80,7 +80,7 @@ export class AccessSingleComponent implements OnInit {
   }
 
   getSize() {
-    return window.innerHeight - 200;
+    return window.innerHeight - 255;
   }
 
 

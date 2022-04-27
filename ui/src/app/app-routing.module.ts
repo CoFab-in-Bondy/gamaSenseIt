@@ -8,10 +8,11 @@ import { Error500Component } from "@components/error500/error500.component";
 import { UserGuard } from "@guards/user.guard";
 import { SensorsSingleComponent } from "./modules/sensors/sensors-single/sensors-single.component";
 import { LoginPageComponent } from "./modules/auth/login-page/login-page.component";
-import { AccessPageComponent } from "./modules/accesses/access-page/access-page.component";
+import { AccessListComponent } from "./modules/accesses/access-list/access-list.component";
 import { AccessSingleComponent } from "./modules/accesses/access-single/access-single.component";
 import {SensorsMapComponent} from "./modules/sensors/sensors-map/sensors-map.component";
 import {SensorsListComponent} from "./modules/sensors/sensors-list/sensors-list.component";
+import {AccessCreateComponent} from "./modules/accesses/access-create/access-create.component";
 
 const routes: Routes = [
   {
@@ -46,15 +47,19 @@ const routes: Routes = [
     component: LoginPageComponent,
   },
   {
+    path: "accesses/create",
+    pathMatch: "full",
+    component: AccessCreateComponent,
+  },
+  {
+    path: "accesses/:id",
+    canActivate: [UserGuard],
+    component: AccessSingleComponent
+  },
+  {
     path: "accesses",
     canActivate: [UserGuard],
-    component: AccessPageComponent,
-    children: [
-      {
-        path: ":id",
-        component: AccessSingleComponent
-      }
-    ]
+    component: AccessListComponent
   },
   {
     path: "error404",

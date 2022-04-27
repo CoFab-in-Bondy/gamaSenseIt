@@ -5,14 +5,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.ColumnDefault;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractBase;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractSensor;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractUser;
+import ummisco.gamaSenseIt.springServer.data.model.preference.Interactible;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends Interactible {
 
     @OneToMany(mappedBy = "user")
     private Set<AccessUser> accessUsers;
@@ -45,6 +52,11 @@ public class User {
     @Transient
     @JsonProperty("accessUserPrivilege")
     private AccessUserPrivilege accessUserPrivilege = null;
+
+    // ----- interactSensor ----- //
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "target")
+    @JsonIgnore
+    private final Set<InteractUser> interacts = new HashSet<>();
 
 
     public User() {
@@ -117,5 +129,22 @@ public class User {
 
     public void setPrivilege(UserPrivilege privilege) {
         this.privilege = privilege;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public Set<? extends InteractBase> getInteracts() {
+        return interacts;
     }
 }

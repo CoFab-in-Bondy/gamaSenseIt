@@ -18,7 +18,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { SafeUrl } from "@angular/platform-browser";
 import * as L from "leaflet";
 import {
-  DEFAULT_CENTER,
+  DEFAULT_CENTER, DEFAULT_IMG,
   DEFAULT_LAT,
   LEAFLET_ATTRIBUTION_SMALL,
   LEAFLET_URL, NO_IMG,
@@ -50,7 +50,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   edition: boolean = false;
   sensorsMetadata: SensorMetadataExtended[] = [];
   sensorForm: FormGroup;
-  defaultUrl: SafeUrl;
+  defaultUrl: SafeUrl = NO_IMG;
   photo?: File;
   formater: DTFormatter<(string | number)[]> = (d) => d;
   create: boolean = false;

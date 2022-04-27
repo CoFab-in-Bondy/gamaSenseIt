@@ -12,6 +12,7 @@ import ummisco.gamaSenseIt.springServer.data.model.IView;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.Access;
+import ummisco.gamaSenseIt.springServer.data.model.user.AccessDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.services.access.AccessSearch;
 
@@ -102,6 +103,8 @@ public class PrivateDataController extends DataController {
         sensor.setMaintenanceDescription(sensorDTO.getMaintenanceDescription());
         sensor = sensorsManagement.addSensorForUser(sensor, currentUser().getId());
 
+        interactionManagement.touchSensorWithUser(currentUser().getId(), sensor.getId());
+
         return sensor.toNode(true);
     }
 
@@ -158,68 +161,25 @@ public class PrivateDataController extends DataController {
             sensor.setMaintenanceDescription(sensorDTO.getMaintenanceDescription());
 
         sensor = sensorsManagement.patchSensor(sensor);
+
+        interactionManagement.touchSensorWithUser(currentUser().getId(), sensor.getId());
+
         return sensor.toNode(true);
     }
 
-
-
-    /*
-    @CrossOrigin
-    @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.PATCH)
-    public Sensor updateSensor(
-            @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
-            @RequestParam(value = IParametersRequest.NAME, required = false) String name,
-            @RequestParam(value = IParametersRequest.DISPLAY_NAME, required = false) String displayName,
-            @RequestParam(value = IParametersRequest.SUB_DISPLAY_NAME, required = false) String subDisplayName,
-            @RequestParam(value = IParametersRequest.LONGITUDE, required = false) Double longitude,
-            @RequestParam(value = IParametersRequest.LATITUDE, required = false) Double latitude
+    @RequestMapping(value = IRoute.ACCESSES, method = RequestMethod.POST)
+    @JsonView(IView.AccessUser.class)
+    public Access accessCreate(
+            @RequestPart(value = "access") AccessDTO accessDTO
     ) {
-
-        Sensor sensor = sensor(sensorId);
-        if (sensor == null)
-            return null;
-
-        if (name != null)
-            sensor.setName(name);
-
-        if (displayName != null)
-            sensor.setDisplayName(displayName);
-
-        if (subDisplayName != null)
-            sensor.setSubDisplayName(subDisplayName);
-
-        if (longitude != null)
-            sensor.setLongitude(longitude);
-
-        if (longitude != null)
-            sensor.setLatitude(latitude);
-
-        return sensorsRepo.save(sensor);
+        var access = accessManagement.createAccess(user().getId(), accessDTO.getName().strip(), accessDTO.getPrivilege());
+        interactionManagement.touchAccessWithUser(user().getId(), access.getId());
+        return access;
     }
-    */
-
-    /*------------------------------------*
-     | Sensors metadata                   |
-     *------------------------------------*/
-
-    /*
-    @CrossOrigin
-    @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.POST)
-    public SensorMetadata addSensorMetadata(
-            @RequestParam(value = IParametersRequest.NAME, defaultValue = NIL) String name,
-            @RequestParam(value = IParametersRequest.VERSION, defaultValue = NIL) String version,
-            @RequestParam(value = IParametersRequest.DATA_SEPARATOR, defaultValue = SensorMetadata.DEFAULT_DATA_SEPARATOR) String sep,
-            @RequestParam(value = IParametersRequest.DESCRIPTION, defaultValue = NIL) String description
-    ) {
-        var sensorsMetadata = sensorsMetadataRepo.findByNameAndVersion(name, version);
-        if (!sensorsMetadata.isEmpty()) return null;
-        return this.sensorsMetadataRepo.save(new SensorMetadata(name, version, sep, description));
-    }
-    */
 
     @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SEARCH, method = RequestMethod.GET)
     @JsonView(IView.AccessUser.class)
-    public AccessSearch accessByIdSearch(
+    public List<Node> accessByIdSearch(
             @PathVariable(name = "id") long accessId,
             @RequestParam(name = IParametersRequest.QUERY, defaultValue = "") String query,
             @RequestParam(name = IParametersRequest.SENSOR, defaultValue = "1") boolean sensor,
@@ -235,15 +195,14 @@ public class PrivateDataController extends DataController {
     @JsonView(IView.AccessCount.class)
     public Access getAccessById(@PathVariable(name = "id") long accessId) {
         accessManagement.guardManage(accessId, currentUser().getId());
-        return this.accessRepo.getById(accessId);
+        return this.accessRepo.findById(accessId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't found this access"));
     }
-
 
     @RequestMapping(value = IRoute.ACCESSES  + IRoute.SEARCH, method = RequestMethod.GET)
     @JsonView(IView.AccessCount.class)
     public List<Access> accessSearch(@RequestParam(name = IParametersRequest.QUERY, defaultValue = "") String query) {
-        query = "%" + query.replace("%", "%%") + "%";
-        return this.accessRepo.searchManageableAccessByName(currentUser().getId(), query);
+        return this.accessManagement.search(currentUser(), query);
     }
 
     public record UserIdRecord(long userId) {}
@@ -253,6 +212,8 @@ public class PrivateDataController extends DataController {
     @JsonView(IView.AccessUser.class)
     public void accessByIdAddUser(@PathVariable(name = "id") long accessId, @RequestBody UserIdRecord userIdRecord) {
         accessManagement.guardManage(accessId, currentUser().getId());
+        interactionManagement.touchUserWithUser(currentUser().getId(), userIdRecord.userId());
+        interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.addAccessUser(accessId, userIdRecord.userId());
     }
 
@@ -260,6 +221,8 @@ public class PrivateDataController extends DataController {
     @JsonView(IView.AccessUser.class)
     public void accessByIdDelUser(@PathVariable(name = "id") long accessId, @PathVariable(name = "userId") long userId) {
         accessManagement.guardManage(accessId, currentUser().getId());
+        interactionManagement.touchUserWithUser(currentUser().getId(), userId);
+        interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.delAccessUser(accessId, userId);
     }
 
@@ -270,6 +233,8 @@ public class PrivateDataController extends DataController {
             @PathVariable(name = "userId") long userId
     ) {
         accessManagement.guardManage(accessId, currentUser().getId());
+        interactionManagement.touchUserWithUser(currentUser().getId(), userId);
+        interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.promoteAccessUser(accessId, userId, AccessUserPrivilege.MANAGE);
     }
 
@@ -280,6 +245,8 @@ public class PrivateDataController extends DataController {
             @PathVariable(name = "userId") long userId
     ) {
         accessManagement.guardManage(accessId, currentUser().getId());
+        interactionManagement.touchUserWithUser(currentUser().getId(), userId);
+        interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.promoteAccessUser(accessId, userId, AccessUserPrivilege.VIEW);
     }
 
@@ -287,6 +254,8 @@ public class PrivateDataController extends DataController {
     @JsonView(IView.AccessUser.class)
     public void accessByIdAddSensor(@PathVariable(name = "id") long accessId, @RequestBody SensorIdRecord sensorIdRecord) {
         accessManagement.guardManage(accessId, currentUser().getId());
+        interactionManagement.touchSensorWithUser(currentUser().getId(), sensorIdRecord.sensorId());
+        interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.addAccessSensor(accessId, sensorIdRecord.sensorId());
     }
 
@@ -294,6 +263,8 @@ public class PrivateDataController extends DataController {
     @JsonView(IView.AccessUser.class)
     public void accessByIdDelSensor(@PathVariable(name = "id") long accessId, @PathVariable(name = "sensorId") long sensorId) {
         accessManagement.guardManage(accessId, currentUser().getId());
+        interactionManagement.touchSensorWithUser(currentUser().getId(), sensorId);
+        interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.delAccessSensor(accessId, sensorId);
     }
 }

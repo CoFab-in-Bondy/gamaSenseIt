@@ -12,8 +12,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$gamasenseit-primary: mat.define-palette(mat.$indigo-palette);
-$gamasenseit-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$gamasenseit-primary: mat.define-palette(mat.$green-palette);
+$gamasenseit-accent: mat.define-palette(mat.$light-green-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $gamasenseit-warn: mat.define-palette(mat.$red-palette);
@@ -81,20 +81,55 @@ $body-color: $dark;
   box-shadow: 0 48px 40px -40px rgb(98, 218, 98) inset;
 }
 
+.degraded:disabled, .degraded:disabled:hover, .degraded:disabled:active   {
+  background-color: rgb(150, 150, 150);
+  box-shadow: 0 48px 40px -40px rgb(230, 230, 230) inset;
+}
+
 .box-wrapper {
-  padding: 15px;
+  transition: all 0.2s linear;
   width: 100% !important;
+  padding: 0;
+  @media (min-width: 400px) {
+    padding: 0.75rem;
+  }
+  @media (min-width: 576px) {
+    padding: 1.5rem;
+  }
 }
 
 .box {
-  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 35%) !important;
-  border-radius: 15px !important;
-  padding: 1.5rem !important;
-  border: 1px solid rgb(236, 236, 236);
+  transition: all 0.2s linear;
   background-color: white;
   height: 100%;
   width: 100%;
   overflow: hidden;
+  padding: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 35%);
+
+  @media (min-width: 400px) {
+    padding: 0.75rem;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 20%);
+    border-radius: 15px !important;
+    border: 1px solid rgb(236, 236, 236);
+  }
+  @media (min-width: 400px) {
+    padding: 0.75rem;
+  }
+  @media (min-width: 576px) {
+    padding: 1.5rem;
+  }
+}
+
+.little-box {
+  @extend .box;
+  width: 100%;
+  max-width: 768px;
+  height: fit-content;
+  margin: auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .unselectable {
@@ -119,6 +154,69 @@ $body-color: $dark;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color:  rgb(98, 218, 98);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 
 

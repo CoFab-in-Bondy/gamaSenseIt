@@ -2,10 +2,25 @@ import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import {AccessPrivilege} from "../../constantes";
 
 @Injectable()
 export class AccessService {
   constructor(private http: HttpClient, public datepipe: DatePipe) {}
+
+  create(name: string, maintenance: boolean): Observable<Access> {
+    const data = new FormData();
+    data.append("access", new Blob(
+      [JSON.stringify({
+        "name": name,
+        "privilege": maintenance? AccessPrivilege.MAINTENANCE: AccessPrivilege.SOCIAL
+      })],
+    {
+        type: "application/json; charset=utf-8",
+      }
+    ));
+    return this.http.post<Access>("/private/accesses", data);
+  }
 
   search({ query }: {query: string} ): Observable<Access[]> {
     return this.http.get<Access[]>("/private/accesses/search", {

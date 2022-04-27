@@ -9,12 +9,11 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
 import ummisco.gamaSenseIt.springServer.data.model.user.UserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
-import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagment;
+import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagement;
 import ummisco.gamaSenseIt.springServer.data.services.user.UserManagment;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class BaseActivation {
     UserManagment userManagment;
 
     @Autowired
-    SensorManagment sensorManagment;
+    SensorManagement sensorManagment;
 
     @Autowired
     ISensorRepository sensorRepo;

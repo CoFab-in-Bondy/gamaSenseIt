@@ -9,13 +9,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractBase;
+import ummisco.gamaSenseIt.springServer.data.model.preference.InteractSensor;
+import ummisco.gamaSenseIt.springServer.data.model.preference.Interactible;
+import ummisco.gamaSenseIt.springServer.data.model.user.User;
 
 import javax.persistence.*;
 import java.io.IOException;
 import java.util.*;
 
 @Entity
-public class Sensor {
+public class Sensor extends Interactible {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
     @JsonIgnore
@@ -114,10 +118,15 @@ public class Sensor {
     @JsonIgnore
     private String maintenanceDescription;
 
-    // ----- bulk_data ----- //
+    // ----- parameters ----- //
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
     @JsonIgnore
     private Set<Parameter> parameters = new HashSet<>();
+
+    // ----- interactSensor ----- //
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
+    @JsonIgnore
+    private final Set<InteractSensor> interacts = new HashSet<>();
 
     public Sensor() {
     } // for JSON compatibility
@@ -331,15 +340,19 @@ public class Sensor {
     }
 
     @Override
-    public int hashCode() {
-        return this.id.intValue();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Sensor sensor)) return false;
+        return getId().equals(sensor.getId());
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Sensor sensor = (Sensor) o;
-        return id.equals(sensor.id) && Objects.equals(name, sensor.name);
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public Set<? extends InteractBase> getInteracts() {
+        return interacts;
     }
 }

@@ -16,7 +16,6 @@ export class AccessListComponent implements OnInit {
     this.onSearch('');
   }
 
-
   onSearch(event: Event | string) {
     const query: string =
       event instanceof Event ? (<any>event.target).value || "" : event;
@@ -26,6 +25,6 @@ export class AccessListComponent implements OnInit {
   }
 
   getSize() {
-    return window.innerHeight - 160;
+    return window.innerHeight - 170;
   }
 }
