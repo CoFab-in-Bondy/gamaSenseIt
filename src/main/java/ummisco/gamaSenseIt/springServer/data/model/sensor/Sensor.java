@@ -9,10 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
+import ummisco.gamaSenseIt.springServer.data.model.ImageConstantes;
 import ummisco.gamaSenseIt.springServer.data.model.preference.InteractBase;
 import ummisco.gamaSenseIt.springServer.data.model.preference.InteractSensor;
 import ummisco.gamaSenseIt.springServer.data.model.preference.Interactible;
-import ummisco.gamaSenseIt.springServer.data.model.user.User;
+import ummisco.gamaSenseIt.springServer.data.model.user.AccessSensor;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -72,10 +73,10 @@ public class Sensor extends Interactible {
     private boolean isHidden;
 
     // ----- isHidden ----- //
-    @Column(name = "notifier")
-    @JsonProperty("notifier")
+    @Column(name = "notified")
+    @JsonProperty("notified")
     @JsonView(IView.Public.class)
-    private boolean notifier;
+    private boolean notified;
 
     // ----- hiddenMessage ---- //
     @Column(name = "hidden_message")
@@ -128,12 +129,25 @@ public class Sensor extends Interactible {
     @JsonIgnore
     private final Set<InteractSensor> interacts = new HashSet<>();
 
+    // ----- accessSensors ----- //
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sensor")
+    @JsonIgnore
+    private final Set<AccessSensor> accessSensors = new HashSet<>();
+
     public Sensor() {
     } // for JSON compatibility
 
     public void setLocation(Point location) {
         setLongitude(location.getX());
         setLatitude(location.getY());
+    }
+
+    public void setSensorMetadataId(Long sensorMetadataId) {
+        this.sensorMetadataId = sensorMetadataId;
+    }
+
+    public Set<AccessSensor> getAccessSensors() {
+        return accessSensors;
     }
 
     /*
@@ -154,16 +168,18 @@ public class Sensor extends Interactible {
     }
     */
 
-    public boolean isNotifier() {
-        return notifier;
+    public boolean isNotified() {
+        return notified;
     }
 
-    public void setNotifier(boolean notifier) {
-        this.notifier = notifier;
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     public byte[] getPhoto() {
-        return photo;
+        return photo == null || photo.length == 0? ImageConstantes.NO_IMG: photo;
+
+
     }
 
     public void setPhoto(byte[] photo) {
@@ -321,22 +337,10 @@ public class Sensor extends Interactible {
 
     @Override
     public String toString() {
-        return "Sensor{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", subDisplayName='" + subDisplayName + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", isHidden=" + isHidden +
-                ", notifier=" + notifier +
-                ", hiddenMessage='" + hiddenMessage + '\'' +
-                ", sensorMetadataId=" + sensorMetadataId +
-                ", lastCaptureDate=" + lastCaptureDate +
-                ", photo.length=" + (photo == null? "null": photo.length) +
-                ", description.length=" + description.length() +
-                ", maintenanceDescription.length=" + maintenanceDescription.length()  +
-                '}';
+        return String.format(
+                "Sensor(%d, %s, (%.5f, %.5f), %s, %s)",
+                id, name, longitude, latitude, notified? "N": "M", lastCaptureDate
+        );
     }
 
     @Override

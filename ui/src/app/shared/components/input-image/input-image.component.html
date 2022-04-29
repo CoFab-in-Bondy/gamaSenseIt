@@ -3,7 +3,7 @@
   #square (window:resize)="0"
   [ngStyle]="{'height.px': getSize() }"
 >
-  <app-dialog class="download col mb-3">
+  <app-dialog class="download col mb-3" #dialog>
     <div class="m-0 p-0" [ngStyle]="{'height.px': getSize(), 'width.px': getSize() }" trigger>
       <img
         *ngIf="imageSrc"
@@ -16,15 +16,17 @@
     </div >
 
     <div body>
-      <div class="d-flex justify-content-center dialog-image"
+      <div class="d-flex justify-content-center dialog-image drag-and-drop"
            [ngStyle]="{'height.px': getSizeSquare(), 'width.px': getSizeSquare() }">
 
         <label
           [for]="name"
           class="label-edit"
           *ngIf="editable"
+          appDnd
+          (fileDropped)="onLoadFile($event)"
         >
-          <img class="icon-edit" src="assets/buttons/edit.svg" alt="icon simple">
+          <img class="icon-edit" src="assets/buttons/image-upload.svg" alt="icon simple">
           <input
             type="file"
             [name]="name"
@@ -56,8 +58,8 @@
       </div>
 
       <div *ngIf="!editable && imageSrc">
-        <div class="d-flex justify-content-center my-3">
-          <app-button width="140" fa="fas fa-expand-arrows-alt" [href]="imageSrc" blank="true">
+        <div class="d-flex justify-content-center my-3" *ngIf="extendSrc">
+          <app-button width="140" fa="fas fa-expand-arrows-alt" [routerLink]="extendSrc" blank="true">
             Agrandir
           </app-button>
         </div>
@@ -67,11 +69,6 @@
           </app-button>
         </div>
       </div>
-
     </div>
   </app-dialog>
-
-
-
-
 </div>

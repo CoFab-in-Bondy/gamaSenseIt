@@ -1,13 +1,20 @@
 package ummisco.gamaSenseIt.springServer.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.Normalizer;
 
 @Service
 public class SecurityUtils {
 
+    @Value("${gamaSenseIt.cors-url:}")
+    private String corsUrl;
+    @Value("${server.port}")
+    private int portServer;
 
     public String sanitizeFilename(String name) {
         // null is converted to "null"
@@ -32,5 +39,20 @@ public class SecurityUtils {
             name = "_";
 
         return name;
+    }
+
+    public String getRootUrl() {
+        String url;
+        try {
+            url = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        } catch (NullPointerException | IllegalStateException err) {
+            if (corsUrl != null && !corsUrl.isEmpty()) {
+                url = corsUrl;
+            } else {
+                url = "https://localhost:"+portServer;
+            }
+        }
+        url = url.replaceAll("//+$", "");
+        return url;
     }
 }

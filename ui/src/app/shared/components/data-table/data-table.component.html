@@ -13,7 +13,7 @@
     <div
       *ngFor="let name of headers; let i = index"
       class="col-data"
-      [ngStyle]="{ flex: '1 0 ' + minSizes[i] + 'px' }"
+      [ngStyle]="getSizesStyles(i)"
     >
       <button *ngIf="sortable !== 'NO'" class="sort me-2" (click)="onSort(i)">
         {{ isSortBy(i) ? (isAsc(i) ? "▲" : "▼") : "◊" }}
@@ -44,7 +44,7 @@
       <div
         *ngFor="let value of formater(d); let iCol = index"
         class="col-data"
-        [ngStyle]="{ flex: '1 0 ' + minSizes[iCol] + 'px' }"
+        [ngStyle]="getSizesStyles(iCol)"
       >
         <ng-container *ngIf="!isIcon(format(value))">
           <span  [title]="value">{{ format(value) }}</span>

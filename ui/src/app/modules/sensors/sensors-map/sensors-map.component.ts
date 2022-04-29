@@ -2,7 +2,7 @@ import {Component, Input, OnInit, OnDestroy, Output, EventEmitter, SecurityConte
 import { ActivatedRoute, Router } from "@angular/router";
 import * as L from "leaflet";
 import { Subscription } from "rxjs";
-import {DELAY_DEAD, DELAY_NO_SIGNAL, LEAFLET_ATTRIBUTION, LEAFLET_URL, SM} from "src/app/constantes";
+import {DELAY_DEAD, DELAY_NO_SIGNAL, LEAFLET_ATTRIBUTION, LEAFLET_URL, MD, SM} from "src/app/constantes";
 import { CLICK_MARKER, GREEN_MARKER, ORANGE_MARKER, RED_MARKER } from "@models/icon.model";
 import { HumanService } from "@services/human.service";
 import { SensorMetadataService } from "@services/sensorMetadata.service";
@@ -40,8 +40,8 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
 
   private initMap(): void {
     this.map = L.map("map-view-map", {
-      center: [48.856614, 2.3522219],
-      zoom: 12,
+      center: [40, 0],
+      zoom: window.innerWidth < MD? 1: 2,
     });
 
     const tiles = L.tileLayer(

@@ -9,14 +9,18 @@
         <div class="col-12 col-lg-7 col-xl-8">
           <div>
             <div class="row m-0">
-              <input
-                class="p-0 col-12 col-md-4 order-0 order-md-1 text-start text-md-end"
-                type="text"
-                id="name"
-                minlength="2"
-                maxlength="255"
-                formControlName="name"
-              />
+              <div class="p-0 col-12 col-md-4 order-0 order-md-1">
+                <input
+                  class="text-start text-md-end"
+                  type="text"
+                  id="name"
+                  minlength="2"
+                  maxlength="255"
+                  formControlName="name"
+                />
+                <span id="id"> {{ getIdFormat() }} </span>
+
+              </div>
               <input
                 class="p-0 col-12 col-md-8 order-1 order-md-0"
                 type="text"
@@ -101,6 +105,7 @@
               (image)="photo = $event"
               name="photo"
               [default]="defaultUrl"
+              [extendSrc]="id? ['/sensors', id, 'photo']: undefined"
               [editable]="edition"
             ></app-input-image>
           </div>
@@ -139,6 +144,16 @@
                 >
                   JSON
                 </app-button>
+                <app-button
+                  *ngIf="editable"
+                  url="assets/buttons/binary.svg"
+                  (click)="onDownloadBinary()"
+                  width="120"
+                  class="ms-3"
+                  #close
+                >
+                  Programme
+                </app-button>
               </div>
             </div>
           </app-dialog>
@@ -169,7 +184,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12" [ngClass]="{ 'col-md-6': editable }">
+        <div class="col-12" [ngClass]="{ 'col-md-6': editable || create }">
           <strong>Description</strong>
           <div class="description">
             <textarea
@@ -179,7 +194,7 @@
             ></textarea>
           </div>
         </div>
-        <div class="col-12 col-md-6" *ngIf="editable">
+        <div class="col-12 col-md-6" *ngIf="editable || create">
           <strong>Description de maintenance</strong>
           <div class="description">
             <textarea
@@ -198,7 +213,7 @@
           [scales]="[25, 50, 100]"
           sortable="SERVER"
           pagable="SERVER"
-          [minSizes]="sizes()"
+          [sizes]="sizes()"
           [data]="parameters?.values || []"
           [formater]="formater"
           [empty]="'Aucune donnée à afficher'"

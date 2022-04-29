@@ -4,9 +4,9 @@
     <app-data-table
     [sortable]="'NO'"
     [pagable]="'NO'"
-    [minSizes]="[120, 150, 120, 150, 400, 75]"
+    [sizes]="[50, 120, 150, 120, 150, 400]"
     [data]="sensors"
-    [headers]="['Nom', 'Nom D\'affichage', 'Type', 'DMS', 'Signal', 'Status']"
+    [headers]="['', 'Nom', 'Nom D\'affichage', 'Type', 'DMS', 'Signal']"
     [formater]="formater"
     [linker]="linker"
     [empty]="'Aucun capteurs disponible'"

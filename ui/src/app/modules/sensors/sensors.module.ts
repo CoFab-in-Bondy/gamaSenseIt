@@ -3,6 +3,7 @@ import { SharedModule } from "src/app/shared/shared.module";
 import { SensorsListComponent } from "./sensors-list/sensors-list.component";
 import { SensorsMapComponent } from "./sensors-map/sensors-map.component";
 import { SensorsSingleComponent } from "./sensors-single/sensors-single.component";
+import { SensorsImageComponent } from './sensor-image/sensors-image.component';
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import { SensorsSingleComponent } from "./sensors-single/sensors-single.componen
   declarations: [
     SensorsListComponent,
     SensorsMapComponent,
-    SensorsSingleComponent
+    SensorsSingleComponent,
+    SensorsImageComponent
   ],
   providers: [],
 })

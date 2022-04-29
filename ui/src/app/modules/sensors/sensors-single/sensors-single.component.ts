@@ -39,7 +39,7 @@ const widths = {
   styleUrls: ["./sensors-single.component.scss"],
 })
 export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentChecked {
-  id?: number = 0;
+  id?: number;
   metadata?: SensorMetadata;
   editable: boolean = false;
   lnglat: Pos = DEFAULT_CENTER;
@@ -91,16 +91,24 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   dynamicInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
       this.messageError = '';
-      if (params["id"] == "create") {
+      if (params["id"] == undefined || params["id"] == "create") {
         this.id = undefined;
         if (this.auth.isUser()) this.dynamicInitCreate();
         else this.router.navigate(["/login"]);
       } else {
+        console.log("hasandId")
         let id = +params["id"];
         this.id = id;
         this.dynamicInitUpdate();
       }
     });
+  }
+
+  getIdFormat() {
+    if (this.id == undefined) return "#?????";
+    let s = this.id+"";
+    while (s.length < 5) s = "0" + s;
+    return '#'+s;
   }
 
   dynamicInitCreate() {
@@ -394,6 +402,16 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     if (this.id == undefined) return;
     this.sensorService
       .download({ sensorId: this.id, type: "json" })
+      .subscribe(() => {}, console.error);
+  }
+
+  /**
+   * Run download for binary file.
+   */
+  onDownloadBinary(): void {
+    if (this.id == undefined) return;
+    this.sensorService
+      .binary(this.id)
       .subscribe(() => {}, console.error);
   }
 

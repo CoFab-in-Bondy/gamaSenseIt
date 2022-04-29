@@ -13,6 +13,7 @@ import { AccessSingleComponent } from "./modules/accesses/access-single/access-s
 import {SensorsMapComponent} from "./modules/sensors/sensors-map/sensors-map.component";
 import {SensorsListComponent} from "./modules/sensors/sensors-list/sensors-list.component";
 import {AccessCreateComponent} from "./modules/accesses/access-create/access-create.component";
+import {SensorsImageComponent} from "./modules/sensors/sensor-image/sensors-image.component";
 
 const routes: Routes = [
   {
@@ -27,14 +28,28 @@ const routes: Routes = [
   },
   {
     path: "sensors/map",
+    pathMatch: "full",
     component: SensorsMapComponent
   },
   {
     path: "sensors/list",
+    pathMatch: "full",
     component: SensorsListComponent
   },
   {
+    path: "sensors/create",
+    pathMatch: "full",
+    component: SensorsSingleComponent,
+    canActivate: [UserGuard]
+  },
+  {
+    path: "sensors/:id/photo",
+    pathMatch: "full",
+    component: SensorsImageComponent
+  },
+  {
     path: "sensors/:id",
+    pathMatch: "full",
     component: SensorsSingleComponent
   },
   {
@@ -53,11 +68,13 @@ const routes: Routes = [
   },
   {
     path: "accesses/:id",
+    pathMatch: "full",
     canActivate: [UserGuard],
     component: AccessSingleComponent
   },
   {
     path: "accesses",
+    pathMatch: "full",
     canActivate: [UserGuard],
     component: AccessListComponent
   },

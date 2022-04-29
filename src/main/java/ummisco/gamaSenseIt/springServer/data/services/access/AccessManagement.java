@@ -103,7 +103,7 @@ public class AccessManagement {
         }
 
         Comparator<Access> cmp = Comparator.comparing(access -> access.getDateInteractWithUser(user.getId()));
-        accesses.sort(cmp.reversed());
+        accesses.sort(cmp.reversed().thenComparing(Access::getName));
         return accesses;
     }
 

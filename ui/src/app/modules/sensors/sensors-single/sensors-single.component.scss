@@ -9,10 +9,11 @@
     border-radius: 2px;
   }
 
-  #name {
+  #name, #id {
     font-size: 15px;
     color: $light-gray;
     text-align: right;
+    display: inline;
   }
 
   #displayName {

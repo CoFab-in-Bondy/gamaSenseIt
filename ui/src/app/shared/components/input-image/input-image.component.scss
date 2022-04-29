@@ -59,14 +59,20 @@
       transition: all 0.2s;
       opacity: 0;
     }
+  }
 
-    &:hover, &:active {
-      background-color: rgba(180, 180, 180, 0.507);
-      .icon-edit {
-        opacity: 1;
-      }
+
+
+  label:hover, label:active, label.filenear {
+    background-color: rgba(180, 180, 180, 0.507);
+    .icon-edit {
+      opacity: 1;
     }
 
+    &.fileover img {
+      animation: shake 1s;
+      animation-iteration-count: infinite;
+    }
   }
 
   .preview {

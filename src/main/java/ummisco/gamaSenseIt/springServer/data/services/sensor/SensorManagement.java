@@ -68,7 +68,7 @@ public class SensorManagement implements ISensorManagement {
             return;
 
         
-        Sensor selectedSensor = foundSensors.get(0);
+        Sensor sensor = foundSensors.get(0);
 
         Date capturedate = new Date(captureTimestamp * 1000);
         
@@ -89,9 +89,11 @@ public class SensorManagement implements ISensorManagement {
          * System.out.println("token "+token); System.out.println("contents "+contents);
          */
 
-        SensoredBulkData bulkData = new SensoredBulkData(selectedSensor, token, capturedate, date, contents);
+        SensoredBulkData bulkData = new SensoredBulkData(sensor, token, capturedate, date, contents);
         bulkDataRepo.save(bulkData);
-        List<Parameter> parameters = dataAnalyser.analyseBulkData(contents, capturedate, selectedSensor);
+        sensor.setNotified(false);
+        sensorRepo.save(sensor);
+        List<Parameter> parameters = dataAnalyser.analyseBulkData(contents, capturedate, sensor);
         // System.out.println("*************************************************************************************");
 
         analysedDataRepo.saveAll(parameters);

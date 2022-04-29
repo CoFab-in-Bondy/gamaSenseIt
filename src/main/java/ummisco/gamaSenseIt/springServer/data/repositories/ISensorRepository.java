@@ -15,8 +15,8 @@ public interface ISensorRepository extends CrudRepository<Sensor, Long> {
     @Query(nativeQuery = true, value = """
             SELECT s.* FROM sensor s
                 WHERE s.last_capture_date IS NOT NULL
-                    AND s.last_capture_date < CURRENT_TIMESTAMP - ms
-                    AND s.notifier = true""")
+                    AND s.last_capture_date < CURRENT_TIMESTAMP - :ms
+                    AND s.notified = false""")
     List<Sensor> findPowerOffNotAlreadyNotified(long ms);
 
 

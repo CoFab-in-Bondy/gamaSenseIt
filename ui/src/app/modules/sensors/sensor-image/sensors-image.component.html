@@ -1,0 +1,12 @@
+<div class="box-wrapper vh-100">
+  <div class="box">
+    <div class="inner-box" (window:resize)="onResize()" #innerBox>
+      <img
+        [src]="urlData"
+        class="view"
+        alt="Image"
+        [ngStyle]="{'width.px': size, 'height.px': size}"
+      >
+    </div>
+  </div>
+</div>

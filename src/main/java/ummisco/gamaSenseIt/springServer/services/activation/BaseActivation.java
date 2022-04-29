@@ -11,6 +11,7 @@ import ummisco.gamaSenseIt.springServer.data.model.user.UserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagement;
 import ummisco.gamaSenseIt.springServer.data.services.user.UserManagment;
+import ummisco.gamaSenseIt.springServer.services.compiler.Compiler;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

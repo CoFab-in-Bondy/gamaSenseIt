@@ -8,6 +8,7 @@ import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class AccessSearch {
 
@@ -33,6 +34,14 @@ public class AccessSearch {
         }});
     }
 
+    public static <R> R computeNode(Node node, Function<User, R> userCase, Function<Sensor, R> sensorCase) {
+        if (node.get("user") instanceof User)
+            return userCase.apply((User) node.get("user"));
+        if (node.get("sensor") instanceof Sensor)
+            return sensorCase.apply((Sensor) node.get("sensor"));
+        return null;
+    }
+
     private static Date getDate(long userId, Node userOrSensor) {
         Object obj = userOrSensor.get("user");
         if (obj == null)
@@ -40,9 +49,13 @@ public class AccessSearch {
         return ((Interactible)obj).getDateInteractWithUser(userId);
     }
 
+    private static String getName(Node userOrSensor) {
+        return computeNode(userOrSensor, u->u.getFirstname()+ ' ' +u.getLastname(), Sensor::getName);
+    }
+
     public List<Node> toNodeForUser(User currentUser) {
         Comparator<Node> cmp = Comparator.comparing(o-> getDate(currentUser.getId(), o));
-        json.sort(cmp.reversed());
+        json.sort(cmp.reversed().thenComparing(AccessSearch::getName));
         return json;
     }
 }

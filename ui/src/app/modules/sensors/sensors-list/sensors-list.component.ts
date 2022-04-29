@@ -30,12 +30,12 @@ export class SensorsListComponent implements OnInit, OnDestroy {
 
   linker: DTLinker<[Sensor, SensorMetadataExtended]> = ([s, smd]) => ["/sensors", s.id];
   formater: DTFormatter<[Sensor, SensorMetadataExtended]> = ([s, smd]) => [
+      this.state(s),
       s.name,
       s.displayName,
       `${smd.name} (${smd.version})`,
       this.humanService.coordsToHumain(s.latitude, s.longitude),
       this.ago.transform(s.lastCaptureDate) + ` (${s.lastCaptureDate})`,
-      this.state(s),
   ];
 
   constructor(

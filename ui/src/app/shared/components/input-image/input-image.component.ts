@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
-import {DEFAULT_IMG} from "../../../constantes";
+import {DEFAULT_IMG, NO_IMG} from "../../../constantes";
+import {DialogComponent} from "@components/dialog/dialog.component";
 
 @Component({
   selector: 'app-input-image',
@@ -25,13 +26,15 @@ export class InputImageComponent implements AfterContentInit {
   @Input()
   default: SafeUrl;
 
-  defaultSrc: SafeUrl = DEFAULT_IMG;
+  defaultSrc: SafeUrl = NO_IMG;
 
   @Output()
   image = new EventEmitter<File|undefined>();
 
-
   imageSrc?: SafeUrl;
+
+  @Input()
+  extendSrc?: (string|number)[]
 
   @Input()
   name: string = "image";
@@ -39,11 +42,15 @@ export class InputImageComponent implements AfterContentInit {
   @Input()
   editable: boolean;
 
+  @ViewChild("dialog")
+  dialog: DialogComponent;
+
   width = 0;
   height = 0;
 
   init = false;
-  @ViewChild("imageRef", {static: true})
+
+  @ViewChild("imageRef")
   imageRef: ElementRef;
 
   @ViewChild("square")
@@ -68,6 +75,7 @@ export class InputImageComponent implements AfterContentInit {
         this.imageSrc = this.sanitizer.bypassSecurityTrustUrl(url);
       }
       this.image.emit(file);
+      this.dialog.onClose();
     } else {
       this.image.emit(undefined);
     }
@@ -100,7 +108,6 @@ export class InputImageComponent implements AfterContentInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes['default']) {
       if (this.imageSrc == changes.default.previousValue || this.imageSrc == undefined) {
         this.imageSrc = changes.default.currentValue;
@@ -121,6 +128,11 @@ export class InputImageComponent implements AfterContentInit {
       return window.innerWidth / 2;
     else
       return window.innerHeight / 2;
+  }
+
+  onLoadFile(event: any) {
+    this.imageRef.nativeElement.files = event;
+    this.onImagePreview();
   }
 
 

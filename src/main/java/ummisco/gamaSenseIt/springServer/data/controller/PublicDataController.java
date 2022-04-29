@@ -194,7 +194,8 @@ public class PublicDataController extends DataController {
 
     @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.GET)
     @JsonView(IView.SensorMetadataExtended.class)
-    public Iterable<SensorMetadata> getAllSensorMetadataExtended(@RequestParam(name = IParametersRequest.MANAGEABLE, defaultValue = "false") boolean manageable) {
+    public Iterable<SensorMetadata> getAllSensorMetadataExtended(
+            @RequestParam(name = IParametersRequest.MANAGEABLE, defaultValue = "false") boolean manageable) {
         var smds = this.sensorsMetadataRepo.findAll();
         var smdsIter = smds.iterator();
         var sensorsId = new HashSet<>();

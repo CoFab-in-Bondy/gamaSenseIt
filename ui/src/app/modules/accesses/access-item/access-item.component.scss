@@ -1,5 +1,9 @@
 @import "all";
 
+.item {
+  border: 1px solid black;
+}
+
 .del, .add, .eye, .manage {
   width: 30px;
   height: 30px;

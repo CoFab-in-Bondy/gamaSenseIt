@@ -7,12 +7,16 @@ import { HttpClient } from "@angular/common/http";
 export class AuthService {
   constructor(private http: HttpClient, private router: Router ) { }
 
+  getStorage() {
+    return localStorage;
+  }
+
   isAuth(): boolean {
     return this.getToken() != null;
   }
 
   getToken(): string|null {
-    return sessionStorage.getItem('token');
+    return this.getStorage().getItem('token');
   }
 
   getBodyToken(): any|null {
@@ -31,11 +35,11 @@ export class AuthService {
   setToken(token: string): void {
     if (this.isAuth())
       this.delToken();
-    return sessionStorage.setItem('token', token);
+    return this.getStorage().setItem('token', token);
   }
 
   delToken(): void {
-    return sessionStorage.removeItem('token');
+    return this.getStorage().removeItem('token');
   }
 
   private postLogin(username: string, password: string): Observable<any> {

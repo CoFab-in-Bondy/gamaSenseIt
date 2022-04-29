@@ -20,6 +20,7 @@ import ummisco.gamaSenseIt.springServer.data.services.geo.GeoService;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagement;
 import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
+import ummisco.gamaSenseIt.springServer.services.compiler.Compiler;
 import ummisco.gamaSenseIt.springServer.services.export.ExportResolver;
 
 import java.util.ArrayList;
@@ -32,6 +33,10 @@ public abstract class DataController {
 
     @Autowired
     protected SecurityUtils securityUtils;
+
+
+    @Autowired
+    protected Compiler compiler;
 
     @Autowired
     protected IAccessRepository accessRepo;

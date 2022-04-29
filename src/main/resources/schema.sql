@@ -58,7 +58,7 @@ CREATE TABLE sensor (
     name VARCHAR(255) UNIQUE,
     sensor_metadata_id BIGINT NOT NULL,
     sub_display_name VARCHAR(255),
-    notifier BIT NOT NULL DEFAULT FALSE,
+    notified BIT NOT NULL DEFAULT TRUE,
     photo MEDIUMBLOB,
     description TEXT,
     maintenance_description TEXT,
@@ -226,12 +226,12 @@ ALTER TABLE
     ADD
         CONSTRAINT fk_ia_to_t FOREIGN KEY (access_id) REFERENCES access (id);
 
+
 CREATE TRIGGER trig_sensor_last_capture_date AFTER INSERT ON parameter
     FOR EACH ROW
     UPDATE sensor
-        SET last_capture_date = NEW.capture_date, notifier = true
-        WHERE id = NEW.sensor_id AND (last_capture_date < NEW.capture_date OR last_capture_date IS NULL);
-
+    SET last_capture_date = NEW.capture_date, notified = (NEW.capture_date > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 day))
+    WHERE id = NEW.sensor_id AND (last_capture_date < NEW.capture_date OR last_capture_date IS NULL);
 
 -- CREATE OR REPLACE VIEW view_access_user_sensor AS
 --    SELECT DISTINCT user_id, sensor_id FROM (

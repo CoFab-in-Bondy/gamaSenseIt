@@ -42,3 +42,10 @@ GeoLite2-Country.mmdb
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# ignore output from compiler
+src/main/resources/compiler
+!src/main/resources/compiler/*.c
+!src/main/resources/compiler/*.cpp
+!src/main/resources/compiler/*.h
+!src/main/resources/compiler/Makefile

@@ -2,7 +2,7 @@
   "properties": [
     {
       "name": "redirect.port",
-      "type": "java.lang.String",
+      "type": "java.lang.Integer",
       "description": "Port to redirect."
     }
   ] }

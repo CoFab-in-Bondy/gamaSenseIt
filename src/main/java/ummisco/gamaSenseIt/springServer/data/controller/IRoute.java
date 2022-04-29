@@ -24,6 +24,7 @@ public interface IRoute {
             PARAMETERS = "/parameters",
             SENSORS = "/sensors",
             EXTENDED = "/extended",
+            BINARY = "/binary",
             DOWNLOAD = "/download",
             ME = "/me",
             IMAGE = "/image",

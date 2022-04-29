@@ -41,7 +41,6 @@ Plusieurs page avec barre de recherche
 numéro du capteur
 courbe des données
 supprimer un capteur 
-
-
-
-server en block
+telechargement sur une ligne, compilation plus rapide
+server en block,
+min and MAX size

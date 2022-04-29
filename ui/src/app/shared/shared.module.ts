@@ -46,6 +46,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/mater
 import {MatInputModule} from "@angular/material/input";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {DndDirective} from "./directives/dnd.directive";
 
 @NgModule({
     imports: [
@@ -103,6 +104,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     InputImageComponent,
     SafePipe,
     UnsafePipe,
+    DndDirective,
   ],
   providers: [],
 })

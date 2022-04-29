@@ -1,8 +1,9 @@
 package ummisco.gamaSenseIt.springServer.data.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -266,5 +267,20 @@ public class PrivateDataController extends DataController {
         interactionManagement.touchSensorWithUser(currentUser().getId(), sensorId);
         interactionManagement.touchAccessWithUser(currentUser().getId(), accessId);
         accessManagement.delAccessSensor(accessId, sensorId);
+    }
+
+
+    @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.BINARY, method = RequestMethod.GET)
+    public ResponseEntity<Resource> getBinarySensor(@PathVariable(name = "id") long sensorId) {
+        var sensor = sensorManage(sensorId);
+        try {
+            var binary = compiler.getBinary(sensor);
+            var header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "octet-stream"));
+            header.setContentDisposition(ContentDisposition.attachment().filename("sensor.exe").build());
+            return new ResponseEntity<>(new ByteArrayResource(binary), header, HttpStatus.OK);
+        } catch (IOException err) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't compile Sensor");
+        }
     }
 }

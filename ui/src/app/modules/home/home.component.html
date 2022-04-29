@@ -1,7 +1,41 @@
 <div class="box-wrapper">
-  <div class="box">
+  <div class="center-box">
     <h1>Acceuil</h1>
-    <p>Page d'acceuil principale</p>
+    <p>Bienvenue sur le site officiel de gamaSenseit</p>
+    <p>
+      Cette application a pour but de rendre plus simple la mise en place et la collecte de données de capteurs pouvant être placée partout dans le monde.
+      Il a tout d'abors été mis en place pour les capteurs Qameleo et s'étend maintenant à tout type de capteurs
+    </p>
 
+  </div>
+  <div class="center-box">
+    <h2>Une carte</h2>
+    <p>
+      Une carte est disponible pour explorer est retrouver avec aisance les capteurs dans une zone démographique.
+    </p>
+    <app-button
+      class="m-auto d-block"
+      url="/assets/buttons/map.svg"
+      width="220"
+      [routerLink]="['/sensors', 'map']"
+    >
+      Voir la carte des capteurs
+    </app-button>
+  </div>
+  <div class="center-box">
+    <h2>Une Liste</h2>
+    <p>
+      L'application possède un système pour retrouver facilement vos capteurs via une liste,
+      parfait pour vérifier l'état de vos capteurs d'un simple coup d'oeil et leurs dernières émisions de données
+    </p>
+    <app-button
+      class="m-auto d-block"
+      url="/assets/buttons/list.svg"
+      width="220"
+      [routerLink]="['/sensors', 'list']"
+    >
+      Voir la liste des capteurs
+
+    </app-button>
   </div>
 </div>

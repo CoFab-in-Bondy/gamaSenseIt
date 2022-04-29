@@ -46,7 +46,7 @@ export class DataTableComponent<D> {
   @Input() sortable: "SERVER" | "CLIENT" | "NO" = "NO";
   @Input() pagable: "SERVER" | "CLIENT" | "NO" = "NO";
 
-  @Input() minSizes: number[] = [];
+  @Input() sizes: (number|[number, number])[] = [];
   @Input() headers: string[] = [];
   @Input() data: D[] = [];
   @Input() formater: (d: D) => DTValue[];
@@ -150,5 +150,12 @@ export class DataTableComponent<D> {
     if (this.isIcon(value))
       return value;
     return value.toString();
+  }
+
+  getSizesStyles(index: number) {
+    let minSize = this.sizes[index]
+    return {
+      flex: '1 0 ' + this.sizes[index] + 'px'
+    };
   }
 }
