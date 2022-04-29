@@ -32,8 +32,8 @@ bin/
 *.crt
 
 # Ignore Data
-src/main/resources/data.sql
-.angular
+/src/main/resources/data.sql
+/ui/.angular/
 
 # GeoLite
 GeoLite2-ASN.mmdb
@@ -44,8 +44,8 @@ GeoLite2-Country.mmdb
 hs_err_pid*
 
 # ignore output from compiler
-src/main/resources/compiler
-!src/main/resources/compiler/*.c
-!src/main/resources/compiler/*.cpp
-!src/main/resources/compiler/*.h
-!src/main/resources/compiler/Makefile
+/src/main/resources/compiler/*
+!/src/main/resources/compiler/*.c
+!/src/main/resources/compiler/*.cpp
+!/src/main/resources/compiler/*.h
+!/src/main/resources/compiler/Makefile
