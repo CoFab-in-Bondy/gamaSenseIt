@@ -47,6 +47,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DndDirective} from "./directives/dnd.directive";
+import { MatOptionModule } from "@angular/material/core";
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
     imports: [
@@ -58,7 +60,10 @@ import {DndDirective} from "./directives/dnd.directive";
         MatIconModule,
         MatListModule,
         MatButtonModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatOptionModule,
+        MatInputModule,
+        MatSelectModule
     ],
   exports: [
     // shared exports
@@ -88,7 +93,10 @@ import {DndDirective} from "./directives/dnd.directive";
     MatSlideToggleModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatOptionModule,
+    MatInputModule,
+    MatSelectModule
   ],
   declarations: [
     HeaderComponent,

@@ -99,12 +99,14 @@ export class InputImageComponent implements AfterContentInit {
     if (this.imageRef == undefined) return;
     this.imageRef.nativeElement.value = "";
     this.imageSrc = undefined;
+    this.onImagePreview();
   }
 
   onImageReset(): void {
     if (this.imageRef == undefined) return;
     this.imageRef.nativeElement.value = "";
     this.imageSrc = this.default;
+    this.onImagePreview();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -6,19 +6,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class Compiler {
@@ -28,31 +27,22 @@ public class Compiler {
     @Autowired
     private SecurityUtils securityUtils;
 
-    @Value("classpath:compiler")
-    private Resource directory;
-
     @Value("${gamaSenseIt.make}")
     private String make;
 
-    static void copyRecursive(File path, String dest) throws IOException {
-        if (path.isFile()) {
-            copyResource(path, dest);
-        } else {
-            for (var file : Objects.requireNonNull(path.listFiles())) {
-                if (file.isFile() &&
-                        (file.getName().endsWith(".c")
-                                || file.getName().endsWith(".cpp")
-                                || file.getName().endsWith(".h")
-                                || "Makefile".equals(file.getName()))) {
-                    copyResource(file, Paths.get(dest, file.getName()).toString());
-                }
+    static void copyRecursive(String dest) throws IOException {
+        String dir = "/compiler/";
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource[] resources = resolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + dir + "**");
+        for (Resource resource : resources) {
+            if (resource.exists() & resource.isReadable() && resource.contentLength() > 0) {
+                URL url = resource.getURL();
+                String urlString = url.toExternalForm();
+                String targetName = urlString.substring(urlString.indexOf(dir) + dir.length());
+                File destination = new File(dest, targetName);
+                Files.copy(url.openStream(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
         }
-    }
-
-    static void copyResource(File path, String dest) throws IOException {
-        InputStream src = new FileInputStream(path);
-        Files.copy(src, Paths.get(dest), StandardCopyOption.REPLACE_EXISTING);
     }
 
     public byte[] getBinary(Sensor sensor) throws IOException {
@@ -63,8 +53,8 @@ public class Compiler {
         logger.info("Start compilation for " + sensor);
 
         var dir = Files.createTempDirectory("compiler-");
-        copyRecursive(directory.getFile(), dir.toString());
         logger.info("Working in " + dir);
+        copyRecursive(dir.toString());
 
         var out = dir.resolve("sensor.exe");
         try {
@@ -90,7 +80,7 @@ public class Compiler {
             }
         } finally {
             FileUtils.deleteDirectory(dir.toFile());
-            logger.trace("Directory deleted");
+            logger.info("Directory deleted");
         }
     }
 

@@ -45,7 +45,7 @@ export class AccessCreateComponent implements OnInit {
 
   getErrorName(): string|null {
     if (this.name.hasError('required')) {
-      return 'Vous devez enter un nom';
+      return 'Vous devez entrer un nom';
     }
     console.log();
     return null;

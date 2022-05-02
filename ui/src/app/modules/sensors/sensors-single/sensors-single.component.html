@@ -2,32 +2,36 @@
   <div class="sensor box w-100">
     <form
       [formGroup]="sensorForm"
-      class="m-0 mb-3"
+      class="m-0"
+      [ngClass]="{'mb-3': !create}"
       enctype="multipart/form-data"
     >
       <div class="row p-0">
         <div class="col-12 col-lg-7 col-xl-8">
           <div>
             <div class="row m-0">
-              <div class="p-0 col-12 col-md-4 order-0 order-md-1">
+              <div class="p-0 col-12 col-xl-4 order-0 order-xl-1">
                 <input
-                  class="text-start text-md-end"
+                  class="text-start text-xl-end"
                   type="text"
                   id="name"
                   minlength="2"
-                  maxlength="255"
+                  maxlength="128"
                   formControlName="name"
+                  placeholder="NAME_SENSOR"
+                  
                 />
                 <span id="id"> {{ getIdFormat() }} </span>
 
               </div>
               <input
-                class="p-0 col-12 col-md-8 order-1 order-md-0"
+                class="p-0 col-12 col-xl-8 order-1 order-xl-0"
                 type="text"
                 id="displayName"
                 minlength="5"
                 maxlength="255"
                 formControlName="displayName"
+                placeholder="Designation"
               />
               <input
                 class="p-0 col-12 order-2"
@@ -35,13 +39,14 @@
                 id="subDisplayName"
                 minlength="5"
                 maxlength="255"
+                placeholder="Indications"
                 formControlName="subDisplayName"
               />
             </div>
             <div>
               <div class="pos">
                 <div class="me-2">
-                  <p for="latitude" class="d-block d-sm-none">Lat.</p>
+                  <p class="d-block d-sm-none">Lat.</p>
                   <label for="latitude" class="d-none d-sm-block"
                   >Latitude</label
                   >
@@ -53,7 +58,7 @@
                   />
                 </div>
                 <div>
-                  <p for="latitude" class="d-block d-sm-none">Lng.</p>
+                  <p class="d-block d-sm-none">Lng.</p>
                   <label for="longitude" class="d-none d-sm-block"
                   >Longitude</label
                   >
@@ -68,20 +73,29 @@
             </div>
           </div>
           <div>
-            <select
-              id="sensorMetadata"
-              class="form-control"
-              formControlName="sensorMetadata"
-              (ngModelChange)="onChangeMetadata($event)"
-            >
-              <option
-                *ngFor="let smd of sensorsMetadata"
-                [ngValue]="smd"
-              >
-                {{ smd.name }} ({{smd.version}})
-              </option>
-            </select>
-            <p class="input-align">{{ metadata?.description }}</p>
+            <mat-form-field appearance="fill" *ngIf="create">
+              <mat-label>Type du capteur</mat-label>
+              <mat-select 
+              required formControlName="sensorMetadata"
+              (ngModelChange)="onChangeMetadata($event)">
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let smd of sensorsMetadata" [value]="smd">
+                  <img [src]="
+                    smd?.id
+                    ? ('/public/sensors/metadata/' + smd?.id + '/image' | secure | async)
+                    : NO_IMG
+                  "
+                  width="24"
+                  height="24"
+                  (window:resize)="0"/> {{ smd.name }} ({{smd.version}})
+                </mat-option>
+              </mat-select>
+              <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error> -->
+              <!--<mat-hint>{{animalControl.value?.sound}}</mat-hint> -->
+            </mat-form-field>
+
+            <h2 *ngIf="!create" class="m-0 p-0">{{ metadata?.name }} {{ metadata?.version }}</h2>
+            <p *ngIf="!create" class="input-align">{{ metadata?.description }}</p>
           </div>
         </div>
         <div class="col-12 col-lg-5 col-xl-4 row pb-3 m-0">
@@ -117,6 +131,30 @@
                 'height.px': getSize()
               }"
             ></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12" [ngClass]="{ 'col-md-6': editable || create }">
+          <strong>Description</strong>
+          <div class="description" >
+            <textarea
+              type="text"
+              id="description"
+              placeholder="Aucune description"
+              formControlName="description"
+            ></textarea>
+          </div>
+        </div>
+        <div class="col-12 col-md-6" *ngIf="editable || create">
+          <strong>Description de maintenance</strong>
+          <div class="description">
+            <textarea
+              type="text"
+              id="maintenanceDescription"
+              placeholder="Aucune description"
+              formControlName="maintenanceDescription"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -180,28 +218,6 @@
 
           <div class="error col-12 col-md mb-3" *ngIf="messageError">
             {{ messageError }}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12" [ngClass]="{ 'col-md-6': editable || create }">
-          <strong>Description</strong>
-          <div class="description">
-            <textarea
-              type="text"
-              id="description"
-              formControlName="description"
-            ></textarea>
-          </div>
-        </div>
-        <div class="col-12 col-md-6" *ngIf="editable || create">
-          <strong>Description de maintenance</strong>
-          <div class="description">
-            <textarea
-              type="text"
-              id="maintenanceDescription"
-              formControlName="maintenanceDescription"
-            ></textarea>
           </div>
         </div>
       </div>

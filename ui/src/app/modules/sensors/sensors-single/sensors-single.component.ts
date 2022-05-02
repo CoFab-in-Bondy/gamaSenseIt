@@ -119,12 +119,12 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     this.sensorForm.enable();
     this.sensorForm.patchValue({
       sensorMetadata: undefined,
-      name: "NEW",
-      displayName: "Nouveau capteur",
-      subDisplayName: "Sub dsiplay",
+      name: "",
+      displayName: "",
+      subDisplayName: "",
       longitude: 0.0,
       latitude: 0.0,
-      hiddenMessage: "Ce capetru n'est pas disponible pour le moment",
+      hiddenMessage: "Capteur indisponible",
       isHidden: 0,
       description: "",
       maintenanceDescription: "",

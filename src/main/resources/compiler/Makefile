@@ -1,4 +1,8 @@
-CC = C:\MinGW\bin\gcc
+ifeq ($(OS),Windows_NT)
+	CC = C:\MinGW\bin\gcc
+else
+	CC = /usr/bin/gcc
+endif
 CFLAGS = \
 	-Wredundant-decls     \
 	-Wformat-security     \
@@ -13,7 +17,7 @@ CFLAGS = \
 	-Wfloat-equal         \
 	-Wextra
 NAME = UNKOWN
-OUT = prog
+OUT = sensor.exe
 
 .PHONY: build
 build: main.o

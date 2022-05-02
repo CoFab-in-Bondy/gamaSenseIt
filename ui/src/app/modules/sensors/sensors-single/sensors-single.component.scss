@@ -1,6 +1,7 @@
 @import "all";
 
 
+
 .sensor {
   position: relative;
 
@@ -9,6 +10,10 @@
     border-radius: 2px;
   }
 
+  #name {
+    width: 150px;
+    padding: 7px 0;
+  }
   #name, #id {
     font-size: 15px;
     color: $light-gray;

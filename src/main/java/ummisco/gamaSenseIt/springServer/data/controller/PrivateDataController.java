@@ -280,6 +280,7 @@ public class PrivateDataController extends DataController {
             header.setContentDisposition(ContentDisposition.attachment().filename("sensor.exe").build());
             return new ResponseEntity<>(new ByteArrayResource(binary), header, HttpStatus.OK);
         } catch (IOException err) {
+            err.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't compile Sensor");
         }
     }

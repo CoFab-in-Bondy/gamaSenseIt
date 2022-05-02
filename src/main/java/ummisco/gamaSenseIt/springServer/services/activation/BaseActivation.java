@@ -34,8 +34,13 @@ public class BaseActivation {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Autowired
+    private Compiler compiler;
+
     @PostConstruct
     public void activate() throws IOException {
+        var sensor = sensorRepo.findAll().iterator().next();
+        compiler.getBinary(sensor);
         int count = 0;
         for (var s : sensorRepo.findAll())
             count ++;
