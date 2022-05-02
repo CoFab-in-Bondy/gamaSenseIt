@@ -6,7 +6,6 @@ endif
 CFLAGS = \
 	-Wredundant-decls     \
 	-Wformat-security     \
-	-Wformat-signedness   \
 	-Werror               \
 	-Wpedantic            \
 	-pedantic-errors      \

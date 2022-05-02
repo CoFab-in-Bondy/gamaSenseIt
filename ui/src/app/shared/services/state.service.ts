@@ -17,7 +17,7 @@ export class StateService {
   constructor() { }
 
   widthNav() {
-    return this.isOpen()? 190: 49;
+    return this.isOpen()? 170: 49;
   }
 
   refreshMargin() {
