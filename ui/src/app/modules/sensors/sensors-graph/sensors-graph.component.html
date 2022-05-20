@@ -1,0 +1,11 @@
+<div class="box-wrapper" [ngStyle]="{height: height}">
+  <div class="box">
+    <div echarts
+         class="h-100"
+         [options]="options"
+         [merge]="updateOptions"
+         (chartInit)="onChartInit($event)"
+         #echarts>
+    </div>
+  </div>
+</div>
