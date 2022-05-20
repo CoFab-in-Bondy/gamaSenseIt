@@ -4,12 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.ApplicationContext;
 
-import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagement;
-
 @SpringBootApplication
-public class Application {
+public class Application implements ErrorController {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 

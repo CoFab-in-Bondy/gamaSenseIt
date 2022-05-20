@@ -8,19 +8,21 @@ public interface IRoute {
             DATE = "/date",
             SEPARATOR = "/separator",
             METADATA = "/metadata",
+            DATA = "/data",
             SEARCH = "/search",
             ID = "/{id}",
-    USERS = "/users",
-    PROMOTE = "/promote",
-    DISMISE = "/dismiss",
+            SENSOR_ID = "/{sensorId}",
+            USERS = "/users",
+            PROMOTE = "/promote",
+            DISMISE = "/dismiss",
 
-    // First level
-    PUBLIC = "/public",
+            // First level
+            PUBLIC = "/public",
             PRIVATE = "/private",
             AUTH = "/auth",
 
-    // Second level
-    SERVER = "/server",
+            // Second level
+            SERVER = "/server",
             PARAMETERS = "/parameters",
             SENSORS = "/sensors",
             EXTENDED = "/extended",
@@ -32,5 +34,7 @@ public interface IRoute {
             SENSORS_METADATA = SENSORS + METADATA,
             PARAMETERS_METADATA = PARAMETERS + METADATA,
             IP = "ip";
+
+    String[] ENDPOINTS = {PUBLIC, PRIVATE, AUTH, "/error"};
 
 }

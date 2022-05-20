@@ -19,7 +19,7 @@
                   maxlength="128"
                   formControlName="name"
                   placeholder="NAME_SENSOR"
-                  
+
                 />
                 <span id="id"> {{ getIdFormat() }} </span>
 
@@ -75,7 +75,7 @@
           <div>
             <mat-form-field appearance="fill" *ngIf="create">
               <mat-label>Type du capteur</mat-label>
-              <mat-select 
+              <mat-select
               required formControlName="sensorMetadata"
               (ngModelChange)="onChangeMetadata($event)">
                 <mat-option>--</mat-option>
@@ -161,7 +161,7 @@
       <div class="row">
         <div class="col">
           <app-dialog class="download col mb-3 me-3" *ngIf="!create">
-            <app-button width="140" fa="fas fa-cloud-download" trigger>
+            <app-button width="130" fa="fas fa-cloud-download" trigger>
               Télécharger
             </app-button>
 
@@ -197,7 +197,17 @@
           </app-dialog>
 
           <app-button
-            width="140"
+            *ngIf="id"
+            width="130"
+            fa="fas fa-chart-bar"
+            class="edit col mb-3 me-3"
+            [link]="['/sensors', id, 'graph']"
+          >
+            Graphiques
+          </app-button>
+
+          <app-button
+            width="130"
             url="/assets/buttons/edit.svg"
             class="edit col mb-3 me-3"
             (click)="onEdition(); $event.stopPropagation()"
@@ -207,7 +217,7 @@
           </app-button>
 
           <app-button
-            width="140"
+            width="130"
             *ngIf="edition && auth.isUser()"
             fa="fas fa-cloud-upload"
             class="edit col mb-3 me-3"
@@ -233,7 +243,7 @@
           [data]="parameters?.values || []"
           [formater]="formater"
           [empty]="'Aucune donnée à afficher'"
-          [headers]="parameters?.metadata?.headers || []"
+          [headers]="metadata?.parameters?.headers || []"
           (navigate)="onChange($event)"
           [height]="525"
         >

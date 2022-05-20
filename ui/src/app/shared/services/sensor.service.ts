@@ -88,4 +88,8 @@ export class SensorService {
   getImage(id: number): Observable<SafeUrl> {
     return this.secure.transform(`/public/sensors/${id}/image`);
   }
+
+  getData(sensorId: number, parameterMetadataId: number): Observable<Data[]> {
+    return this.http.get<Data[]>(`/public/sensors/${sensorId}/data/${parameterMetadataId}`);
+  }
 }

@@ -1,4 +1,4 @@
-<a [attr.href]="href" [attr.target]="blank == 'true' || blank == true? '_blank': undefined"  rel="noopener noreferrer">
+<a [attr.href]="href" [routerLink]="link"  [attr.target]="blank == 'true' || blank == true? '_blank': undefined"  rel="noopener noreferrer">
 <button [type]="type" [disabled]="disabled" class="degraded">
 
   <i [ngStyle]="{'background-image': url? 'url(' + url + ')': undefined }" [ngClass]="fa"></i>

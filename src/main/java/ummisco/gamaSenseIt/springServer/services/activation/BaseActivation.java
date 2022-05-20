@@ -12,8 +12,10 @@ import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagement;
 import ummisco.gamaSenseIt.springServer.data.services.user.UserManagment;
 import ummisco.gamaSenseIt.springServer.services.compiler.Compiler;
+import ummisco.gamaSenseIt.springServer.services.mail.PowerNotifier;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,14 @@ public class BaseActivation {
     @Autowired
     private Compiler compiler;
 
+    @Autowired
+    private PowerNotifier notifier;
+
     @PostConstruct
-    public void activate() throws IOException {
+    public void activate() throws IOException, MessagingException {
         var sensor = sensorRepo.findAll().iterator().next();
         compiler.getBinary(sensor);
+
         int count = 0;
         for (var s : sensorRepo.findAll())
             count ++;

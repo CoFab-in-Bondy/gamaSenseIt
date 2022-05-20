@@ -13,32 +13,29 @@ public class RecordList extends ArrayList<Record> {
 
     private static final Logger logger = LoggerFactory.getLogger(RecordList.class);
 
-    private final RecordListMetadata metadata;
-    private final int total;
+    private final List<ParameterMetadata> parametersMetadata;
 
-    public RecordList(List<ParameterMetadata> parameterMetadata, Map<Date, Map<Long, byte[]>> captured) {
+    public RecordList(List<ParameterMetadata> parametersMetadata, Map<Date, Map<Long, byte[]>> captured) {
         super(captured.size());
-        this.metadata = new RecordListMetadata(parameterMetadata);
+        this.parametersMetadata = parametersMetadata;
         for (var e : captured.entrySet()) {
             var values = new ArrayList<Object>();
-            parameterMetadata.forEach(pmd -> {
+            parametersMetadata.forEach(pmd -> {
                 var data = e.getValue().getOrDefault(pmd.getId(), null);
                 values.add(pmd.getDataType().convertToObject(data));
             });
             super.add(new Record(e.getKey(), values));
         }
-        this.total = size();
     }
 
-    public RecordListMetadata getMetadata() {
-        return this.metadata;
+    public List<ParameterMetadata> getParametersMetadata() {
+        return parametersMetadata;
     }
-    
+
     public Node toNode() {
         return new Node() {{
-            put("metadata", metadata.toNode());
             put("values", RecordList.this);
-            put("total", RecordList.this.total);
+            put("total", RecordList.this.size());
         }};
     }
 
@@ -49,7 +46,7 @@ public class RecordList extends ArrayList<Record> {
 
     @SuppressWarnings("unchecked")
     public void sortBy(final int index, final boolean asc) {
-        if (0 > index || index >= metadata.width())
+        if (0 > index || index >= getParametersMetadata().size())
             return;
         try {
             // null-friendly comparator

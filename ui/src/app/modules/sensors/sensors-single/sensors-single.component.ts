@@ -98,6 +98,10 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
       } else {
         console.log("hasandId")
         let id = +params["id"];
+        if (isNaN(id)) { // invalid id
+          this.router.navigate(["/error404"], {skipLocationChange: true});
+          return;
+        }
         this.id = id;
         this.dynamicInitUpdate();
       }
@@ -292,7 +296,8 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    */
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
-    this.map.remove();
+    // Can't use twice the same map
+    // this.map.remove();
   }
 
   /**
@@ -432,8 +437,8 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * @returns
    */
   sizes(): number[] {
-    let width = this.parameters?.metadata.width || 0;
-    let type = this.parameters?.metadata.formats || [];
+    let width = this.metadata?.parameters?.width || 0;
+    let type = this.metadata?.parameters?.formats || [];
     let arr = [];
     for (let i = 0; i < width; i++) {
       arr.push(widths[type[i]]);
@@ -447,7 +452,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * @returns type as string.
    */
   type(index: number): "INTEGER" | "DOUBLE" | "STRING" | "DATE" | undefined {
-    return this.parameters?.metadata.formats[index];
+    return this.metadata?.parameters?.formats[index];
   }
 
   /**

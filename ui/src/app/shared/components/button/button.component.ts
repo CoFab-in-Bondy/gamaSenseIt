@@ -15,6 +15,7 @@ export class ButtonComponent implements OnInit {
   @Input() fa = "";
   @Input() type: "button"|"sumbit"|string = "button";
   @Input() href?: string|null|SafeUrl = undefined;
+  @Input() link?: (string|number)[] = undefined;
   @Input() disabled: boolean = false;
   @Input() blank: boolean|string = false;
 

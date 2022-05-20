@@ -3,8 +3,10 @@ package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.*;
 import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
@@ -15,6 +17,9 @@ import java.util.stream.Stream;
 
 @Service
 public class SensorManagement implements ISensorManagement {
+
+    @Autowired
+    IParameterRepository parameterRepo;
 
     @Autowired
     IParameterMetadataRepository parameterMetadataRepo;

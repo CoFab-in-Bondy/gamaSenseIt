@@ -1,12 +1,22 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 public class APIError {
     private int status;
     private String error;
     private String message;
     private long timestamp;
+
+    public APIError(){
+        this.status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+        this.error = HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase();
+        this.message = HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase();
+        this.timestamp = System.nanoTime();
+    }
 
     public APIError(HttpStatus status, String message){
         this.status = status.value();
@@ -45,5 +55,18 @@ public class APIError {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public ResponseEntity<APIError> response() {
+        return new ResponseEntity<>(this, HttpStatus.valueOf(this.getStatus()));
+    }
+
+    public ModelAndView modelAndView() {
+        var mav = new ModelAndView(new MappingJackson2JsonView());
+        mav.addObject("status", status);
+        mav.addObject("error", error);
+        mav.addObject("message", message);
+        mav.addObject("timestamp", timestamp);
+        return mav;
     }
 }

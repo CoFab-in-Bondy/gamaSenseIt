@@ -11,7 +11,7 @@ public class RecordListMetadata {
 
     private final List<ParameterMetadata> parametersMetadata;
 
-    RecordListMetadata(List<ParameterMetadata> parameterMetadata) {
+    public RecordListMetadata(List<ParameterMetadata> parameterMetadata) {
         this.parametersMetadata = parameterMetadata;
     }
 

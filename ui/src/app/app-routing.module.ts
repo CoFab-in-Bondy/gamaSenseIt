@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { HomeComponent } from "./modules/home/home.component";
 import { Error403Component } from "@components/error403/error403.component";
 
 import { Error404Component } from "@components/error404/error404.component";
@@ -14,12 +13,16 @@ import {SensorsMapComponent} from "./modules/sensors/sensors-map/sensors-map.com
 import {SensorsListComponent} from "./modules/sensors/sensors-list/sensors-list.component";
 import {AccessCreateComponent} from "./modules/accesses/access-create/access-create.component";
 import {SensorsImageComponent} from "./modules/sensors/sensor-image/sensors-image.component";
+import {SensorsGraphComponent} from "./modules/sensors/sensors-graph/sensors-graph.component";
+import {ServerGuard} from "@guards/server.guard";
+import {FakeComponent} from "@components/fake/fake.component";
 
 const routes: Routes = [
   {
     path: "",
     pathMatch: "full",
-    component: HomeComponent,
+    canActivate: [ServerGuard],
+    component: FakeComponent
   },
   {
     path: "sensors",
@@ -41,8 +44,11 @@ const routes: Routes = [
     pathMatch: "full",
     component: SensorsSingleComponent,
     canActivate: [UserGuard]
-  },
-  {
+  }, {
+    path: "sensors/:id/graph",
+    pathMatch: "full",
+    component: SensorsGraphComponent
+  }, {
     path: "sensors/:id/photo",
     pathMatch: "full",
     component: SensorsImageComponent
@@ -92,7 +98,7 @@ const routes: Routes = [
   },
   {
     path: "**",
-    redirectTo: "/error404",
+    component: Error404Component,
   },
 ];
 

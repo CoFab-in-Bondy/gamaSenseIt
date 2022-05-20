@@ -23,7 +23,7 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
     // ----- parameter_metadata_id ----- //
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @JsonProperty("id")
     @JsonView(IView.Public.class)

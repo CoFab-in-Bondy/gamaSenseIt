@@ -26,29 +26,28 @@ public class Sensor extends Interactible {
     @JsonIgnore
     private final Set<SensoredBulkData> bulkData = new HashSet<>();
 
-    // ----- name ----- //
     // ----- sensor_id ----- //
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @JsonProperty("id")
     @JsonView(IView.Public.class)
     private Long id;
 
 
-    // ----- displayName ----- //
+    // ----- name ----- //
     @Column(name = "name")
     @JsonProperty("name")
     @JsonView(IView.Public.class)
     private String name;
 
-    // ----- name ----- //
+    // ----- displayName ----- //
     @Column(name = "display_name")
     @JsonProperty("displayName")
     @JsonView(IView.Public.class)
     private String displayName;
 
-    // ----- longitude ----- //
+    // ----- subDisplayName ----- //
     @Column(name = "sub_display_name")
     @JsonProperty("subDisplayName")
     @JsonView(IView.Public.class)
@@ -60,7 +59,7 @@ public class Sensor extends Interactible {
     @JsonView(IView.Public.class)
     private double longitude;
 
-    // ----- longitude ----- //
+    // ----- latitude ----- //
     @Column(name = "latitude")
     @JsonProperty("latitude")
     @JsonView(IView.Public.class)
@@ -72,7 +71,7 @@ public class Sensor extends Interactible {
     @JsonView(IView.Public.class)
     private boolean isHidden;
 
-    // ----- isHidden ----- //
+    // ----- notified ----- //
     @Column(name = "notified")
     @JsonProperty("notified")
     @JsonView(IView.Public.class)
@@ -113,7 +112,7 @@ public class Sensor extends Interactible {
     @JsonView(IView.Public.class)
     private String description;
 
-    // ----- description ----- //
+    // ----- maintenanceDescription ----- //
     @Column(name = "maintenance_description", nullable = false)
     @JsonProperty("maintenanceDescription")
     @JsonIgnore

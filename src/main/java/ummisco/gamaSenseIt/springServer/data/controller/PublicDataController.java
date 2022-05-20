@@ -6,12 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ummisco.gamaSenseIt.springServer.Application;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.Data;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.services.export.ExportJSON;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -71,7 +73,7 @@ public class PublicDataController extends DataController {
     public ResponseEntity<Resource> downloadParameters(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
             @RequestParam(value = IParametersRequest.TYPE) String type,
-            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false)ParameterMetadata parameterMetadata,
+            @RequestParam(value = IParametersRequest.PARAMETER_METADATA_ID, required = false) ParameterMetadata parameterMetadata,
             @RequestParam(value = IParametersRequest.START, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date start,
             @RequestParam(value = IParametersRequest.END, required = false)
@@ -137,7 +139,7 @@ public class PublicDataController extends DataController {
     public ResponseEntity<?> sensorMetadataImage(@PathVariable(name = "id") long sensorMetadataId) {
         var s = sensorsMetadataRepo
                 .findById(sensorMetadataId)
-                .orElseThrow((()->new ResponseStatusException(HttpStatus.NOT_FOUND)));
+                .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
         return img(s.getName(), s.getIcon());
     }
 
@@ -240,5 +242,12 @@ public class PublicDataController extends DataController {
                 put("lng", 2.3522219);
             }};
         }
+    }
+
+    @RequestMapping(value = IRoute.SENSORS + IRoute.SENSOR_ID + IRoute.DATA + IRoute.ID, method = RequestMethod.GET)
+    public List<Data> getData(@PathVariable(name = "sensorId") long sensorId, @PathVariable(name = "id") long parameterMetadataId) {
+        sensorRead(sensorId);
+        var parameters = parametersRepo.findBySensorIdEqualsAndParameterMetadataIdEqualsOrderByCaptureDate(sensorId, parameterMetadataId);
+        return parameters.stream().map(Data::new).toList();
     }
 }

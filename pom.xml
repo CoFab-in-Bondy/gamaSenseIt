@@ -5,7 +5,7 @@
     <!-- JAR identity-->
     <groupId>org.springframework.samples</groupId>
     <artifactId>gamasenseit</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
     <name>gamasenseit</name>
     <description>Application for sensors</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.5</version>
+        <version>2.6.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -151,6 +151,12 @@
 
     <dependencies>
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -175,7 +181,7 @@
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>
             <artifactId>geoip2</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
         </dependency>
 
         <!-- MQTT : https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-mqtt -->
@@ -183,7 +189,7 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-mqtt</artifactId>
             <scope>compile</scope>
-            <version>5.5.10</version>
+            <version>5.5.11</version>
         </dependency>
 
         <!-- Hibernate : https://mvnrepository.com/artifact/org.hibernate/hibernate-spatial/5.6.0.Final -->
@@ -202,7 +208,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
+            <version>8.0.29</version>
         </dependency>
 
         <!-- For CSV : https://mvnrepository.com/artifact/com.opencsv/opencsv -->
@@ -255,21 +261,21 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>5.6.2</version>
+            <version>5.6.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>5.6.2</version>
+            <version>5.6.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>5.6.2</version>
+            <version>5.6.3</version>
         </dependency>
 
 
@@ -284,14 +290,14 @@
         <dependency>
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core</artifactId>
-            <version>2.3.6.RELEASE</version>
+            <version>2.4.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-ldap -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
-            <version>5.6.2</version>
+            <version>5.6.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.unboundi/unboundid-ldapsdk -->

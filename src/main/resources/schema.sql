@@ -66,7 +66,7 @@ CREATE TABLE sensor (
 ) engine = InnoDB;
 
 CREATE TABLE sensored_bulk_data (
-    sensored_bulk_data_id BIGINT NOT NULL,
+    sensored_bulk_data_id BIGINT NOT NULL AUTO_INCREMENT,
     capture_date DATETIME,
     contents VARCHAR(255),
     receiving_date DATETIME,

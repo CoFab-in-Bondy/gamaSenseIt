@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
+import ummisco.gamaSenseIt.springServer.data.services.record.RecordListMetadata;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class SensorMetadata {
     // ----- sensor_metadata_id ----- //
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @JsonProperty("id")
     @JsonView(IView.Public.class)
@@ -145,6 +146,7 @@ public class SensorMetadata {
             put("name", getName());
             put("dataSeparator", getDataSeparator());
             put("description", getDescription());
+            put("parameters", new RecordListMetadata(getParametersMetadata()).toNode());
         }};
     }
 

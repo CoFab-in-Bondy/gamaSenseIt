@@ -14,7 +14,7 @@ public class Parameter {
 
     // ----- parameter_id ----- //
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     @JsonProperty("id")
     @JsonView(IView.Public.class)

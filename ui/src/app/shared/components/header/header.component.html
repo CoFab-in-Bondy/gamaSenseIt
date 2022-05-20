@@ -5,7 +5,7 @@
     </button>
 
     <mat-nav-list>
-      <mat-list-item routerLinkActive="active" [routerLink]="['']">
+      <mat-list-item routerLinkActive="active" (click)="onHome()">
         <mat-icon mat-list-icon>home</mat-icon>
         <h4 mat-line *ngIf="state.isOpen()">Accueil</h4>
       </mat-list-item>

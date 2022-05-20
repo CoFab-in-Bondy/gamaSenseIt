@@ -32,7 +32,7 @@ export class LoginPageComponent implements OnInit {
   onSubmitForm() {
     const form = this.userForm.value;
     this.auth.login(form['mail'], form['password']).subscribe(
-      res => this.router.navigate(['/']),
+      res => this.router.navigate(['/sensors/map']),
       err => console.log(err),
     )
   }

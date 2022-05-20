@@ -1,8 +1,9 @@
 import {ChangeDetectorRef, Component, HostListener, ViewChild} from '@angular/core';
-import { AuthService } from '@services/auth.service';
-import { Router } from '@angular/router';
+import {AuthService} from '@services/auth.service';
+import {Router} from '@angular/router';
 import {MD} from "../../../constantes";
 import {StateService} from "@services/state.service";
+import {ServerService} from "@services/server.service";
 
 function isLargeScreen() {
   return window.innerWidth >= MD;
@@ -18,7 +19,8 @@ export class HeaderComponent {
     public auth: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    public state: StateService
+    public state: StateService,
+    private server: ServerService
   ) { }
 
   @ViewChild("mat-drawer-content", {static: true})
@@ -26,12 +28,16 @@ export class HeaderComponent {
 
   logout(): void {
     this.auth.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.cdr.detectChanges();
     this.state.refreshMargin();
+  }
+
+  onHome() {
+    document.location.href = this.server.getServerUrl();
   }
 }

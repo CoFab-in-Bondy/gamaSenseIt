@@ -34,6 +34,11 @@ declare interface Parameter {
   // parameterMetadata: ParameterMetadata
 }
 
+declare interface Data {
+  name: string,
+  value: (number|string)[]
+}
+
 declare interface ParameterMetadata {
   id: number,
   name: string,
@@ -98,7 +103,13 @@ declare interface SensorMetadata {
   name: string,
   description: string,
   // sensors: Sensor[],
-  // parametersMetadata: ParameterMetadata[]
+  parameters:  {
+    headers : string[]
+    ids : number[],
+    units : string[],
+    formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
+    width : number
+  }
 }
 
 type BypassSecurityOptions = {
@@ -137,13 +148,6 @@ declare type DTLinker<D> = (d: D) => (string|number|null)[];
 
 
 declare interface RecordParameters {
-  metadata: {
-    headers : string[]
-    ids : number[],
-    units : string[],
-    formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
-    width : number
-  },
   values : (string|number)[][],
   total : number,
 }

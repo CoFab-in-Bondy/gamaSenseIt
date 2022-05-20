@@ -30,8 +30,8 @@ public class AuthControllerTest {
 
     @Test
     public void login() throws Exception {
-        String username = "***REMOVED***.***REMOVED***@ird.fr";
-        String password = "***REMOVED******REMOVED***";
+        String username = "nonono";
+        String password = "nonono";
         String body = String.format("{\"username\":\"%s\",\"password\":\"%s\"}", username, password);
 
         MvcResult result = mvc.perform(

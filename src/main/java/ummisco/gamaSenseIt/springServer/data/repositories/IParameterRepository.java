@@ -24,4 +24,6 @@ public interface IParameterRepository extends CrudRepository<Parameter, Long> {
                     AND (:start IS NULL OR p.captureDate >= :start)
                     AND (:end IS NULL OR p.captureDate <= :end)""")
     List<Parameter> advancedFindAll(long sensorId, @Nullable Long parameterMetadataId, @Nullable Date start, @Nullable Date end);
+
+    List<Parameter> findBySensorIdEqualsAndParameterMetadataIdEqualsOrderByCaptureDate(Long sensorId, Long parameterMetadataId);
 }

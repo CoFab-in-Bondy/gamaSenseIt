@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.services.record.RecordListMetadata;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 
 import java.io.IOException;
@@ -38,7 +39,8 @@ public class ExportCSV extends Export {
         var writer = new CSVWriter(out);
 
         var records = recordManager.getRecords(sensor, parameterMetadata, start, end);
-        var metadata = records.getMetadata();
+        var parametersMetadata = records.getParametersMetadata();
+        var metadata = new RecordListMetadata(parametersMetadata);
         writer.writeNext(metadata.headers());
         writer.writeNext(Arrays.stream(metadata.ids()).map(Objects::toString).toArray(String[]::new));
         writer.writeNext(metadata.units());

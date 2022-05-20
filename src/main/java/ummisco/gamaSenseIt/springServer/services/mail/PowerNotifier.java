@@ -46,7 +46,7 @@ public class PowerNotifier {
     @Value("${gamaSenseIt.power-notifier-delay}")
     private long initialDelayString;
 
-    private static String mailTemplate = getMailTemplate();
+    private static final String mailTemplate = getMailTemplate();
 
     private static String getMailTemplate() {
         String tpl;
@@ -112,7 +112,7 @@ public class PowerNotifier {
                     .map(AccessSensor::getAccess)
                     .map(Access::getUsers)
                     .flatMap(Set::stream)
-                    .findFirst().ifPresent(user -> {
+                    .forEach(user -> {
                         try {
                             sendSensorDown(user.getMail(), sensor);
                         } catch (MessagingException err) {

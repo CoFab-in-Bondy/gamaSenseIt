@@ -7,7 +7,7 @@ import java.util.Date;
 public class SensoredBulkData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sensoredBulkDataId;
 
     private long token;

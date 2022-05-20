@@ -11,14 +11,12 @@ import ummisco.gamaSenseIt.springServer.data.model.APIError;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<APIError> generateNotFoundException(ResponseStatusException ex) {
+    public ResponseEntity<APIError> handleApiError(ResponseStatusException ex) {
         var apiError = new APIError(ex.getStatus(), ex.getReason());
         logger.error("[" + ex.getStatus().value() + " " + ex.getStatus().getReasonPhrase() + "] " + ex.getReason());
-        return new ResponseEntity<>(apiError, ex.getStatus());
+        return apiError.response();
     }
-
 }

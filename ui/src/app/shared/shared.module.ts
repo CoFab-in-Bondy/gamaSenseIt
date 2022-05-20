@@ -49,6 +49,11 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {DndDirective} from "./directives/dnd.directive";
 import { MatOptionModule } from "@angular/material/core";
 import {MatSelectModule} from '@angular/material/select';
+import { NgxEchartsModule } from 'ngx-echarts';
+import {ServerGuard} from "@guards/server.guard";
+import {ServerService} from "@services/server.service";
+import { FakeComponent } from '@components/fake/fake.component';
+
 
 @NgModule({
     imports: [
@@ -63,7 +68,10 @@ import {MatSelectModule} from '@angular/material/select';
         MatTooltipModule,
         MatOptionModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        NgxEchartsModule.forRoot({
+          echarts: () => import('echarts')
+        })
     ],
   exports: [
     // shared exports
@@ -74,6 +82,7 @@ import {MatSelectModule} from '@angular/material/select';
     DataTableComponent,
     DialogComponent,
     ButtonComponent,
+    FakeComponent,
     DateAgoPipe,
     SecurePipe,
     TributtonComponent,
@@ -96,7 +105,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatTooltipModule,
     MatOptionModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxEchartsModule
   ],
   declarations: [
     HeaderComponent,
@@ -106,6 +116,7 @@ import {MatSelectModule} from '@angular/material/select';
     DataTableComponent,
     DialogComponent,
     ButtonComponent,
+    FakeComponent,
     DateAgoPipe,
     SecurePipe,
     TributtonComponent,
@@ -113,6 +124,7 @@ import {MatSelectModule} from '@angular/material/select';
     SafePipe,
     UnsafePipe,
     DndDirective,
+    FakeComponent
   ],
   providers: [],
 })
@@ -128,6 +140,8 @@ export class SharedModule {
         AuthGuard,
         UserGuard,
         AdminGuard,
+        ServerGuard,
+        ServerService,
         AuthService,
         HumanService,
         ErrorService,

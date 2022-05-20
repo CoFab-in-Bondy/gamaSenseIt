@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
 import ummisco.gamaSenseIt.springServer.data.model.preference.InteractAccess;
 import ummisco.gamaSenseIt.springServer.data.model.preference.InteractBase;
-import ummisco.gamaSenseIt.springServer.data.model.preference.InteractSensor;
 import ummisco.gamaSenseIt.springServer.data.model.preference.Interactible;
-import ummisco.gamaSenseIt.springServer.data.model.sensor.Parameter;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 
 import javax.persistence.*;
@@ -40,9 +38,9 @@ public class Access extends Interactible {
     @JsonIgnore
     private final Set<Sensor> sensors = new HashSet<>();
 
-    // ----- parameter_id ----- //
+    // ----- access_id ----- //
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @JsonProperty("id")
     @JsonView(IView.Public.class)
