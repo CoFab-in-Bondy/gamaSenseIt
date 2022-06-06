@@ -2,10 +2,8 @@ package ummisco.gamaSenseIt.springServer.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.Normalizer;
 
 @Service
@@ -41,7 +39,7 @@ public class SecurityUtils {
         return name;
     }
 
-    public String getRootUrl() {
+    public String getFrontUrl() {
         String url;
         try {
             url = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();

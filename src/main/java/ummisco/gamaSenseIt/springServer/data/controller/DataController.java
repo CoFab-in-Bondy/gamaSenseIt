@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -83,16 +84,15 @@ public abstract class DataController {
         return result;
     }
 
-    public User publicUser() {
+    public @Nullable User publicUser() {
         if (publicUser == null)
-            publicUser = userRepo.findByMail("public");
+            publicUser = userRepo.findByMail("public").orElse(null);
         return publicUser;
     }
 
-    public User currentUser() {
+    public @Nullable User currentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth instanceof AnonymousAuthenticationToken ? null: userRepo.findByMail(auth.getName());
-
+        return auth instanceof AnonymousAuthenticationToken ? null: userRepo.findByMail(auth.getName()).orElse(null);
     }
 
     public User user() {
@@ -104,7 +104,7 @@ public abstract class DataController {
         var user = user();
         var publicUser = publicUser();
         var s = sensorsRepo.findReadableSensor(user.getId(), sensorId);
-        if (s == null && user != publicUser)
+        if (s == null && publicUser != null && user != publicUser)
             s = sensorsRepo.findReadableSensor(publicUser.getId(), sensorId);
         if (s == null) {
             logger.warn("Can't find sensors readable with id " + sensorId + " with " + user.getMail());

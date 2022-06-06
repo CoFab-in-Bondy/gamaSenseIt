@@ -2,8 +2,8 @@
   <div class="sensor box w-100">
     <form
       [formGroup]="sensorForm"
-      class="m-0"
       [ngClass]="{'mb-3': !create}"
+      class="m-0"
       enctype="multipart/form-data"
     >
       <div class="row p-0">
@@ -13,12 +13,12 @@
               <div class="p-0 col-12 col-xl-4 order-0 order-xl-1">
                 <input
                   class="text-start text-xl-end"
-                  type="text"
-                  id="name"
-                  minlength="2"
-                  maxlength="128"
                   formControlName="name"
+                  id="name"
+                  maxlength="128"
+                  minlength="2"
                   placeholder="NAME_SENSOR"
+                  type="text"
 
                 />
                 <span id="id"> {{ getIdFormat() }} </span>
@@ -26,68 +26,68 @@
               </div>
               <input
                 class="p-0 col-12 col-xl-8 order-1 order-xl-0"
-                type="text"
-                id="displayName"
-                minlength="5"
-                maxlength="255"
                 formControlName="displayName"
+                id="displayName"
+                maxlength="255"
+                minlength="5"
                 placeholder="Designation"
+                type="text"
               />
               <input
                 class="p-0 col-12 order-2"
-                type="text"
-                id="subDisplayName"
-                minlength="5"
-                maxlength="255"
-                placeholder="Indications"
                 formControlName="subDisplayName"
+                id="subDisplayName"
+                maxlength="255"
+                minlength="5"
+                placeholder="Indications"
+                type="text"
               />
             </div>
             <div>
               <div class="pos">
                 <div class="me-2">
                   <p class="d-block d-sm-none">Lat.</p>
-                  <label for="latitude" class="d-none d-sm-block"
+                  <label class="d-none d-sm-block" for="latitude"
                   >Latitude</label
                   >
                   <input
-                    type="text"
                     class="form-control"
-                    id="latitude"
                     formControlName="latitude"
+                    id="latitude"
+                    type="text"
                   />
                 </div>
                 <div>
                   <p class="d-block d-sm-none">Lng.</p>
-                  <label for="longitude" class="d-none d-sm-block"
+                  <label class="d-none d-sm-block" for="longitude"
                   >Longitude</label
                   >
                   <input
-                    type="text"
                     class="form-control"
-                    id="longitude"
                     formControlName="longitude"
+                    id="longitude"
+                    type="text"
                   />
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <mat-form-field appearance="fill" *ngIf="create">
+            <mat-form-field *ngIf="create" appearance="fill">
               <mat-label>Type du capteur</mat-label>
               <mat-select
-              required formControlName="sensorMetadata"
-              (ngModelChange)="onChangeMetadata($event)">
+                (ngModelChange)="onChangeMetadata($event)" formControlName="sensorMetadata"
+                required>
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let smd of sensorsMetadata" [value]="smd">
-                  <img [src]="
+                  <img (window:resize)="0"
+                       [src]="
                     smd?.id
                     ? ('/public/sensors/metadata/' + smd?.id + '/image' | secure | async)
                     : NO_IMG
                   "
-                  width="24"
-                  height="24"
-                  (window:resize)="0"/> {{ smd.name }} ({{smd.version}})
+                       height="24"
+                       width="24"/> {{ smd.name }} ({{smd.version}})
                 </mat-option>
               </mat-select>
               <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error> -->
@@ -101,7 +101,6 @@
         <div class="col-12 col-lg-5 col-xl-4 row pb-3 m-0">
           <div class="col-4 p-0 pe-2">
             <img
-              class="sensor-metadata-logo"
               #sensorMetadataImg
               (window:resize)="0"
               [src]="
@@ -111,84 +110,89 @@
                   | async)
                 : NO_IMG
               "
+              class="sensor-metadata-logo"
               style="width: 100%"
             />
           </div>
           <div class="col-4 p-0 px-1">
             <app-input-image
               (image)="photo = $event"
-              name="photo"
               [default]="defaultUrl"
-              [extendSrc]="id? ['/sensors', id, 'photo']: undefined"
               [editable]="edition"
+              [extendSrc]="id? ['/sensors', id, 'photo']: undefined"
+              name="photo"
             ></app-input-image>
           </div>
           <div class="col-4 p-0 ps-2">
             <div
-              id="map-sensors-single"
               [ngStyle]="{
                 'width.px': getSize(),
                 'height.px': getSize()
               }"
-            ></div>
+              id="map-container">
+              <div
+                id="map-sensors-single"
+                style="width: 100%; height: 100%"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-12" [ngClass]="{ 'col-md-6': editable || create }">
+        <div [ngClass]="{ 'col-md-6': editable || create }" class="col-12">
           <strong>Description</strong>
-          <div class="description" >
+          <div class="description">
             <textarea
-              type="text"
+              formControlName="description"
               id="description"
               placeholder="Aucune description"
-              formControlName="description"
+              type="text"
             ></textarea>
           </div>
         </div>
-        <div class="col-12 col-md-6" *ngIf="editable || create">
+        <div *ngIf="editable || create" class="col-12 col-md-6">
           <strong>Description de maintenance</strong>
           <div class="description">
             <textarea
-              type="text"
+              formControlName="maintenanceDescription"
               id="maintenanceDescription"
               placeholder="Aucune description"
-              formControlName="maintenanceDescription"
+              type="text"
             ></textarea>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <app-dialog class="download col mb-3 me-3" *ngIf="!create">
-            <app-button width="130" fa="fas fa-cloud-download" trigger>
+          <app-dialog *ngIf="!create" class="download col mb-3 me-3">
+            <app-button fa="fas fa-cloud-download" trigger width="130">
               Télécharger
             </app-button>
 
             <div body>
               <div class="buttons">
                 <app-button
-                  url="assets/buttons/csv.svg"
-                  class="me-3"
-                  (click)="onDownloadCSV()"
                   #close
+                  (click)="onDownloadCSV()"
+                  class="me-3"
+                  url="assets/buttons/csv.svg"
                 >
                   CSV
                 </app-button>
                 <app-button
-                  url="assets/buttons/json.svg"
-                  (click)="onDownloadJSON()"
                   #close
+                  (click)="onDownloadJSON()"
+                  url="assets/buttons/json.svg"
                 >
                   JSON
                 </app-button>
                 <app-button
-                  *ngIf="editable"
-                  url="assets/buttons/binary.svg"
-                  (click)="onDownloadBinary()"
-                  width="120"
-                  class="ms-3"
                   #close
+                  (click)="onDownloadBinary()"
+                  *ngIf="editable"
+                  class="ms-3"
+                  url="assets/buttons/binary.svg"
+                  width="120"
                 >
                   Programme
                 </app-button>
@@ -198,54 +202,54 @@
 
           <app-button
             *ngIf="id"
-            width="130"
-            fa="fas fa-chart-bar"
-            class="edit col mb-3 me-3"
             [link]="['/sensors', id, 'graph']"
+            class="edit col mb-3 me-3"
+            fa="fas fa-chart-bar"
+            width="130"
           >
             Graphiques
           </app-button>
 
           <app-button
-            width="130"
-            url="/assets/buttons/edit.svg"
-            class="edit col mb-3 me-3"
             (click)="onEdition(); $event.stopPropagation()"
             *ngIf="!edition && auth.isUser() && editable"
+            class="edit col mb-3 me-3"
+            url="/assets/buttons/edit.svg"
+            width="130"
           >
             Editer
           </app-button>
 
           <app-button
-            width="130"
-            *ngIf="edition && auth.isUser()"
-            fa="fas fa-cloud-upload"
-            class="edit col mb-3 me-3"
             (click)="onSave(); $event.stopPropagation()"
+            *ngIf="edition && auth.isUser()"
+            class="edit col mb-3 me-3"
+            fa="fas fa-cloud-upload"
+            width="130"
           >
             Sauvegarder
           </app-button>
 
-          <div class="error col-12 col-md mb-3" *ngIf="messageError">
+          <div *ngIf="messageError" class="error col-12 col-md mb-3">
             {{ messageError }}
           </div>
         </div>
       </div>
 
-      <div class="m-0 p-0" [ngClass]="{ 'd-none': create }">
+      <div [ngClass]="{ 'd-none': create }" class="m-0 p-0">
         <app-data-table
-          class="p-0"
+          (navigate)="onChange($event)"
+          [data]="parameters?.values || []"
+          [empty]="'Aucune donnée à afficher'"
+          [formater]="formater"
+          [headers]="metadata?.parameters?.headers || []"
+          [height]="525"
           [length]="parameters?.total"
           [scales]="[25, 50, 100]"
-          sortable="SERVER"
-          pagable="SERVER"
           [sizes]="sizes()"
-          [data]="parameters?.values || []"
-          [formater]="formater"
-          [empty]="'Aucune donnée à afficher'"
-          [headers]="metadata?.parameters?.headers || []"
-          (navigate)="onChange($event)"
-          [height]="525"
+          class="p-0"
+          pagable="SERVER"
+          sortable="SERVER"
         >
         </app-data-table>
       </div>

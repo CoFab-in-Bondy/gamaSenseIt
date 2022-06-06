@@ -102,7 +102,6 @@ const routes: Routes = [
   },
 ];
 
-/* {preloadingStrategy: PreloadAllModules} | permet le chergent en plusieurs temps*/
 @NgModule({
   imports: [
     RouterModule.forRoot(routes),

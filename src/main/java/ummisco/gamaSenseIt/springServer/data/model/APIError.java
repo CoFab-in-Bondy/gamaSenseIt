@@ -1,9 +1,15 @@
 package ummisco.gamaSenseIt.springServer.data.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class APIError {
     private int status;
@@ -67,6 +73,19 @@ public class APIError {
         mav.addObject("error", error);
         mav.addObject("message", message);
         mav.addObject("timestamp", timestamp);
+        mav.setStatus(HttpStatus.valueOf(this.getStatus()));
         return mav;
+    }
+
+    public String json() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this);
+    }
+
+    public void intoResponse(@Nullable HttpServletResponse response) throws IOException {
+        if (response == null) return;
+        response.setStatus(this.status);
+        response.getWriter().write(json());
+
     }
 }

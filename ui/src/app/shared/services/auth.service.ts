@@ -12,55 +12,29 @@ export class AuthService {
   }
 
   isAuth(): boolean {
-    return this.getToken() != null;
+    return this.getRole() != null;
   }
 
-  getToken(): string|null {
-    return this.getStorage().getItem('token');
+  getRole(): Roles|null {
+    return <Roles|null>this.getStorage().getItem('role');
   }
 
-  getBodyToken(): any|null {
-    if (this.isAuth()) {
-      const b64Payload = this.getToken()!.split(".", 3)[1];
-      const payload = JSON.parse(Buffer.from(b64Payload, 'base64').toString('binary'));
-      return payload;
-    }
-    return null;
+  setRole(role: Roles): void {
+    return this.getStorage().setItem('role', role);
   }
 
-  extractToken(fieldName: string): any {
-    return this.getBodyToken()?.[fieldName];
-  }
-
-  setToken(token: string): void {
-    if (this.isAuth())
-      this.delToken();
-    return this.getStorage().setItem('token', token);
-  }
-
-  delToken(): void {
-    return this.getStorage().removeItem('token');
-  }
-
-  private postLogin(username: string, password: string): Observable<any> {
-    return this.http.post<any>("/auth/login", {
-      username: username,
-      password: password
-    });
-  }
-
-  private postResgister(username: string, password: string): Observable<any> {
-    return this.http.post<any>("/auth/register", {
-      username: username,
-      password: password
-    });
+  delRole(): void {
+    return this.getStorage().removeItem('role');
   }
 
   login(username: string, password: string): Observable<void> {
     return new Observable(o => {
-      this.postLogin(username, password).subscribe(
+      this.http.post<any>('/auth/login', {
+        username: username,
+        password: password
+      }).subscribe(
         res => {
-          this.setToken(res['token']);
+          this.setRole(res['role']);
           o.next();
         },
         err => o.error(err),
@@ -69,37 +43,21 @@ export class AuthService {
     });
   }
 
-  resgister(username: string, password: string): Observable<void> {
-    return new Observable(o => {
-      this.postResgister(username, password).subscribe(
-        res => {
-          this.setToken(res['token']);
-          o.next();
-        },
-        err => o.error(err),
-        () => o.complete()
-      );
-    });
+  logout(): Observable<any> {
+    this.delRole();
+    return this.http.post<any>('/auth/logout', '');
   }
 
-  logout(): void {
-    this.delToken();
-  }
-
-  roles(): string[] {
-    return this.extractToken('roles') || [];
+  refresh(): Observable<any> {
+    return this.http.post<any>('/auth/refresh', '');
   }
 
   isAdmin(): boolean {
-    return this.roles().includes('ADMIN');
+    return this.getRole() == 'ADMIN';
   }
 
   isUser(): boolean {
-    return this.roles().includes('USER') || this.isAdmin();
-  }
-
-  username(): string|null {
-    return this.extractToken('sub');
+    return this.getRole() == 'USER' || this.isAdmin();
   }
 
   withPermissionOrRedirect(check: (()=>boolean) = ()=>true): boolean {

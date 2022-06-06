@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS sensor;
 DROP TABLE IF EXISTS sensor_metadata;
 DROP TABLE IF EXISTS sensored_bulk_data;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS refresh_token;
 DROP TABLE IF EXISTS access_user;
 DROP TABLE IF EXISTS access_sensor;
 DROP TABLE IF EXISTS access;
@@ -95,6 +96,15 @@ CREATE TABLE user (
     PRIMARY KEY (id)
 ) engine = InnoDB;
 
+CREATE TABLE refresh_token (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    issued_at DATETIME NOT NULL,
+    expiration DATETIME NOT NULL,
+    PRIMARY KEY (id)
+)engine = InnoDB;
+
 CREATE TABLE access (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -149,6 +159,16 @@ ALTER TABLE
     user
 ADD
     CONSTRAINT cu_user_on_mail UNIQUE (mail);
+
+ALTER TABLE
+    refresh_token
+ADD
+    CONSTRAINT fk_rf_to_u FOREIGN KEY (user_id) REFERENCES user (id);
+
+ALTER TABLE
+    refresh_token
+ADD
+    CONSTRAINT cu_rf_on_token UNIQUE (token);
 
 ALTER TABLE
     parameter
@@ -232,6 +252,11 @@ CREATE TRIGGER trig_sensor_last_capture_date AFTER INSERT ON parameter
     UPDATE sensor
     SET last_capture_date = NEW.capture_date, notified = (NEW.capture_date > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 day))
     WHERE id = NEW.sensor_id AND (last_capture_date < NEW.capture_date OR last_capture_date IS NULL);
+
+CREATE EVENT remove_expired_refresh_token
+    ON SCHEDULE EVERY 1 HOUR DO
+    DELETE FROM refresh_token
+        WHERE expiration < DATE_ADD(NOW(), INTERVAL 1 DAY); -- Add interval for prevent timezone differance
 
 -- CREATE OR REPLACE VIEW view_access_user_sensor AS
 --    SELECT DISTINCT user_id, sensor_id FROM (

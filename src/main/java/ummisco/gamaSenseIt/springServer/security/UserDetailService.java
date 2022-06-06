@@ -16,8 +16,7 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        var user = userRepo.findByMail(mail);
-        if (user == null) throw new UsernameNotFoundException("Not found");
+        var user = userRepo.findByMail(mail).orElseThrow(() -> {throw new UsernameNotFoundException("Not found");});
         return User.builder()
                 .username(user.getMail())
                 .password(user.getPassword())

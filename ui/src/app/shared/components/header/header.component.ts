@@ -27,7 +27,7 @@ export class HeaderComponent {
   private nav: any;
 
   logout(): void {
-    this.auth.logout();
+    this.auth.logout().subscribe(console.log, console.error);
     this.router.navigate(['/login']);
   }
 

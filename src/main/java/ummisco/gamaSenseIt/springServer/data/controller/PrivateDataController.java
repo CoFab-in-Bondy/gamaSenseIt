@@ -7,7 +7,6 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.IView;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
@@ -15,14 +14,12 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.Access;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
-import ummisco.gamaSenseIt.springServer.data.services.access.AccessSearch;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(IRoute.PRIVATE)
+@RequestMapping(Routes.PRIVATE)
 public class PrivateDataController extends DataController {
 
     /*------------------------------------*
@@ -68,7 +65,7 @@ public class PrivateDataController extends DataController {
      | Sensors                            |
      *------------------------------------*/
 
-    @RequestMapping(value = IRoute.SENSORS, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.SENSORS, method = RequestMethod.POST)
     @JsonView(IView.Public.class)
     public Node addSensor(
             @RequestPart(value = "sensor") SensorDTO sensorDTO,
@@ -110,7 +107,7 @@ public class PrivateDataController extends DataController {
     }
 
 
-    @RequestMapping(value = IRoute.SENSORS + IRoute.ID, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.SENSORS + Routes.ID, method = RequestMethod.POST)
     @JsonView(IView.Public.class)
     public Node patchSensor(
             @PathVariable(name = "id") long sensorId,
@@ -168,7 +165,7 @@ public class PrivateDataController extends DataController {
         return sensor.toNode(true);
     }
 
-    @RequestMapping(value = IRoute.ACCESSES, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.ACCESSES, method = RequestMethod.POST)
     @JsonView(IView.AccessUser.class)
     public Access accessCreate(
             @RequestPart(value = "access") AccessDTO accessDTO
@@ -178,7 +175,7 @@ public class PrivateDataController extends DataController {
         return access;
     }
 
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SEARCH, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.SEARCH, method = RequestMethod.GET)
     @JsonView(IView.AccessUser.class)
     public List<Node> accessByIdSearch(
             @PathVariable(name = "id") long accessId,
@@ -192,24 +189,21 @@ public class PrivateDataController extends DataController {
         return accessManagement.search(currentUser().getId(), accessId, query, sensor, user, in, out);
     }
 
-    @RequestMapping(value = IRoute.ACCESSES  + IRoute.ID, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID, method = RequestMethod.GET)
     @JsonView(IView.AccessCount.class)
     public Access getAccessById(@PathVariable(name = "id") long accessId) {
         accessManagement.guardManage(accessId, currentUser().getId());
         return this.accessRepo.findById(accessId)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't found this access"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't found this access"));
     }
 
-    @RequestMapping(value = IRoute.ACCESSES  + IRoute.SEARCH, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.ACCESSES + Routes.SEARCH, method = RequestMethod.GET)
     @JsonView(IView.AccessCount.class)
     public List<Access> accessSearch(@RequestParam(name = IParametersRequest.QUERY, defaultValue = "") String query) {
         return this.accessManagement.search(currentUser(), query);
     }
 
-    public record UserIdRecord(long userId) {}
-    public record SensorIdRecord(long sensorId) {}
-
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.USERS, method = RequestMethod.POST)
     @JsonView(IView.AccessUser.class)
     public void accessByIdAddUser(@PathVariable(name = "id") long accessId, @RequestBody UserIdRecord userIdRecord) {
         accessManagement.guardManage(accessId, currentUser().getId());
@@ -218,7 +212,7 @@ public class PrivateDataController extends DataController {
         accessManagement.addAccessUser(accessId, userIdRecord.userId());
     }
 
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS + "/{userId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.USERS + "/{userId}", method = RequestMethod.DELETE)
     @JsonView(IView.AccessUser.class)
     public void accessByIdDelUser(@PathVariable(name = "id") long accessId, @PathVariable(name = "userId") long userId) {
         accessManagement.guardManage(accessId, currentUser().getId());
@@ -227,7 +221,7 @@ public class PrivateDataController extends DataController {
         accessManagement.delAccessUser(accessId, userId);
     }
 
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS + "/{userId}" + IRoute.PROMOTE, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.USERS + "/{userId}" + Routes.PROMOTE, method = RequestMethod.POST)
     @JsonView(IView.AccessUser.class)
     public void accessByIdPromoteUser(
             @PathVariable(name = "id") long accessId,
@@ -239,7 +233,7 @@ public class PrivateDataController extends DataController {
         accessManagement.promoteAccessUser(accessId, userId, AccessUserPrivilege.MANAGE);
     }
 
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.USERS + "/{userId}" + IRoute.DISMISE, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.USERS + "/{userId}" + Routes.DISMISE, method = RequestMethod.POST)
     @JsonView(IView.AccessUser.class)
     public void accessByIdDismissUser(
             @PathVariable(name = "id") long accessId,
@@ -251,7 +245,7 @@ public class PrivateDataController extends DataController {
         accessManagement.promoteAccessUser(accessId, userId, AccessUserPrivilege.VIEW);
     }
 
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SENSORS, method = RequestMethod.POST)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.SENSORS, method = RequestMethod.POST)
     @JsonView(IView.AccessUser.class)
     public void accessByIdAddSensor(@PathVariable(name = "id") long accessId, @RequestBody SensorIdRecord sensorIdRecord) {
         accessManagement.guardManage(accessId, currentUser().getId());
@@ -260,7 +254,7 @@ public class PrivateDataController extends DataController {
         accessManagement.addAccessSensor(accessId, sensorIdRecord.sensorId());
     }
 
-    @RequestMapping(value = IRoute.ACCESSES + IRoute.ID + IRoute.SENSORS + "/{sensorId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = Routes.ACCESSES + Routes.ID + Routes.SENSORS + "/{sensorId}", method = RequestMethod.DELETE)
     @JsonView(IView.AccessUser.class)
     public void accessByIdDelSensor(@PathVariable(name = "id") long accessId, @PathVariable(name = "sensorId") long sensorId) {
         accessManagement.guardManage(accessId, currentUser().getId());
@@ -269,8 +263,7 @@ public class PrivateDataController extends DataController {
         accessManagement.delAccessSensor(accessId, sensorId);
     }
 
-
-    @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.BINARY, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SENSORS + Routes.ID + Routes.BINARY, method = RequestMethod.GET)
     public ResponseEntity<Resource> getBinarySensor(@PathVariable(name = "id") long sensorId) {
         var sensor = sensorManage(sensorId);
         try {
@@ -283,5 +276,11 @@ public class PrivateDataController extends DataController {
             err.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't compile Sensor");
         }
+    }
+
+    public record UserIdRecord(long userId) {
+    }
+
+    public record SensorIdRecord(long sensorId) {
     }
 }

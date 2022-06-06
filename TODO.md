@@ -2,8 +2,11 @@
 
 A faire
 
-+ supprimer un capteur
-+ server en block,
-+ hauteur sur petit écran
-+ CSRF et JWT sécurité en HTTP Only avec un refresh token de 3j
-  
++ Supprimer un capteur
++ Server en block
++ Hauteur sur petit écran
++ QR Code
++ Bug avec plusieurs requêtes lors de l'expiration du refresh token
++ Changement de mot de passe
++ Désabonner le mail
++ Crée un compte

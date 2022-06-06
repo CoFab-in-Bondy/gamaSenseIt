@@ -28,8 +28,7 @@ import {
 import { AppRoutingModule } from "../app-routing.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { JwtInterceptor } from "@interceptors/jwt.interceptor";
-import { XsrfInterceptor } from "@interceptors/xsrf.interceptor";
+import { TokenInterceptor } from "@interceptors/token.interceptor";
 import { TributtonComponent } from "@components/tributton/tributton.component";
 import { SecurePipe } from "@pipes/secure.pipe";
 import { InputImageComponent } from "@components/input-image/input-image.component";
@@ -71,7 +70,11 @@ import { FakeComponent } from '@components/fake/fake.component';
         MatSelectModule,
         NgxEchartsModule.forRoot({
           echarts: () => import('echarts')
-        })
+        }),
+        HttpClientXsrfModule.withOptions({
+          cookieName: 'XSRF-TOKEN',
+          headerName: 'X-XSRF-TOKEN',
+        }),
     ],
   exports: [
     // shared exports
@@ -95,7 +98,6 @@ import { FakeComponent } from '@components/fake/fake.component';
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientXsrfModule,
     FontAwesomeModule,
     MatFormFieldModule,
     MatInputModule,
@@ -147,8 +149,7 @@ export class SharedModule {
         ErrorService,
         StateService,
         // global providers
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: XsrfInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         { provide: ErrorHandler, useClass: ErrorInterceptor },
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'} },
         DatePipe,

@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import ummisco.gamaSenseIt.springServer.data.model.user.UserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.repositories.IUserRepository;
 import ummisco.gamaSenseIt.springServer.security.jwt.JwtRequestFilter;
@@ -28,6 +29,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+    @Autowired
+    private AccessDeniedHandlerImpl accessDeniedHandler;
+
+
     @Value("${gamaSenseIt.password-strength:-1}")
     private int strength;
 
@@ -35,14 +40,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
-                .csrf().disable()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/auth/**", "/public/**").permitAll()
                 .antMatchers("/private/**").hasAnyAuthority(UserPrivilege.USER.name())
-                .antMatchers("/actuator/**").hasAnyAuthority(UserPrivilege.ADMIN.name());
+                .antMatchers("/actuator/**").denyAll(); // disabled
     }
 
     @Autowired

@@ -8,12 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-import ummisco.gamaSenseIt.springServer.data.controller.IRoute;
+import ummisco.gamaSenseIt.springServer.data.controller.Routes;
 import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
 
 import java.io.IOException;
@@ -32,32 +33,23 @@ public class AngularConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public AngularRedirectExceptionResolver angularRedirectExceptionResolver() {
-        return new AngularRedirectExceptionResolver();
+    public AngularExceptionResolver angularRedirectExceptionResolver() {
+        return new AngularExceptionResolver();
     }
 
-    public boolean isEndpoint(String location) {
-        for (var endpoint : IRoute.ENDPOINTS)
-            if (location.startsWith(endpoint))
-                return true;
-        return false;
-    }
 
     /* replace the basic recourse handler*/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-
         registry.addResourceHandler("/**") // for all resources
                 .addResourceLocations("classpath:/static/") // search in static
                 .resourceChain(true) // or in cache resources
-                .addResolver(new PathResourceResolver() {
-                    // si la resource n'existe pas on retourne sur l'index.html
+                .addResolver(new PathResourceResolver() { // else resolve frontend except on endpoints
                     @Override
-                    protected Resource getResource(String resourcePath, Resource location) throws IOException {
+                    protected Resource getResource(@NonNull String resourcePath, @NonNull Resource location) throws IOException {
                         Resource res = super.getResource(resourcePath, location);
                         if (res == null) {
-                            if (isEndpoint("/" + resourcePath))
+                            if (Routes.isEndpoint("/" + resourcePath))
                                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "/" + resourcePath);
                             else
                                 throw new AngularRedirectException();
@@ -68,7 +60,7 @@ public class AngularConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
         if (corsUrl != null && !corsUrl.isEmpty()) {
             logger.info("CORS enabled for : " + corsUrl);
             registry.addMapping("/**").allowedOrigins(corsUrl).allowedMethods("*");
@@ -76,6 +68,6 @@ public class AngularConfig implements WebMvcConfigurer {
             logger.info("CORS disabled");
             registry.addMapping("/**").allowedOrigins().allowedMethods("*");
         }
-        logger.info("Base url at " + securityUtils.getRootUrl());
+        logger.info("Base url at " + securityUtils.getFrontUrl());
     }
 }

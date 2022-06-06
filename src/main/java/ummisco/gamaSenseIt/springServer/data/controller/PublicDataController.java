@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping(IRoute.PUBLIC)
+@RequestMapping(Routes.PUBLIC)
 public class PublicDataController extends DataController {
 
     private static final Logger logger = LoggerFactory.getLogger(PublicDataController.class);
@@ -38,12 +38,12 @@ public class PublicDataController extends DataController {
      | Server                             |
      *------------------------------------*/
 
-    @RequestMapping(value = IRoute.SERVER + IRoute.DATE, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SERVER + Routes.DATE, method = RequestMethod.GET)
     public long serverDate() {
         return Calendar.getInstance().getTimeInMillis() / 1000;
     }
 
-    @RequestMapping(value = IRoute.SERVER + IRoute.SEPARATOR, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SERVER + Routes.SEPARATOR, method = RequestMethod.GET)
     public String serverSeparator() {
         return SensorMetadata.DEFAULT_DATA_SEPARATOR;
     }
@@ -53,7 +53,7 @@ public class PublicDataController extends DataController {
      *------------------------------------*/
 
     @JsonView(IView.Public.class)
-    @RequestMapping(value = IRoute.PARAMETERS, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.PARAMETERS, method = RequestMethod.GET)
     public Node parameters(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
             @RequestParam(value = IParametersRequest.START, required = false)
@@ -69,7 +69,7 @@ public class PublicDataController extends DataController {
     }
 
     @JsonView(IView.Public.class)
-    @RequestMapping(value = IRoute.PARAMETERS + IRoute.DOWNLOAD, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.PARAMETERS + Routes.DOWNLOAD, method = RequestMethod.GET)
     public ResponseEntity<Resource> downloadParameters(
             @RequestParam(value = IParametersRequest.SENSOR_ID) long sensorId,
             @RequestParam(value = IParametersRequest.TYPE) String type,
@@ -120,7 +120,7 @@ public class PublicDataController extends DataController {
     }
     */
 
-    @RequestMapping(value = IRoute.SENSORS + IRoute.ID, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SENSORS + Routes.ID, method = RequestMethod.GET)
     public Node sensor(@PathVariable(name = "id") long sensorId) {
         try {
             return sensorManage(sensorId).toNode(true);
@@ -129,13 +129,13 @@ public class PublicDataController extends DataController {
         }
     }
 
-    @RequestMapping(value = IRoute.SENSORS + IRoute.ID + IRoute.IMAGE, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SENSORS + Routes.ID + Routes.IMAGE, method = RequestMethod.GET)
     public ResponseEntity<?> sensorImage(@PathVariable(name = "id") long sensorId) {
         var s = sensorRead(sensorId);
         return img(s.getName(), s.getPhoto());
     }
 
-    @RequestMapping(value = IRoute.SENSORS + IRoute.METADATA + IRoute.ID + IRoute.IMAGE, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SENSORS + Routes.METADATA + Routes.ID + Routes.IMAGE, method = RequestMethod.GET)
     public ResponseEntity<?> sensorMetadataImage(@PathVariable(name = "id") long sensorMetadataId) {
         var s = sensorsMetadataRepo
                 .findById(sensorMetadataId)
@@ -194,7 +194,7 @@ public class PublicDataController extends DataController {
     }
     */
 
-    @RequestMapping(value = IRoute.SENSORS_METADATA, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SENSORS_METADATA, method = RequestMethod.GET)
     @JsonView(IView.SensorMetadataExtended.class)
     public Iterable<SensorMetadata> getAllSensorMetadataExtended(
             @RequestParam(name = IParametersRequest.MANAGEABLE, defaultValue = "false") boolean manageable) {
@@ -244,7 +244,7 @@ public class PublicDataController extends DataController {
         }
     }
 
-    @RequestMapping(value = IRoute.SENSORS + IRoute.SENSOR_ID + IRoute.DATA + IRoute.ID, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.SENSORS + Routes.SENSOR_ID + Routes.DATA + Routes.ID, method = RequestMethod.GET)
     public List<Data> getData(@PathVariable(name = "sensorId") long sensorId, @PathVariable(name = "id") long parameterMetadataId) {
         sensorRead(sensorId);
         var parameters = parametersRepo.findBySensorIdEqualsAndParameterMetadataIdEqualsOrderByCaptureDate(sensorId, parameterMetadataId);

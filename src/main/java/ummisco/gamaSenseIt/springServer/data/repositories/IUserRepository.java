@@ -4,7 +4,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
 
+import java.util.Optional;
+
 @Repository
 public interface IUserRepository extends CrudRepository<User, Long> {
-    User findByMail(String mail);
+    Optional<User> findByMail(String mail);
 }

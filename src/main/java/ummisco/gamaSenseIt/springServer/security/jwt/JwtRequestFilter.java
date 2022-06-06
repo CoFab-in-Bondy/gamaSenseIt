@@ -1,14 +1,18 @@
 package ummisco.gamaSenseIt.springServer.security.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import io.micrometer.core.lang.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
+import ummisco.gamaSenseIt.springServer.data.controller.Routes;
+import ummisco.gamaSenseIt.springServer.data.model.APIError;
 import ummisco.gamaSenseIt.springServer.security.UserDetailService;
 
 import javax.servlet.FilterChain;
@@ -22,39 +26,52 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
-    @Autowired
-    private JwtUtils jwtUtils;
+
+    public static final String REFRESH = "Refresh";
+
+    private final JwtUtils jwtUtils;
+    private final UserDetailService userDetailsService;
 
     @Autowired
-    private UserDetailService userDetailsService;
+    public JwtRequestFilter(JwtUtils jwtUtils, UserDetailService userDetailsService) {
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-
-        Jwt jwt = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            try {
-                jwt = jwtUtils.parse(authHeader.substring(7));
-                jwt.username();
-            } catch (IllegalArgumentException e) {
-                logger.warn("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
-                logger.info("JWT Token has expired");
-            }
-        } else {
-            logger.warn("JWT Token does not begin with Bearer String for request to " + request.getRequestURI());
+    protected void doFilterInternal(
+            @Nullable HttpServletRequest request, @Nullable HttpServletResponse response, FilterChain filterChain
+    ) throws ServletException, IOException {
+        String url = request == null ? "" : request.getRequestURL().toString();
+        try {
+            jwtUtils.extractAccess(request).ifPresent(jwt -> {
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    var user = this.userDetailsService.loadUserByUsername(jwt.username());
+                    if (jwt.validateExpirationAndUser(user)) {
+                        logger.info("Request of " + user.getUsername() + " as " + user.getAuthorities() + " to " + url);
+                        var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(auth);
+                    } else {
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, REFRESH);
+                    }
+                }
+            });
+            filterChain.doFilter(request, response);
+        } catch (ResponseStatusException ex) {
+            var apiError = new APIError(ex.getStatus(), ex.getReason());
+            logger.info("Return error from filter at " + url);
+            apiError.intoResponse(response);
         }
+    }
 
-        if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var user = this.userDetailsService.loadUserByUsername(jwt.username());
-            if (jwt.validate(user)) {
-                logger.info("Request of " + user.getUsername() + " as "  + user.getAuthorities() + " to " + request.getRequestURL());
-                var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-        }
-        filterChain.doFilter(request, response);
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        if (Routes.isEndpoint(path))
+            return (Routes.AUTH + Routes.LOGIN).equals(path)
+                    || (Routes.AUTH + Routes.LOGOUT).equals(path)
+                    || (Routes.AUTH + Routes.REFRESH).equals(path);
+        return true;
     }
 }

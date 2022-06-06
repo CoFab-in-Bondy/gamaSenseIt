@@ -76,13 +76,13 @@ public class PowerNotifier {
         helper.setTo(email);
         helper.setSubject("Signal perdu - " + sensor.getDisplayName());
         var body = mailTemplate.formatted(
-                securityUtils.getRootUrl(),
+                securityUtils.getFrontUrl(),
                 esc(sensor.getName() + String.format("#%05d", sensor.getId())),
                 esc(sensor.getDisplayName()),
                 esc(sensor.getSubDisplayName()),
                 sensor.getLastCaptureDate() != null ? "le " + esc(format.format(sensor.getLastCaptureDate())) : "toujours",
-                securityUtils.getRootUrl() + "/sensors/" + sensor.getId(),
-                securityUtils.getRootUrl() + "/sensors/" + sensor.getId()
+                securityUtils.getFrontUrl() + "/sensors/" + sensor.getId(),
+                securityUtils.getFrontUrl() + "/sensors/" + sensor.getId()
         );
         helper.setText(body, true);
         helper.addInline("ico", new ClassPathResource("mail/ico.png"));

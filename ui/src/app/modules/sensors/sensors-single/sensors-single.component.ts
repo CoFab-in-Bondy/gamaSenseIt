@@ -1,30 +1,24 @@
 import {
   AfterContentChecked,
-  AfterContentInit, AfterViewInit, ChangeDetectorRef,
-  Component, ElementRef,
-  OnChanges,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription } from "rxjs";
-import { HumanService } from "@services/human.service";
-import { SensorService } from "@services/sensor.service";
-import { DataTableComponent } from "@components/data-table/data-table.component";
-import { SensorMetadataService } from "@services/sensorMetadata.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { SafeUrl } from "@angular/platform-browser";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Subscription} from "rxjs";
+import {HumanService} from "@services/human.service";
+import {SensorService} from "@services/sensor.service";
+import {DataTableComponent} from "@components/data-table/data-table.component";
+import {SensorMetadataService} from "@services/sensorMetadata.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SafeUrl} from "@angular/platform-browser";
 import * as L from "leaflet";
-import {
-  DEFAULT_CENTER, DEFAULT_IMG,
-  DEFAULT_LAT,
-  LEAFLET_ATTRIBUTION_SMALL,
-  LEAFLET_URL, NO_IMG,
-} from "src/app/constantes";
-import { CLICK_MARKER } from "@models/icon.model";
-import { AuthService } from "@services/auth.service";
+import {DEFAULT_CENTER, LEAFLET_URL, NO_IMG,} from "src/app/constantes";
+import {CLICK_MARKER} from "@models/icon.model";
+import {AuthService} from "@services/auth.service";
 
 const widths = {
   INTEGER: 150,
@@ -52,23 +46,18 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   sensorForm: FormGroup;
   defaultUrl: SafeUrl = NO_IMG;
   photo?: File;
-  formater: DTFormatter<(string | number)[]> = (d) => d;
   create: boolean = false;
   init: boolean = false;
-
   marker: L.Marker;
   messageError: string = '';
-
-  private map: L.Map;
-
-  private routeSub: Subscription;
   NO_IMG = NO_IMG;
-
   @ViewChild("sensorMetadataImg")
   sensorMetadataImg: ElementRef;
-
-  @ViewChild(DataTableComponent, { static: true })
+  @ViewChild(DataTableComponent, {static: true})
   public tb: DataTableComponent<string | number>;
+  lastWidth = 1;
+  private map: L.Map;
+  private routeSub: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -79,9 +68,12 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     private router: Router,
     public auth: AuthService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+  }
 
-  resolveSensorMetadataExtended(smd: SensorMetadata): SensorMetadataExtended|undefined {
+  formater: DTFormatter<(string | number)[]> = (d) => d;
+
+  resolveSensorMetadataExtended(smd: SensorMetadata): SensorMetadataExtended | undefined {
     return this.sensorsMetadata.find(it => it.id == smd.id);
   }
 
@@ -110,9 +102,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
 
   getIdFormat() {
     if (this.id == undefined) return "#?????";
-    let s = this.id+"";
+    let s = this.id + "";
     while (s.length < 5) s = "0" + s;
-    return '#'+s;
+    return '#' + s;
   }
 
   dynamicInitCreate() {
@@ -151,7 +143,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
 
     this.sensorService.getById(this.id).subscribe(
       (sensor) => {
-        this.markMap({ lat: sensor.latitude, lng: sensor.longitude });
+        this.markMap({lat: sensor.latitude, lng: sensor.longitude});
         this.metadata = sensor.metadata;
         this.editable = sensor.manageable;
         const metadata = this.resolveSensorMetadataExtended(sensor.metadata);
@@ -223,7 +215,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     tiles.addTo(this.map);
     this.map.on("click", (event: any) => {
       if (!this.create) return;
-      const { lat, lng } = event.latlng;
+      const {lat, lng} = event.latlng;
       this.markMap({
         lat: Math.round(lat * 100000) / 100000,
         lng: Math.round(lng * 100000) / 100000,
@@ -273,11 +265,11 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * Remove previous marker and add one to lat and lng then move the map to the coords.
    * @param {lat, lng}: {lat: number, lng: number}
    */
-  markMap({ lat, lng }: { lat: number; lng: number }) {
+  markMap({lat, lng}: { lat: number; lng: number }) {
     if (this.marker) this.map.removeLayer(this.marker);
-    this.marker = L.marker({ lat, lng }, { icon: CLICK_MARKER });
+    this.marker = L.marker({lat, lng}, {icon: CLICK_MARKER});
     this.marker.addTo(this.map);
-    this.map.flyTo({ lat, lng });
+    this.map.flyTo({lat, lng});
     this.sensorForm.controls["latitude"].setValue(lat.toFixed(5));
     this.sensorForm.controls["longitude"].setValue(lng.toFixed(5));
     this.map.invalidateSize();
@@ -295,6 +287,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * Clear All.
    */
   ngOnDestroy(): void {
+    console.log("OnDestroy Single")
     this.routeSub?.unsubscribe();
     // Can't use twice the same map
     // this.map.remove();
@@ -367,9 +360,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     else
       this.sensorService
         .update(<number>this.id, data)
-        .subscribe(res=>{
+        .subscribe(res => {
           this.edition = false;
-        }, err=>{
+        }, err => {
           this.sensorForm.enable();
           this.messageError = err?.error?.message || 'Unknow';
         });
@@ -396,8 +389,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   onDownloadCSV(): void {
     if (this.id == undefined) return;
     this.sensorService
-      .download({ sensorId: this.id, type: "csv" })
-      .subscribe(() => {}, console.error);
+      .download({sensorId: this.id, type: "csv"})
+      .subscribe(() => {
+      }, console.error);
   }
 
   /**
@@ -406,8 +400,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   onDownloadJSON(): void {
     if (this.id == undefined) return;
     this.sensorService
-      .download({ sensorId: this.id, type: "json" })
-      .subscribe(() => {}, console.error);
+      .download({sensorId: this.id, type: "json"})
+      .subscribe(() => {
+      }, console.error);
   }
 
   /**
@@ -417,7 +412,8 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     if (this.id == undefined) return;
     this.sensorService
       .binary(this.id)
-      .subscribe(() => {}, console.error);
+      .subscribe(() => {
+      }, console.error);
   }
 
   /**
@@ -465,13 +461,13 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     return `${base}&query=${form["latitude"]},${form["longitude"]}`;
   }
 
-  lastWidth = 1;
-
   getSize() {
-    return this.init && this.sensorMetadataImg? this.sensorMetadataImg.nativeElement.offsetWidth: 1;
+    return this.init && this.sensorMetadataImg ? this.sensorMetadataImg.nativeElement.offsetWidth : 1;
   }
 
   ngAfterContentChecked(): void {
-    setTimeout(()=>{this.init = true});
+    setTimeout(() => {
+      this.init = true
+    });
   }
 }

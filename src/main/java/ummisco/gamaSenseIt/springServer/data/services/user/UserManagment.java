@@ -27,8 +27,7 @@ public class UserManagment implements IUserManagment{
 
 	@Override
 	public User createIfNotExistUser(String firstname, String lastName, String mail, String password, UserPrivilege privilege) {
-		var user = repo.findByMail(mail);
-		return user == null? createUser(firstname,  lastName,  mail,  password, privilege): user;
+		return repo.findByMail(mail).orElseGet(()->createUser(firstname,  lastName,  mail,  password, privilege));
 	}
 
 }

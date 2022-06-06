@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
 
-public class Jwt {
+public class JwtToken {
 
     private final Claims claims;
 
-    public Jwt(String token, String secret){
+    public JwtToken(String token, String secret){
         this.claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
@@ -30,12 +30,11 @@ public class Jwt {
         return this.expiration().before(new Date());
     }
 
-    private boolean canBeRefreshed() {
-        return !this.isExpired();
-    }
-
-    public boolean validate(UserDetails user) {
+    public boolean validateExpirationAndUser(UserDetails user) {
         return this.username().equals(user.getUsername()) && !this.isExpired();
     }
 
+    public static final String ACCESS_TOKEN_COOKIE_NAME = "AccessToken";
+    public static final String REFRESH_TOKEN_COOKIE_NAME = "RefreshToken";
 }
+
