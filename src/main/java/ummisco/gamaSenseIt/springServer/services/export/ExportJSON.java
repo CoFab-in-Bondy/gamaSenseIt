@@ -39,7 +39,7 @@ public class ExportJSON extends Export {
     ) {
 
         var records = recordManager.getRecords(s, pmd, start, end);
-        records.sortBy(Objects.requireNonNullElse(sort, 0), Objects.requireNonNullElse(asc, true));
+        records.sortBy(Objects.requireNonNullElse(sort, 0), Objects.requireNonNullElse(asc, false));
 
         if (page != null)
             records.page(page, Objects.requireNonNullElse(count, 50));

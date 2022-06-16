@@ -32,6 +32,9 @@ public class AccessManagement {
     @Autowired
     private IUserRepository userRepo;
 
+    /**
+     * Create group and creator as manager.
+     */
     public Access createAccess(long userId, String name, AccessPrivilege privilege) {
         var access = new Access();
         access.setPrivilege(privilege);
@@ -45,6 +48,9 @@ public class AccessManagement {
         return access;
     }
 
+    /**
+     * Add view access to a group.
+     */
     public AccessUser addAccessUser(long accessId, long userId) {
         var pk = new AccessUser.AccessUserPK(accessId, userId);
         if (accessUserRepo.findById(pk).isPresent())
@@ -56,6 +62,10 @@ public class AccessManagement {
         return accessUserRepo.save(acu);
     }
 
+
+    /**
+     * Delete a user from a group.
+     */
     public void delAccessUser(long accessId, long userId) {
         var pk = new AccessUser.AccessUserPK(accessId, userId);
         var acu = accessUserRepo
@@ -64,6 +74,9 @@ public class AccessManagement {
         accessUserRepo.delete(acu);
     }
 
+    /**
+     * Change privilege of user in group.
+     */
     public AccessUser promoteAccessUser(long accessId, long userId, AccessUserPrivilege accessUserPrivilege) {
         var pk = new AccessUser.AccessUserPK(accessId, userId);
         var acu = accessUserRepo
@@ -73,6 +86,10 @@ public class AccessManagement {
         return accessUserRepo.save(acu);
     }
 
+
+    /**
+     * Add sensor to group.
+     */
     public AccessSensor addAccessSensor(long accessId, long sensorId) {
         var pk = new AccessSensor.AccessSensorPK(accessId, sensorId);
         if (accessSensorRepo.findById(pk).isPresent())
@@ -83,6 +100,9 @@ public class AccessManagement {
         return accessSensorRepo.save(acu);
     }
 
+    /**
+     * Delete a sensor from a group.
+     */
     public void delAccessSensor(long accessId, long sensorId) {
         var pk = new AccessSensor.AccessSensorPK(accessId, sensorId);
         var acs = accessSensorRepo
@@ -91,6 +111,9 @@ public class AccessManagement {
         accessSensorRepo.delete(acs);
     }
 
+    /**
+     * Search a group.
+     */
     public List<Access> search(User user, String query) {
         query = query.toLowerCase();
         var accesses = new ArrayList<Access>();
@@ -107,6 +130,10 @@ public class AccessManagement {
         return accesses;
     }
 
+
+    /**
+     * Search a sensor or user in a group.
+     */
     public List<Node> search(long userId, long accessId, String mixedCaseQuery, boolean sensor, boolean user, boolean in, boolean out) {
         final var query = mixedCaseQuery.toLowerCase();
         var access = accessRepo
@@ -175,6 +202,9 @@ public class AccessManagement {
         return res.toNodeForUser(currentUser);
     }
 
+    /**
+     * Check if a user can manage a given group.
+     */
     public void guardManage(long accessId, long userId) {
         var access = accessRepo
                 .findById(accessId)

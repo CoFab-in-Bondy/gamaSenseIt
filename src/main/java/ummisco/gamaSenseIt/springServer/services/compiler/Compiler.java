@@ -58,12 +58,12 @@ public class Compiler {
 
         var out = dir.resolve("sensor.exe");
         try {
-            var command = List.of(make, "NAME=" + securityUtils.sanitizeFilename(sensor.getName()), "OUT=" + out);
-            var pb = new ProcessBuilder(command)
-                    .inheritIO()
-                    .directory(dir.toFile());
-
-            var process = pb.start();
+            var command = List.of(
+                    make,
+                    "NAME=" + securityUtils.sanitizeFilename(sensor.getName()),
+                    "OUT=" + out
+            );
+            var process = new ProcessBuilder(command).inheritIO().directory(dir.toFile()).start();
             try {
                 process.waitFor();
             } catch (InterruptedException err) {

@@ -13,7 +13,6 @@ import java.util.List;
 @Service("ExportResolver")
 public class ExportResolver {
 
-    // TODO make a map
     @Autowired
     private List<Export> exports;
 
@@ -28,8 +27,10 @@ public class ExportResolver {
         return exportDefault;
     }
 
-    public ResponseEntity<Resource> format(String ext, Sensor s, ParameterMetadata pmd, Date start, Date end) {
+    public ResponseEntity<Resource> format(
+            String ext, Sensor s, ParameterMetadata pmd, Date start, Date end) {
         return resolve(ext).export(s, pmd, start, end);
     }
 
 }
+

@@ -18,7 +18,6 @@ import java.util.Objects;
 @Table(name = "interact_user")
 public class InteractUser implements InteractBase {
 
-
     // ----- user_id ----- //
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)

@@ -11,8 +11,10 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordListMetadata;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -35,7 +37,9 @@ public class ExportCSV extends Export {
             @Nullable Date start,
             @Nullable Date end
     ) {
-        var out = new StringWriter();
+        var byteArray = new ByteArrayOutputStream();
+        var out = new OutputStreamWriter(byteArray, StandardCharsets.UTF_8);
+
         var writer = new CSVWriter(out);
 
         var records = recordManager.getRecords(sensor, parameterMetadata, start, end);
@@ -44,12 +48,13 @@ public class ExportCSV extends Export {
         writer.writeNext(metadata.headers());
         writer.writeNext(Arrays.stream(metadata.ids()).map(Objects::toString).toArray(String[]::new));
         writer.writeNext(metadata.units());
+        records.sortByDate();
         records.forEach(record -> writer.writeNext(record.asStrings()));
         try {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return out.toString().getBytes();
+        return byteArray.toByteArray();
     }
 }

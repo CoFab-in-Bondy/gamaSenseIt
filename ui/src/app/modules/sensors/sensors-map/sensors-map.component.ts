@@ -76,18 +76,6 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
             }
           }
 
-          // highlight the actual icons
-          this.routeSubscription = <any>this.route.firstChild?.params.subscribe(params => {
-            for (let sensorMetadata of this.sensorsMetadata) {
-              for (let sensor of sensorMetadata.sensors) {
-                if (sensor.id === +params["id"]) {
-                  this.addSensorToMap(sensor, sensorMetadata, true);
-                  return;
-                }
-              }
-            }
-          });
-
           [0, 100, 500, 2000, 5000].forEach(s => {
             setTimeout(()=>{
               this.map.invalidateSize();
@@ -143,6 +131,7 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
       this.select.emit(s.id);
     });
 
+    // Add photo and text when mouse is over.
     marker.on('mouseover', e => {
       this.secure.transform(`/public/sensors/${s.id}/image`).subscribe(
         img=>{
