@@ -1,6 +1,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TRIGGER IF EXISTS sensor.trig_sensor_last_capture_date;
+DROP EVENT IF EXISTS remove_expired_refresh_token;
 DROP VIEW IF EXISTS view_access_user_sensor;
 
 DROP TABLE IF EXISTS hibernate_sequence;

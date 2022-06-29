@@ -46,7 +46,8 @@
             },
             "allowedCommonJsDependencies": [
                 "rxjs-compat",
-                "rxjs"
+                "rxjs",
+                "qrcode"
             ],
             "outputPath": "../target/classes/static",
             "index": "src/index.html",
