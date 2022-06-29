@@ -71,7 +71,7 @@
 
                             <!-- Build for production -->
                             <execution>
-                                <id>npm run build</id>
+                                <id>npm run prodbuild</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
@@ -254,8 +254,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
-
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
         <dependency>
