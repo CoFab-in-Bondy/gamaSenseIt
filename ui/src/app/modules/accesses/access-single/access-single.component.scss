@@ -12,7 +12,8 @@ input[type="button"]:not(.active) {
 .wrapper{
   height: 60vh;
   overflow-y: auto;
-  border: solid 1px gray;
+  border: solid 2px $white-light-gray;
+  border-radius: 5px;
 }
 
 .line {

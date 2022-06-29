@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {SensorService} from "@services/sensor.service"
 import "echarts/lib/chart/bar";
 import {Subscription} from "rxjs";
@@ -13,18 +13,18 @@ import {ECharts} from "echarts";
 export class SensorsGraphComponent implements OnInit {
   options: any = {};
   updateOptions: any = {};
-
+  public sensor: SensorExtended;
+  public height = "100vh";
   private routeSub: Subscription;
   private parameters: RecordParameters;
   private echarts: ECharts;
-  public sensor: SensorExtended;
-  public height = "100vh";
 
   constructor(
     private sensorService: SensorService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
@@ -34,7 +34,7 @@ export class SensorsGraphComponent implements OnInit {
           this.sensor = sensor;
           this.afterFetchSensor();
           this.sensorService.getParametersOfId(this.sensor.id).subscribe(
-            parameters=>{
+            parameters => {
               this.parameters = parameters;
               this.afterFetchParameters();
             }
@@ -68,13 +68,13 @@ export class SensorsGraphComponent implements OnInit {
         },
         formatter: (params: any) => {
           params = params.sort((a: any, b: any) => a.componentIndex - b.componentIndex);
-          let values = params[0].value[0] ;
+          let values = params[0].value[0];
 
           for (const i of indexes) {
             const value = params[i].value[1];
-            const content = value == null? '-' : `${value} ${meta.units[i+1]}`;
+            const content = value == null ? '-' : `${value} ${meta.units[i + 1]}`;
             values += "<br/>";
-            values += `<div style="display: inline-block" >${ params[i].marker }${ params[i].seriesName }</div>`;
+            values += `<div style="display: inline-block" >${params[i].marker}${params[i].seriesName}</div>`;
             values += `<div style="margin-left: 50px; display: inline-block; float: right; text-align: right; font-weight: bold">${content}</div>`;
           }
           return values;
@@ -173,7 +173,6 @@ export class SensorsGraphComponent implements OnInit {
   }
 
 
-
   afterFetchParameters(): void {
     this.updateOptions = {series: []};
     const meta = this.sensor.metadata.parameters;
@@ -182,6 +181,7 @@ export class SensorsGraphComponent implements OnInit {
       const data = [];
       for (let record of this.parameters.values) {
         const date = new Date(record[0]).toString();
+        console.log(date);
         data.push({name: date, value: [record[0], record[i]]})
       }
       this.updateOptions.series.push({
@@ -194,7 +194,7 @@ export class SensorsGraphComponent implements OnInit {
   @HostListener('window:resize')
   onResize() {
     const count = this.sensor.metadata.parameters.width;
-    this.height = window.innerHeight > (count * 90 + 100) ? '100vh': count * 150 + "px";
+    this.height = window.innerHeight > (count * 90 + 100) ? '100vh' : count * 150 + "px";
   }
 
   onChartInit(event: any): void {

@@ -72,7 +72,6 @@ public class SensorManagement implements ISensorManagement {
         if (foundSensors.isEmpty())
             return;
 
-        
         Sensor sensor = foundSensors.get(0);
 
         Date capturedate = new Date(captureTimestamp * 1000);

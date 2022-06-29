@@ -52,18 +52,21 @@ public class Compiler {
     private byte[] compileSources(Sensor sensor) throws IOException {
         logger.info("Start compilation for " + sensor);
 
-        var dir = Files.createTempDirectory("compiler-");
-        logger.info("Working in " + dir);
-        copyRecursive(dir.toString());
+        var tempDir = Files.createTempDirectory("compiler-");
+        logger.info("Working in " + tempDir);
+        copyRecursive(tempDir.toString());
 
-        var out = dir.resolve("sensor.exe");
+        var executable = tempDir.resolve("sensor.exe");
         try {
             var command = List.of(
                     make,
                     "NAME=" + securityUtils.sanitizeFilename(sensor.getName()),
-                    "OUT=" + out
+                    "OUT=" + executable
             );
-            var process = new ProcessBuilder(command).inheritIO().directory(dir.toFile()).start();
+            var process = new ProcessBuilder(command)
+                    .inheritIO()
+                    .directory(tempDir.toFile())
+                    .start();
             try {
                 process.waitFor();
             } catch (InterruptedException err) {
@@ -71,15 +74,15 @@ public class Compiler {
             }
 
             if (process.exitValue() == 0) {
-                var bytes = Files.readAllBytes(out);
-                logger.info("Binary (" + bytes.length + "o) is ready at " + out);
+                var bytes = Files.readAllBytes(executable);
+                logger.info("Binary (" + bytes.length + "o) is ready at " + executable);
                 return bytes;
             } else {
                 logger.error("Compilation exit with error code " + process.exitValue());
                 throw new IllegalStateException("Can't compile file");
             }
         } finally {
-            FileUtils.deleteDirectory(dir.toFile());
+            FileUtils.deleteDirectory(tempDir.toFile());
             logger.info("Directory deleted");
         }
     }

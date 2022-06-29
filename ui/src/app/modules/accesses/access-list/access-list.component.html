@@ -1,17 +1,18 @@
 <div class="box-wrapper vh-100">
   <div class="box">
     <h1>Gestion des groupes</h1>
-    <input type="text" placeholder="Rechercher" (input)="onSearch($event)">
-    <div class="wrapper" [ngStyle]="{'height.px': getSize()}">
-      <div *ngFor="let ac of accesses" [routerLink]="['/accesses', ac.id]" class="ligne hstack justify-content-between">
+    <input (input)="onSearch($event)" class="form-control" placeholder="Rechercher" type="text">
+    <div [ngStyle]="{'height.px': getSize()}" class="wrapper mt-2">
+      <div *ngFor="let ac of accesses" [routerLink]="['/accesses', ac.id]"
+           class="line hstack justify-content-between item">
         <div>
-          <i class="fas me-2" [ngClass]="{
+          <i [ngClass]="{
             'fa-tools': ac.privilege == 'MAINTENANCE',
             'fa-users': ac.privilege != 'MAINTENANCE'
-          }"></i>
+          }" class="fas me-2 icon"></i>
           <span class="name">{{ ac.name }}</span>
         </div>
-        <div>
+        <div class="side">
           <div class="sizeSensors">
             <span>{{ ac.sizeSensors }}</span>
             <i class="fas fa-hdd"></i>

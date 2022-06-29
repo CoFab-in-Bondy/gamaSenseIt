@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ExportResolver {
     }
 
     public ResponseEntity<Resource> format(
-            String ext, Sensor s, ParameterMetadata pmd, Date start, Date end) {
+            String ext, Sensor s, ParameterMetadata pmd, Date start, Date end) throws IOException {
         return resolve(ext).export(s, pmd, start, end);
     }
 

@@ -3,8 +3,6 @@ package ummisco.gamaSenseIt.springServer.data.services.record;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.comparator.Comparators;
-import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 
 import java.util.*;
@@ -22,26 +20,22 @@ public class RecordList extends ArrayList<Record> {
             var values = new ArrayList<Object>();
             parametersMetadata.forEach(pmd -> {
                 var data = e.getValue().getOrDefault(pmd.getId(), null);
-                values.add(pmd.getDataType().convertToObject(data));
+                values.add(pmd.getDataType().bytesToObject(data));
             });
             super.add(new Record(e.getKey(), values));
         }
+    }
+
+    public RecordListMetadata metadata() {
+        return new RecordListMetadata(this.parametersMetadata);
     }
 
     public List<ParameterMetadata> getParametersMetadata() {
         return parametersMetadata;
     }
 
-    public Node toNode() {
-        return new Node() {{
-            put("values", RecordList.this);
-            put("total", RecordList.this.size());
-        }};
-    }
-
-    public RecordList sortByDate() {
+    public void sortByDate() {
         sort(Record::compareTo);
-        return this;
     }
 
     @SuppressWarnings("unchecked")

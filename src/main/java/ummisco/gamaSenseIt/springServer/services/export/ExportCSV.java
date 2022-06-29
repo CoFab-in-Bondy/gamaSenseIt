@@ -43,8 +43,7 @@ public class ExportCSV extends Export {
         var writer = new CSVWriter(out);
 
         var records = recordManager.getRecords(sensor, parameterMetadata, start, end);
-        var parametersMetadata = records.getParametersMetadata();
-        var metadata = new RecordListMetadata(parametersMetadata);
+        var metadata = records.metadata();
         writer.writeNext(metadata.headers());
         writer.writeNext(Arrays.stream(metadata.ids()).map(Objects::toString).toArray(String[]::new));
         writer.writeNext(metadata.units());

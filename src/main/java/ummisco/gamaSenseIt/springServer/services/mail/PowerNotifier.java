@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.user.Access;
+import ummisco.gamaSenseIt.springServer.data.model.user.AccessPrivilege;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessSensor;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
+import ummisco.gamaSenseIt.springServer.data.services.date.DateUtils;
 import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
 
 import javax.mail.MessagingException;
@@ -25,8 +27,6 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -34,8 +34,6 @@ public class PowerNotifier {
 
 
     private static final Logger logger = LoggerFactory.getLogger(PowerNotifier.class);
-
-    private final SimpleDateFormat format = new SimpleDateFormat("EEEEE d MMMMM yyyy à H'h'mm", new Locale("fr", "FR"));
 
     @Autowired
     private ISensorRepository sensorRepository;
@@ -60,7 +58,7 @@ public class PowerNotifier {
         return tpl.replaceAll("%([^s]|$)", "%%$1");
     }
 
-    public void sendSensorDown(String email, Sensor sensor) throws MessagingException {
+    public void sendMailForSensorDown(String email, Sensor sensor) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -80,7 +78,7 @@ public class PowerNotifier {
                 esc(sensor.getName() + String.format("#%05d", sensor.getId())),
                 esc(sensor.getDisplayName()),
                 esc(sensor.getSubDisplayName()),
-                sensor.getLastCaptureDate() != null ? "le " + esc(format.format(sensor.getLastCaptureDate())) : "toujours",
+                sensor.getLastCaptureDate() != null ? "le " + esc(DateUtils.formatPretty(sensor.getLastCaptureDate())) : "toujours",
                 securityUtils.getFrontUrl() + "/sensors/" + sensor.getId(),
                 securityUtils.getFrontUrl() + "/sensors/" + sensor.getId()
         );
@@ -110,11 +108,12 @@ public class PowerNotifier {
                 sensorRepository.save(sensor);
                 sensor.getAccessSensors().parallelStream()
                     .map(AccessSensor::getAccess)
+                    .filter(access -> access.getPrivilege().equals(AccessPrivilege.MAINTENANCE))
                     .map(Access::getUsers)
-                    .flatMap(Set::stream)
+                    .flatMap(Set::stream).distinct()
                     .forEach(user -> {
                         try {
-                            sendSensorDown(user.getMail(), sensor);
+                            sendMailForSensorDown(user.getMail(), sensor);
                         } catch (MessagingException err) {
                             err.printStackTrace();
                         }

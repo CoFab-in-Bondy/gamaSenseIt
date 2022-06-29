@@ -168,7 +168,7 @@ declare interface QueryParams {
   parameterMetadataId?: number,
   start?: DDMMYYYY,
   end?: DDMMYYYY,
-  type?: "csv" | "json"
+  type?: "csv" | "json" | "xlsx"
 }
 
 declare interface ParamsOption {

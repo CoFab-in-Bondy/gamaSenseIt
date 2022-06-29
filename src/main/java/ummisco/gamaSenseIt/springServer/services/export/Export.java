@@ -9,18 +9,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.lang.Nullable;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
+import ummisco.gamaSenseIt.springServer.data.services.date.DateUtils;
 import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public abstract class Export {
 
-    protected final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private final String ext;
     private final MediaType media;
 
@@ -49,9 +48,9 @@ public abstract class Export {
                 + sensor.getName()
                 + (start != null || end != null
                 ? "-"
-                + (start == null ? "X" : dateFormat.format(start))
+                + (start == null ? "X" : DateUtils.formatCompact(start))
                 + "-"
-                + (end == null ? "X" : dateFormat.format(end))
+                + (end == null ? "X" :  DateUtils.formatCompact(end))
                 : "")
         ) + "." + type;
     }
@@ -81,14 +80,14 @@ public abstract class Export {
             @Nullable ParameterMetadata parameterMetadata,
             @Nullable Date start,
             @Nullable Date end
-    );
+    ) throws IOException;
 
     public ResponseEntity<Resource> export(
             @NotNull Sensor sensor,
             @Nullable ParameterMetadata parameterMetadata,
             @Nullable Date start,
             @Nullable Date end
-    ) {
+    ) throws IOException {
         String filename = buildFilename(sensor, ext, parameterMetadata, start, end);
         var header = new HttpHeaders();
         var res = toBytes(sensor, parameterMetadata, start, end);

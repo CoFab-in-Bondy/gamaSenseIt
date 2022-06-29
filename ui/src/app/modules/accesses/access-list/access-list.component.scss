@@ -10,9 +10,19 @@
 
 .wrapper{
   overflow-y: auto;
+  border: solid 2px $white-light-gray;
+  border-radius: 5px;
 }
 
-i {
+.icon {
+  height: 30px;
+  width: 30px;
+  padding: 6px;
+  border-radius: 5px;
+  background-color: $light-gray;
+}
+
+.side i {
   margin-left: 5px;
 }
 
@@ -40,14 +50,27 @@ i {
   width: 60px;
 }
 
-.ligne {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid gray;
-  border-top: 1px solid gray;
+.line {
+  margin: 10px 8px;
+  height: 40px;
   cursor: pointer;
+  padding: 5px;
+  background-color: $white-light-gray;
+  border-radius: 5px;
 
   &:hover {
-    background-color: $white-light-gray;
+    background-color: $light-gray;
+
+    .icon {
+      background-color: gray;
+    }
+
+    .side {
+       background-color: $light-gray;
+     }
   }
+}
+
+.side {
+  background-color: $white-light-gray;
 }

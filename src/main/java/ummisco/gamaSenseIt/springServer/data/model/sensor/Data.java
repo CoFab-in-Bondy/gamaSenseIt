@@ -1,11 +1,12 @@
 package ummisco.gamaSenseIt.springServer.data.model.sensor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ummisco.gamaSenseIt.springServer.data.services.date.DateUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.Arrays;
 
 public class Data {
+    /* Point for javascript */
 
     @JsonProperty("name")
     private String name;
@@ -19,10 +20,8 @@ public class Data {
 
     public Data(Parameter parameter) {
         var date = parameter.getCaptureDate();
-        var dt = new SimpleDateFormat("EE MMM dd yyyy HH:mm:ss Z", Locale.ENGLISH);
-        var dts = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.ENGLISH);
-        this.name = dt.format(date);
-        this.value = new Object[]{dts.format(date), parameter.value()};
+        this.name = DateUtils.formatJavascript(date);
+        this.value = new Object[]{DateUtils.formatCompact(date), parameter.value()};
     }
 
     public String getName() {

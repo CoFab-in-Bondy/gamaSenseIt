@@ -57,7 +57,7 @@ public class Parameter {
     public Parameter() {
     } // for JSON compatibility
 
-    private Parameter(byte[] data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
+    public Parameter(byte[] data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
         super();
         this.data = data;
         this.sensor = sensor;
@@ -65,24 +65,12 @@ public class Parameter {
         this.parameterMetadata = parameterMetadata;
     }
 
-    public Parameter(double data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
-        this(ByteBuffer.allocate(Double.BYTES).putDouble(data).array(), captureDate, parameterMetadata, sensor);
-    }
-
-    public Parameter(long data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
-        this(ByteBuffer.allocate(Long.BYTES).putLong(data).array(), captureDate, parameterMetadata, sensor);
-    }
-
-    public Parameter(String data, Date captureDate, ParameterMetadata parameterMetadata, Sensor sensor) {
-        this(data.getBytes(), captureDate, parameterMetadata, sensor);
-    }
-
     @JsonProperty("value")
     @JsonView(IView.Public.class)
     public Object value() {
-        ParameterMetadata.DataFormat df;
+        DataFormat df;
         if ((df = parameterMetadata.getDataType()) != null)
-            return df.convertToObject(data);
+            return df.bytesToObject(data);
         else
             return null;
     }

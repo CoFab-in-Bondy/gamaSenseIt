@@ -4,6 +4,7 @@ import { SafeUrl } from "@angular/platform-browser";
 import { SecurePipe } from "@pipes/secure.pipe";
 import { Observable } from "rxjs";
 import { saveAs } from 'file-saver';
+import * as QRCode from "qrcode";
 
 @Injectable()
 export class SensorService {
@@ -91,5 +92,24 @@ export class SensorService {
 
   getData(sensorId: number, parameterMetadataId: number): Observable<Data[]> {
     return this.http.get<Data[]>(`/public/sensors/${sensorId}/data/${parameterMetadataId}`);
+  }
+
+  qrcode(sensorId: number) {
+    const parsedUrl = new URL(window.location.href);
+    const url = parsedUrl.origin + `/sensors/${sensorId}`;
+    const opts = {
+      errorCorrectionLevel: 'H',
+      type: 'image/png',
+      margin: 1,
+      width: 512,
+      color: {
+        dark:"#000000FF",
+        light:"#FFFFFFFF"
+      }
+    }
+    // @ts-ignore
+    QRCode.toDataURL(url, opts, (err, data) => {
+      saveAs(data, `qrcode-${sensorId}.png`);
+    });
   }
 }

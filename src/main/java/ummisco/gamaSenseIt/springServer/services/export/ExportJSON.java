@@ -39,6 +39,7 @@ public class ExportJSON extends Export {
     ) {
 
         var records = recordManager.getRecords(s, pmd, start, end);
+        int size = records.size();
         records.sortBy(Objects.requireNonNullElse(sort, 0), Objects.requireNonNullElse(asc, false));
 
         if (page != null)
@@ -46,12 +47,13 @@ public class ExportJSON extends Export {
         else if (count != null)
             records.page(0, count);
 
+        var parameters = new Node() {{put("values", records);put("total", size);}};
         if (complete) {
             var root = s.toNode();
-            root.put("parameters", records.toNode());
+            root.put("parameters", parameters);
             return root;
         } else {
-            return records.toNode();
+            return parameters;
         }
     }
 

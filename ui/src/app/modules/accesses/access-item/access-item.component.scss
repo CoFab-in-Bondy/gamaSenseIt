@@ -1,7 +1,9 @@
 @import "all";
 
 .item {
-  border: 1px solid black;
+  border-radius: 5px;
+  background-color: $white-light-gray;
+  padding: 5px;
 }
 
 .del, .add, .eye, .manage {
@@ -12,8 +14,8 @@
   overflow: hidden;
   transition: transform 0.2s, background-color 0.1s, filter 0.1s;
   &:hover {
-    -webkit-filter: brightness(1.1);
-    filter: brightness(1.1);
+    -webkit-filter: brightness(1.05);
+    filter: brightness(1.05);
   }
 }
 
@@ -33,34 +35,38 @@
 
 
 .name {
-  width: 10px;
+  width: 100px;
   display: inline-block;
   white-space: nowrap;
+
 }
 
 i.sensor, i.user{
   height: 30px;
   width: 30px;
   margin-right: 10px;
-  background-color: $white-light-gray;
+  border-radius: 5px;
+  background-color: $light-gray;
 }
 
-i.user, i.user {
+i.user {
   padding: 8px 8px;
 
 }
 
-i.sensor, i.sensor {
+i.sensor {
   padding: 8px 6px;
 
 }
 
 div.cmd {
   float: right;
+  background-color: $white-light-gray;
+  z-index: -1;
 }
 
 .eye {
-  background-color: $white-light-gray;
+  background-color: $light-gray;
   color: black;
 }
 

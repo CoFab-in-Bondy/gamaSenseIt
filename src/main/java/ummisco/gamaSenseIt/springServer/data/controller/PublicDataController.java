@@ -18,6 +18,7 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.services.export.ExportJSON;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -79,7 +80,12 @@ public class PublicDataController extends DataController {
             @RequestParam(value = IParametersRequest.END, required = false)
             @DateTimeFormat(pattern = IParametersRequest.DATE_PATTERN) Date end
     ) {
-        return export.format(type, sensorRead(sensorId), parameterMetadata, start, end);
+        try {
+            return export.format(type, sensorRead(sensorId), parameterMetadata, start, end);
+        } catch (IOException err) {
+            err.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "IOException");
+        }
     }
 
     /*------------------------------------*

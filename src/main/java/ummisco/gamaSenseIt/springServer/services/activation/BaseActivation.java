@@ -3,6 +3,7 @@ package ummisco.gamaSenseIt.springServer.services.activation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import ummisco.gamaSenseIt.springServer.data.model.sensor.DataFormat;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
@@ -61,23 +62,23 @@ public class BaseActivation {
         var qameleo2 = sensorManagment.addSensorMetadata(
                 new SensorMetadata("Qaméléo", "1.0.0", ":", "Des magnifiques capteur de qualité de l'air"),
                 List.of(
-                        new ParameterMetadata("PM1", "mg/m³", ParameterMetadata.DataFormat.DOUBLE, "nuage"),
-                        new ParameterMetadata("PM2.5", "mg/m³", ParameterMetadata.DataFormat.DOUBLE, "nuage"),
-                        new ParameterMetadata("PM10", "mg/m³", ParameterMetadata.DataFormat.DOUBLE, "nuage"),
-                        new ParameterMetadata("Humidité", "%", ParameterMetadata.DataFormat.DOUBLE, "humi"),
-                        new ParameterMetadata("Température", "°C", ParameterMetadata.DataFormat.DOUBLE, "temp"),
-                        new ParameterMetadata("Température", "°C", ParameterMetadata.DataFormat.DOUBLE, "temp")
+                        new ParameterMetadata("PM1", "mg/m³", DataFormat.DOUBLE, "nuage"),
+                        new ParameterMetadata("PM2.5", "mg/m³", DataFormat.DOUBLE, "nuage"),
+                        new ParameterMetadata("PM10", "mg/m³", DataFormat.DOUBLE, "nuage"),
+                        new ParameterMetadata("Humidité", "%", DataFormat.DOUBLE, "humi"),
+                        new ParameterMetadata("Température", "°C", DataFormat.DOUBLE, "temp"),
+                        new ParameterMetadata("Température", "°C",DataFormat.DOUBLE, "temp")
                 )
         );
 
         var qameleo1 = sensorManagment.addSensorMetadata(
                 new SensorMetadata("Qaméléo v2", "1.0.1", ":", "Des magnifiques capteur de qualité de l'air v2"),
                 List.of(
-                        new ParameterMetadata("PM1", "mg/m³", ParameterMetadata.DataFormat.DOUBLE, "nuage"),
-                        new ParameterMetadata("PM2.5", "mg/m³", ParameterMetadata.DataFormat.DOUBLE, "nuage"),
-                        new ParameterMetadata("PM10", "mg/m³", ParameterMetadata.DataFormat.DOUBLE, "nuage"),
-                        new ParameterMetadata("Humidité", "%", ParameterMetadata.DataFormat.DOUBLE, "humi"),
-                        new ParameterMetadata("Température", "°C", ParameterMetadata.DataFormat.DOUBLE, "temp")
+                        new ParameterMetadata("PM1", "mg/m³", DataFormat.DOUBLE, "nuage"),
+                        new ParameterMetadata("PM2.5", "mg/m³", DataFormat.DOUBLE, "nuage"),
+                        new ParameterMetadata("PM10", "mg/m³", DataFormat.DOUBLE, "nuage"),
+                        new ParameterMetadata("Humidité", "%", DataFormat.DOUBLE, "humi"),
+                        new ParameterMetadata("Température", "°C", DataFormat.DOUBLE, "temp")
                 )
         );
 

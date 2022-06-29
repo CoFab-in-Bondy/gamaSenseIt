@@ -88,7 +88,6 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
         if (this.auth.isUser()) this.dynamicInitCreate();
         else this.router.navigate(["/login"]);
       } else {
-        console.log("hasandId")
         let id = +params["id"];
         if (isNaN(id)) { // invalid id
           this.router.navigate(["/error404"], {skipLocationChange: true});
@@ -351,6 +350,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
       this.sensorService.create(data).subscribe(
         sensor => {
           console.log(sensor);
+          /* TODO patch map already exist */
+          this.map.off();
+          this.map.remove();
           this.router.navigate(["/sensors", sensor.id]);
         },
         err => {
@@ -387,22 +389,30 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * Run download for csv file.
    */
   onDownloadCSV(): void {
-    if (this.id == undefined) return;
-    this.sensorService
-      .download({sensorId: this.id, type: "csv"})
-      .subscribe(() => {
-      }, console.error);
+    this.onDownload("csv");
+  }
+
+  /**
+   * Run download for csv file.
+   */
+  onDownloadXSLX(): void {
+    this.onDownload("xlsx");
   }
 
   /**
    * Run download for json file.
    */
   onDownloadJSON(): void {
+    this.onDownload("json");
+  }
+
+  onDownload(type: QueryParams["type"]): void {
     if (this.id == undefined) return;
     this.sensorService
-      .download({sensorId: this.id, type: "json"})
+      .download({sensorId: this.id, type: type})
       .subscribe(() => {
       }, console.error);
+
   }
 
   /**
@@ -469,5 +479,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     setTimeout(() => {
       this.init = true
     });
+  }
+
+  onQRCode() {
+    if (this.id) this.sensorService.qrcode(this.id);
   }
 }

@@ -3,7 +3,7 @@ target/
 *.class
 *.jar
 bin/
-!/.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
 *.war
 *.ear
 *.iml

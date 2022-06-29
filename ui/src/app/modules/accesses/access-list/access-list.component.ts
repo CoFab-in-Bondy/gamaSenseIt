@@ -25,6 +25,6 @@ export class AccessListComponent implements OnInit {
   }
 
   getSize() {
-    return window.innerHeight - 170;
+    return window.innerHeight - 190;
   }
 }

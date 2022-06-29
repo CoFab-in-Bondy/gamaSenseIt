@@ -1,22 +1,17 @@
 package ummisco.gamaSenseIt.springServer.data.services.record;
 
 import com.sun.istack.NotNull;
+import ummisco.gamaSenseIt.springServer.data.services.date.DateUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 public class Record extends ArrayList<Object> implements Comparable<Record> {
-
-    protected final static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Date date;
 
     public Record(@NotNull Date date, @NotNull Collection<Object> values) {
         super(values);
-        add(0, dateFormat.format(date));
+        add(0, date);
         this.date = date;
     }
 
@@ -27,7 +22,11 @@ public class Record extends ArrayList<Object> implements Comparable<Record> {
 
     public @NotNull
     String[] asStrings() {
-        return stream().map(Objects::toString).toArray(String[]::new);
+        var strings = new String[size()];
+        strings[0] = DateUtils.formatCompact(date);
+        for (int i = 1; i < size(); i ++)
+            strings[i] = get(i) == null? "null" : get(i).toString();
+        return strings;
     }
 
     @Override
@@ -38,5 +37,10 @@ public class Record extends ArrayList<Object> implements Comparable<Record> {
     @Override
     public int hashCode() {
         return Objects.hashCode(date);
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(asObjects());
     }
 }

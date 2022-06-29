@@ -174,8 +174,8 @@
                 <app-button
                   #close
                   (click)="onDownloadCSV()"
-                  class="me-3"
                   url="assets/buttons/csv.svg"
+                  width="80"
                 >
                   CSV
                 </app-button>
@@ -183,14 +183,22 @@
                   #close
                   (click)="onDownloadJSON()"
                   url="assets/buttons/json.svg"
+                  width="80"
                 >
                   JSON
                 </app-button>
                 <app-button
                   #close
+                  (click)="onDownloadXSLX()"
+                  url="assets/buttons/xlsx.svg"
+                  width="80"
+                >
+                  XSLX
+                </app-button>
+                <app-button
+                  #close
                   (click)="onDownloadBinary()"
                   *ngIf="editable"
-                  class="ms-3"
                   url="assets/buttons/binary.svg"
                   width="120"
                 >
@@ -228,6 +236,15 @@
             width="130"
           >
             Sauvegarder
+          </app-button>
+
+          <app-button
+            (click)="onQRCode(); $event.stopPropagation()"
+            *ngIf="id"
+            fa="fas fa-qrcode"
+            width="130"
+          >
+            QRCode
           </app-button>
 
           <div *ngIf="messageError" class="error col-12 col-md mb-3">

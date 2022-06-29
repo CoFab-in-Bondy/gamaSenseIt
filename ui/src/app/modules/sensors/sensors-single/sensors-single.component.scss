@@ -1,7 +1,6 @@
 @import "all";
 
 
-
 .sensor {
   position: relative;
 
@@ -14,6 +13,7 @@
     width: 140px;
     padding: 7px 0;
   }
+
   #name, #id {
     font-size: 15px;
     color: $light-gray;
@@ -30,7 +30,7 @@
   }
 
   #sensorMetadata {
-    margin-left: 0 ;
+    margin-left: 0;
     padding: 0;
   }
 
@@ -162,5 +162,22 @@
 
   @include respond-below(md) {
     width: 100%;
+  }
+}
+
+
+.buttons app-button {
+  @include respond-below(md) {
+    display: block;
+    margin: auto;
+    &:not(:last-child) {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  @include respond-above(sm) {
+    &:not(:last-child) {
+      margin-right: 1.5em;
+    }
   }
 }
