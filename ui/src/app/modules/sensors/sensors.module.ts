@@ -5,6 +5,7 @@ import { SensorsMapComponent } from "./sensors-map/sensors-map.component";
 import { SensorsSingleComponent } from "./sensors-single/sensors-single.component";
 import { SensorsImageComponent } from './sensor-image/sensors-image.component';
 import { SensorsGraphComponent } from './sensors-graph/sensors-graph.component';
+import { SensorsDownloadComponent } from './sensors-download/sensors-download.component';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { SensorsGraphComponent } from './sensors-graph/sensors-graph.component';
     SensorsMapComponent,
     SensorsSingleComponent,
     SensorsImageComponent,
-    SensorsGraphComponent
+    SensorsGraphComponent,
+    SensorsDownloadComponent
   ],
   providers: [],
 })

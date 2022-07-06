@@ -1,5 +1,7 @@
 # Mosquito
 
+Mosquito is a broker often used with raspberry pi and arduino, it allows to redistribute the data it receives to several clients.
+
 ## Installation
 
 Install for Manjaro.
@@ -14,12 +16,8 @@ systemctl status mosquitto
 Install for Ubuntu.
 ```sh
 sudo apt install mosquitto
-
-# you can also install mosquitto clients to test / develop
-# sudo apt install mosquitto-clients
+sudo apt install mosquitto-clients
 ```
-
-***
 
 ## Ports
 
@@ -29,7 +27,7 @@ iptables -t filter -A INPUT -p tcp --dport 1883 -j LOGACCEPT
 ```
 
 ## Authentication.
-* Make a password file with user gamaseniseit.
+* Make a password file with user gamasenseit.
    ```sh
    sudo mosquitto_passwd -c /etc/mosquitto/passwd gamasenseit
    ```

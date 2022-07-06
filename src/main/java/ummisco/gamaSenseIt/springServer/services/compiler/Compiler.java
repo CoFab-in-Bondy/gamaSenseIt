@@ -60,7 +60,7 @@ public class Compiler {
         try {
             var command = List.of(
                     make,
-                    "NAME=" + securityUtils.sanitizeFilename(sensor.getName()),
+                    "TOKEN=" + securityUtils.sanitizeFilename(sensor.getToken()),
                     "OUT=" + executable
             );
             var process = new ProcessBuilder(command)

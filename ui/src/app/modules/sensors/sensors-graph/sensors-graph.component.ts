@@ -4,6 +4,7 @@ import "echarts/lib/chart/bar";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ECharts} from "echarts";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-sensors-graph',
@@ -13,7 +14,7 @@ import {ECharts} from "echarts";
 export class SensorsGraphComponent implements OnInit {
   options: any = {};
   updateOptions: any = {};
-  public sensor: SensorExtended;
+  public sensor: Sensor<true>;
   public height = "100vh";
   private routeSub: Subscription;
   private parameters: RecordParameters;
@@ -22,7 +23,8 @@ export class SensorsGraphComponent implements OnInit {
   constructor(
     private sensorService: SensorService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private datepipe: DatePipe
   ) {
   }
 
@@ -67,8 +69,9 @@ export class SensorsGraphComponent implements OnInit {
           return [pt[0] + 10, '10%'];
         },
         formatter: (params: any) => {
+          console.log(params);
           params = params.sort((a: any, b: any) => a.componentIndex - b.componentIndex);
-          let values = params[0].value[0];
+          let values = this.datepipe.transform(params[0].value[0], "EEEE d MMMM y à H'h'mm");
 
           for (const i of indexes) {
             const value = params[i].value[1];
@@ -181,8 +184,9 @@ export class SensorsGraphComponent implements OnInit {
       const data = [];
       for (let record of this.parameters.values) {
         const date = new Date(record[0]).toString();
-        console.log(date);
-        data.push({name: date, value: [record[0], record[i]]})
+        data.push({
+          value: [record[0], record[i]]
+        })
       }
       this.updateOptions.series.push({
         data: data

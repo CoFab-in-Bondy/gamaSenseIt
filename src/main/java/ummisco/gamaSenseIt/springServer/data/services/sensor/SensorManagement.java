@@ -1,15 +1,16 @@
 package ummisco.gamaSenseIt.springServer.data.services.sensor;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.*;
 import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
+import ummisco.gamaSenseIt.springServer.services.mqtt.MqttListener;
 
 import java.io.IOException;
 import java.util.*;
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 
 @Service
 public class SensorManagement implements ISensorManagement {
+
+    private static final Logger logger = LoggerFactory.getLogger(SensorManagement.class);
 
     @Autowired
     IParameterRepository parameterRepo;
@@ -52,29 +55,43 @@ public class SensorManagement implements ISensorManagement {
     private ResourceLoader resourceLoader;
 
     @Override
-    public void saveData(String message, Date date) {
+    public void saveData(String message) {
+        Date date = Calendar.getInstance().getTime();
 
         String[] data = message.split(";", 4);
-        if (data.length < 4)
+        if (data.length < 4) {
+            logger.error("Missing part in message");
             return;
-        long captureTimestamp, token;
-        String sensorName = data[1];
+        }
+
+        long captureTimestamp, counted;
+        String token = data[1];
 
         try {
             captureTimestamp = Long.parseLong(data[0]);
-            token = Long.parseLong(data[2]);
+            counted = Long.parseLong(data[2]);
         } catch (NumberFormatException e) {
+            logger.error("Error during parsing message", e);
             return;
         }
 
         String contents = data[3];
-        List<Sensor> foundSensors = sensorRepo.findByName(sensorName);
-        if (foundSensors.isEmpty())
+        Optional<Sensor> foundSensors = sensorRepo.findByToken(token);
+        if (foundSensors.isEmpty()) {
+            logger.error("No sensor match");
             return;
+        }
 
-        Sensor sensor = foundSensors.get(0);
+        Sensor sensor = foundSensors.get();
+
+        if (sensor.getId() == counted) {
+            logger.error("Id for this token");
+            return;
+        }
 
         Date capturedate = new Date(captureTimestamp * 1000);
+
+        logger.info("Message received from " + capturedate);
         
         long diff = Math.abs(date.getTime() - capturedate.getTime());
         long diffDays = (diff / (1000 * 60 * 60 * 24));
@@ -93,7 +110,7 @@ public class SensorManagement implements ISensorManagement {
          * System.out.println("token "+token); System.out.println("contents "+contents);
          */
 
-        SensoredBulkData bulkData = new SensoredBulkData(sensor, token, capturedate, date, contents);
+        SensoredBulkData bulkData = new SensoredBulkData(sensor, counted, capturedate, date, contents);
         bulkDataRepo.save(bulkData);
         sensor.setNotified(false);
         sensorRepo.save(sensor);
@@ -155,7 +172,7 @@ public class SensorManagement implements ISensorManagement {
     public Sensor addSensorForUser(Sensor sensor, long userId) {
         // TODO: qui ajoute les metasensor : les admins
         var sensorSaved = sensorRepo.save(sensor);
-        var access = new Access(sensor.getDisplayName(), AccessPrivilege.MAINTENANCE);
+        var access = new Access(sensor.getName(), AccessPrivilege.MAINTENANCE);
         var accessId = accessRepository.save(access).getId();
         accessSensorRepository.save(new AccessSensor(accessId, sensorSaved.getId()));
         accessUserRepository.save(new AccessUser(accessId, userId, AccessUserPrivilege.MANAGE));

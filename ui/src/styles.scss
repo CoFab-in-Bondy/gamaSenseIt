@@ -170,9 +170,7 @@ button.mat-focus-indicator.mat-mini-fab.mat-button-base.mat-accent {
   height: 50vh !important;
 }
 
-.text-ellipsis {
-  display: block;
-  width: 100%;
+.ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -26,9 +26,8 @@ public class MqttListener implements MessageHandler {
 
     @Override
     public void handleMessage(Message<?> arg0) throws MessagingException {
-        Date now = Calendar.getInstance().getTime();
         logger.info("Message MQTT reçu : " + arg0.getPayload());
-        sensorManagment.saveData(arg0.getPayload().toString(), now);
+        sensorManagment.saveData(arg0.getPayload().toString());
     }
 
 }

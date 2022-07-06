@@ -11,6 +11,7 @@ import {
 import { HumanService } from "@services/human.service";
 import {AuthService} from "@services/auth.service";
 import {DateAgoPipe} from "@pipes/date-ago.pipe";
+import {StateService} from "@services/state.service";
 
 @Component({
   selector: "app-sensors-list",
@@ -19,7 +20,7 @@ import {DateAgoPipe} from "@pipes/date-ago.pipe";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SensorsListComponent implements OnInit, OnDestroy {
-  sensors: [Sensor, SensorMetadataExtended][] = [];
+  sensors: [Sensor<false>, SensorMetadata<true>][] = [];
   links: (number | string)[][] = [];
   GREEN_ICON: Icon = {"url": "assets/lights/light-green.svg", width: 20, height: 20};
   ORANGE_ICON: Icon = {"url": "assets/lights/light-orange.svg", width: 20, height: 20};
@@ -28,19 +29,19 @@ export class SensorsListComponent implements OnInit, OnDestroy {
   @Input() height: number = 600;
   @Output() select = new EventEmitter<number>();
 
-  linker: DTLinker<[Sensor, SensorMetadataExtended]> = ([s, smd]) => ["/sensors", s.id];
-  formater: DTFormatter<[Sensor, SensorMetadataExtended]> = ([s, smd]) => [
+  linker: DTLinker<[Sensor<false>, SensorMetadata<true>]> = ([s, smd]) => ["/sensors", s.id];
+  formater: DTFormatter<[Sensor<false>, SensorMetadata<true>]> = ([s, smd]) => [
       this.state(s),
       s.name,
-      s.displayName,
       `${smd.name} (${smd.version})`,
       this.humanService.coordsToHumain(s.latitude, s.longitude),
-      this.ago.transform(s.lastCaptureDate) + ` (${s.lastCaptureDate})`,
+      this.ago.transform(s.lastCaptureDate) // + ` (${s.lastCaptureDate})`,
   ];
 
   constructor(
     private sensorMetadataService: SensorMetadataService,
     public humanService: HumanService,
+    public stateService: StateService,
     private ref: ChangeDetectorRef,
     private ago: DateAgoPipe,
     public auth: AuthService
@@ -77,7 +78,7 @@ export class SensorsListComponent implements OnInit, OnDestroy {
 
   }
 
-  state(s: Sensor): Icon {
+  state(s: Sensor<false>): Icon {
     let now = new Date().getTime();
     if (s.lastCaptureDate == null)
       return this.RED_ICON;
@@ -100,9 +101,5 @@ export class SensorsListComponent implements OnInit, OnDestroy {
       case this.RED_ICON: return 2;
       default: return 3;
     }
-  }
-
-  getSize() {
-    return this.auth.isUser()? window.innerHeight - 200: window.innerHeight - 140;
   }
 }

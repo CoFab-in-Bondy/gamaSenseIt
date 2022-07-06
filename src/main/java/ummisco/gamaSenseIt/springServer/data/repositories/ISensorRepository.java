@@ -6,10 +6,12 @@ import org.springframework.stereotype.Repository;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface ISensorRepository extends CrudRepository<Sensor, Long> {
+    Optional<Sensor> findByToken(String token);
     List<Sensor> findByName(String name);
 
     @Query(nativeQuery = true, value = """

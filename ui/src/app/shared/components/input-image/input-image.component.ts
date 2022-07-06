@@ -37,6 +37,9 @@ export class InputImageComponent implements AfterContentInit {
   extendSrc?: (string|number)[]
 
   @Input()
+  href?: string;
+
+  @Input()
   name: string = "image";
 
   @Input()

@@ -27,6 +27,7 @@
       "@interceptors/*": ["src/app/shared/interceptors/*"],
       "@models/*": ["src/app/shared/models/*"],
       "@pipes/*": ["src/app/shared/pipes/*"],
+      "@directives/*": ["src/app/shared/directives/*"],
       "@services/*": ["src/app/shared/services/*"]
     }
   },

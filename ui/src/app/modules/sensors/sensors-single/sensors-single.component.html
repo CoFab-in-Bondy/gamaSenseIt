@@ -2,41 +2,30 @@
   <div class="sensor box w-100">
     <form
       [formGroup]="sensorForm"
-      [ngClass]="{'mb-3': !create}"
       class="m-0"
       enctype="multipart/form-data"
     >
-      <div class="row p-0">
-        <div class="col-12 col-lg-7 col-xl-8">
+      <div class="row p-0 g-0 g-sm-3">
+        <div class="col-12 " [ngClass]="{'col-lg-6 col-xxl-9': !create, 'col-md-8 col-xxl-10': create}">
           <div>
             <div class="row m-0">
-              <div class="p-0 col-12 col-xl-4 order-0 order-xl-1">
-                <input
-                  class="text-start text-xl-end"
-                  formControlName="name"
-                  id="name"
-                  maxlength="128"
-                  minlength="2"
-                  placeholder="NAME_SENSOR"
-                  type="text"
-
-                />
+              <div class="p-0 col-12 order-0">
                 <span id="id"> {{ getIdFormat() }} </span>
-
               </div>
               <input
-                class="p-0 col-12 col-xl-8 order-1 order-xl-0"
-                formControlName="displayName"
-                id="displayName"
+                class="p-0 col-12 order-1"
+                formControlName="name"
+                id="name"
                 maxlength="255"
                 minlength="5"
-                placeholder="Designation"
+                placeholder="Nom"
                 type="text"
+
               />
               <input
                 class="p-0 col-12 order-2"
-                formControlName="subDisplayName"
-                id="subDisplayName"
+                formControlName="indications"
+                id="indications"
                 maxlength="255"
                 minlength="5"
                 placeholder="Indications"
@@ -98,11 +87,9 @@
             <p *ngIf="!create" class="input-align">{{ metadata?.description }}</p>
           </div>
         </div>
-        <div class="col-12 col-lg-5 col-xl-4 row pb-3 m-0">
-          <div class="col-4 p-0 pe-2">
+          <div class="col-xxl-1 mb-3" [ngClass]="{' col-4 col-lg-2': !create, 'col-6 col-md-2': create}">
             <img
               #sensorMetadataImg
-              (window:resize)="0"
               [src]="
                 metadata?.id
                 ? ('/public/sensors/metadata/' + metadata?.id + '/image'
@@ -114,20 +101,21 @@
               style="width: 100%"
             />
           </div>
-          <div class="col-4 p-0 px-1">
+          <div class="col-xxl-1" [ngClass]="{'col-4 col-lg-2 ': !create, 'col-6 col-md-2': create}">
             <app-input-image
               (image)="photo = $event"
               [default]="defaultUrl"
               [editable]="edition"
+              [href]="''"
               [extendSrc]="id? ['/sensors', id, 'photo']: undefined"
               name="photo"
             ></app-input-image>
           </div>
-          <div class="col-4 p-0 ps-2">
+          <div [ngClass]="{'col-4 col-lg-2 col-xxl-1': !create, 'col-12 px-0 px-sm-2 mt-0 pb-3': create}">
             <div
               [ngStyle]="{
-                'width.px': getSize(),
-                'height.px': getSize()
+                'width': create? '100%': getSize() + 'px',
+                'height': create?  '500px': getSize() + 'px'
               }"
               id="map-container">
               <div
@@ -135,7 +123,6 @@
                 style="width: 100%; height: 100%"
               ></div>
             </div>
-          </div>
         </div>
       </div>
       <div class="row">
@@ -164,54 +151,14 @@
       </div>
       <div class="row">
         <div class="col">
-          <app-dialog *ngIf="!create" class="download col mb-3 me-3">
-            <app-button fa="fas fa-cloud-download" trigger width="130">
-              Télécharger
-            </app-button>
+          <app-sensors-download class="download mb-3 me-3" *ngIf="!create" [id]="id" [editable]="editable">
 
-            <div body>
-              <div class="buttons">
-                <app-button
-                  #close
-                  (click)="onDownloadCSV()"
-                  url="assets/buttons/csv.svg"
-                  width="80"
-                >
-                  CSV
-                </app-button>
-                <app-button
-                  #close
-                  (click)="onDownloadJSON()"
-                  url="assets/buttons/json.svg"
-                  width="80"
-                >
-                  JSON
-                </app-button>
-                <app-button
-                  #close
-                  (click)="onDownloadXSLX()"
-                  url="assets/buttons/xlsx.svg"
-                  width="80"
-                >
-                  XSLX
-                </app-button>
-                <app-button
-                  #close
-                  (click)="onDownloadBinary()"
-                  *ngIf="editable"
-                  url="assets/buttons/binary.svg"
-                  width="120"
-                >
-                  Programme
-                </app-button>
-              </div>
-            </div>
-          </app-dialog>
+          </app-sensors-download>
 
           <app-button
             *ngIf="id"
             [link]="['/sensors', id, 'graph']"
-            class="edit col mb-3 me-3"
+            class="edit mb-3 me-3"
             fa="fas fa-chart-bar"
             width="130"
           >
@@ -231,7 +178,8 @@
           <app-button
             (click)="onSave(); $event.stopPropagation()"
             *ngIf="edition && auth.isUser()"
-            class="edit col mb-3 me-3"
+            class="edit col"
+            [ngClass]="{'mb-3': id, 'me-3': id}"
             fa="fas fa-cloud-upload"
             width="130"
           >
@@ -241,6 +189,7 @@
           <app-button
             (click)="onQRCode(); $event.stopPropagation()"
             *ngIf="id"
+            class="edit col mb-3"
             fa="fas fa-qrcode"
             width="130"
           >
@@ -258,7 +207,7 @@
           (navigate)="onChange($event)"
           [data]="parameters?.values || []"
           [empty]="'Aucune donnée à afficher'"
-          [formater]="formater"
+          [formatter]="formatter"
           [headers]="metadata?.parameters?.headers || []"
           [height]="525"
           [length]="parameters?.total"

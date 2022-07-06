@@ -14,14 +14,13 @@ public class Record extends ArrayList<Object> implements Comparable<Record> {
         add(0, date);
         this.date = date;
     }
-
-    public @NotNull
-    Object[] asObjects() {
+    @NotNull
+    public  Object[] asObjects() {
         return toArray(Object[]::new);
     }
-
-    public @NotNull
-    String[] asStrings() {
+    
+    @NotNull
+    public  String[] asStrings() {
         var strings = new String[size()];
         strings[0] = DateUtils.formatCompact(date);
         for (int i = 1; i < size(); i ++)

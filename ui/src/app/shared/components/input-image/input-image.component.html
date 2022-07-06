@@ -58,8 +58,8 @@
       </div>
 
       <div *ngIf="!editable && imageSrc">
-        <div class="d-flex justify-content-center my-3" *ngIf="extendSrc">
-          <app-button width="140" fa="fas fa-expand-arrows-alt" [routerLink]="extendSrc" blank="true">
+        <div class="d-flex justify-content-center my-3" *ngIf="extendSrc || href">
+          <app-button width="140" fa="fas fa-expand-arrows-alt" [routerLink]="extendSrc" [href]="href" blank="true">
             Agrandir
           </app-button>
         </div>

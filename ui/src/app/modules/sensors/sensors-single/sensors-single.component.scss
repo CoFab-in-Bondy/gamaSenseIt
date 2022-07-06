@@ -4,28 +4,23 @@
 .sensor {
   position: relative;
 
-  #displayName, #subDisplayName, #name {
+  #indications, #name {
     display: inline;
     border-radius: 2px;
   }
 
-  #name {
-    width: 140px;
-    padding: 7px 0;
-  }
-
-  #name, #id {
+  #id {
     font-size: 15px;
     color: $light-gray;
     text-align: right;
     display: inline;
   }
 
-  #displayName {
+  #name {
     font-size: 28px;
   }
 
-  #subDisplayName {
+  #indications {
     font-size: 18px;
   }
 
@@ -151,7 +146,6 @@
 .error {
   background-color: $light-red;
   text-decoration: $red;
-  width: max-content;
   display: block;
   float: left;
   width: 250px;
@@ -162,22 +156,5 @@
 
   @include respond-below(md) {
     width: 100%;
-  }
-}
-
-
-.buttons app-button {
-  @include respond-below(md) {
-    display: block;
-    margin: auto;
-    &:not(:last-child) {
-      margin-bottom: 1.5em;
-    }
-  }
-
-  @include respond-above(sm) {
-    &:not(:last-child) {
-      margin-right: 1.5em;
-    }
   }
 }

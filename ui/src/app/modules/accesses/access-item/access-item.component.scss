@@ -2,8 +2,40 @@
 
 .item {
   border-radius: 5px;
-  background-color: $white-light-gray;
   padding: 5px;
+  position: relative;
+  border: 1px $white-light-gray solid;
+}
+
+.sensor, .user{
+  height: 30px;
+  width: 30px;
+  border-radius: 5px;
+  background-color: $white-light-gray;
+}
+
+.user {
+  padding: 8px 8px;
+
+}
+
+.sensor {
+  padding: 8px 6px;
+}
+
+.name {
+  display: block;
+  white-space: nowrap;
+  float: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 80px;
+}
+
+.cmd {
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }
 
 .del, .add, .eye, .manage {
@@ -14,8 +46,7 @@
   overflow: hidden;
   transition: transform 0.2s, background-color 0.1s, filter 0.1s;
   &:hover {
-    -webkit-filter: brightness(1.05);
-    filter: brightness(1.05);
+    filter: brightness(1.1);
   }
 }
 
@@ -31,38 +62,6 @@
 
 .add {
   background-color: $light-green;
-}
-
-
-.name {
-  width: 100px;
-  display: inline-block;
-  white-space: nowrap;
-
-}
-
-i.sensor, i.user{
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-  border-radius: 5px;
-  background-color: $light-gray;
-}
-
-i.user {
-  padding: 8px 8px;
-
-}
-
-i.sensor {
-  padding: 8px 6px;
-
-}
-
-div.cmd {
-  float: right;
-  background-color: $white-light-gray;
-  z-index: -1;
 }
 
 .eye {

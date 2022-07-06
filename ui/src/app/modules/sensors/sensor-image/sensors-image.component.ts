@@ -35,12 +35,10 @@ export class SensorsImageComponent implements OnInit {
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
       let id = +params["id"];
-      this.sensorService
-        .getImage(id)
-        .subscribe((url) => {
-              this.urlData = url;
-              this.onResize();
-        }, console.error);
+      this.sensorService.getImage(id).subscribe(url=>{
+        this.urlData = url;
+        this.onResize();
+      }, console.error);
     });
   }
 

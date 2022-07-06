@@ -11,16 +11,16 @@ export class SensorService {
 
   constructor(private http: HttpClient, private secure: SecurePipe) {}
 
-  create(sensor: FormData): Observable<SensorExtended> {
-    return this.http.post<SensorExtended>("/private/sensors", sensor);
+  create(sensor: FormData): Observable<Sensor<true>> {
+    return this.http.post<Sensor<true>>("/private/sensors", sensor);
   }
 
-  update(id: number, sensor: FormData): Observable<SensorExtended> {
-    return this.http.post<SensorExtended>(`/private/sensors/${id}`, sensor);
+  update(id: number, sensor: FormData): Observable<Sensor<true>> {
+    return this.http.post<Sensor<true>>(`/private/sensors/${id}`, sensor);
   }
 
-  getById(id: number): Observable<SensorExtended> {
-    return this.http.get<SensorExtended>(`/public/sensors/${id}?`);
+  getById(id: number): Observable<Sensor<true>> {
+    return this.http.get<Sensor<true>>(`/public/sensors/${id}?`);
   }
 
   getParametersOfId(id: number, options: ParamsOption = {}): Observable<RecordParameters> {

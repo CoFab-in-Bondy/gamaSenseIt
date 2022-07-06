@@ -3,12 +3,8 @@ package ummisco.gamaSenseIt.springServer.data.services.access;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
-import ummisco.gamaSenseIt.springServer.data.controller.IParametersRequest;
 import ummisco.gamaSenseIt.springServer.data.model.user.*;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 
@@ -152,8 +148,7 @@ public class AccessManagement {
             var sensors = access.getSensors();
             if (in) {
                 for (var s: sensors)
-                    if ((s.getName().toLowerCase().contains(query)
-                            || s.getDisplayName().toLowerCase().contains(query)))
+                    if (s.getName().toLowerCase().contains(query))
                         res.put(s, true);
             }
             if (out) {
@@ -167,8 +162,7 @@ public class AccessManagement {
                         continue;
 
                     for (var s: otherAccess.getSensors()) {
-                        if ((s.getName().toLowerCase().contains(query)
-                                || s.getDisplayName().toLowerCase().contains(query))
+                        if ((s.getName().toLowerCase().contains(query))
                                 && !sensors.contains(s)
                                 && !addedSensorsId.contains(s.getId())) {
                             addedSensorsId.add(s.getId());

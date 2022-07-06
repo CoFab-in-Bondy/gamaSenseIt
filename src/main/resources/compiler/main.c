@@ -3,6 +3,6 @@
 
 
 int main(void) {
-    printf("Demo de %s\n", NAME);
+    printf("TOKEN=%s\n", TOKEN);
     return 0;
 }

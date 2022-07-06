@@ -111,13 +111,13 @@ public class BaseActivation {
         List<Sensor> all = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             var s = new Sensor();
-            s.setName(prefixName + i);
-            s.setDisplayName(prefixDisplayName + i);
+            s.setToken(prefixName + i);
+            s.setName(prefixDisplayName + i);
             s.setLongitude(locationX + (Math.random() - 0.5) * 2 * spray);
             s.setLatitude(locationY + (Math.random() - 0.5) * 2 * spray);
             s.setSensorMetadata(smd);
             s.setHiddenMessage(hiddenMessage);
-            s.setSubDisplayName("NoneDisplay");
+            s.setIndications("NoneDisplay");
             s.setDescription("Quisque vulputate, arcu laoreet ornare cursus, lectus dui laoreet magna, et fringilla nulla elit a velit. Praesent auctor scelerisque nunc non eleifend. Phasellus vel turpis nulla. Cras tristique semper mauris nec elementum. Quisque congue maximus metus, vel mattis dolor elementum imperdiet. Quisque tempor, mi ac imperdiet lobortis, tortor lorem bibendum lectus, in venenatis massa lectus non ante. Aenean ultrices arcu nulla, sit amet mollis ante facilisis in. Nunc tristique tempus erat sed fermentum. Suspendisse potenti. Aliquam posuere feugiat eros id dapibus. Mauris dictum est tellus.\n" +
                     "\n" +
                     "Sed malesuada augue sit amet mattis efficitur. Pellentesque dapibus, sem at consectetur luctus, augue mi facilisis neque, eu ultrices dolor libero ut ex. Suspendisse laoreet risus nibh, ut vestibulum justo feugiat at. Pellentesque sodales nunc at porta eleifend. Sed quis diam a massa tempor mollis vitae id ipsum. Donec tempor porttitor erat, nec ullamcorper nisl venenatis a. Vivamus maximus ut nibh in placerat. Etiam consequat justo in magna vestibulum, quis pulvinar ipsum tincidunt. Praesent et dictum velit. Quisque et enim mauris. Nam tincidunt ultrices dignissim. Nulla et tristique ex, ac aliquam eros. Aliquam gravida orci porta, iaculis sem ac, commodo augue. Mauris sed arcu ut sapien placerat imperdiet. Maecenas vel facilisis ligula.\n" +

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.security.SecureRandom;
 import java.text.Normalizer;
+import java.util.Base64;
 
 @Service
 public class SecurityUtils {
@@ -52,5 +54,13 @@ public class SecurityUtils {
         }
         url = url.replaceAll("//+$", "");
         return url;
+    }
+
+    public String randomToken() {
+        var data = new byte[48];
+        var random = new SecureRandom();
+        random.nextBytes(data);
+        var b64 = Base64.getEncoder().encode(data);
+        return new String(b64);
     }
 }

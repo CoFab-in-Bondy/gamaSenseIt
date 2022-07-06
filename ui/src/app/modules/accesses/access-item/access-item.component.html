@@ -1,15 +1,24 @@
-<div class="item">
+<div class="item name shadow-sm">
   <i class="type fas" [ngClass]="{
     'fa-hdd': isSensor(m),
     'sensor': isSensor(m),
     'fa-user': isUser(m),
     'user': isUser(m)
   }"></i>
-  <span class="name">{{
+  <span style="font-weight: bold; padding-left: 5px; padding-right: 5px">
+  {{
     isSensor(m)
-    ? m.sensor.id + ' ' + m.sensor.name + ' ' +  m.sensor.displayName
-    : m.user.firstname + ' ' + m.user.lastname
-  }}</span>
+      ? '#' + m.sensor.id
+      : m.user.firstname
+    }}
+  </span>
+  <span>
+  {{
+    isSensor(m)
+      ? m.sensor.name
+      : m.user.lastname
+    }}
+  </span>
   <div class="cmd">
     <button class="fa-crown manage me-2" (click)="onPromote()" *ngIf="isIn(m) && isUser(m)" [ngClass]="{
       'fas': isManager(m),

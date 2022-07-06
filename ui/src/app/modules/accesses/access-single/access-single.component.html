@@ -16,7 +16,7 @@
   <div class="my-2">
     <app-tributton (swap)="onInOrOut($event)" left="fas fa-plus" right="fas fa-times"></app-tributton>
   </div>
-  <div class="wrapper" [ngStyle]="{'height.px': getSize()}">
+  <div class="wrapper" appResponsive [gap]="-120">
     <div class="line mx-2" *ngFor="let match of search">
       <app-access-item [accessId]="id" [m]="match"></app-access-item>
     </div>

@@ -49,7 +49,7 @@ export class DataTableComponent<D> {
   @Input() sizes: (number|[number, number])[] = [];
   @Input() headers: string[] = [];
   @Input() data: D[] = [];
-  @Input() formater: (d: D) => DTValue[];
+  @Input() formatter: (d: D) => DTValue[];
   @Input() linker: (d: D) => (string|number|null)[];
   @Input() empty = "Aucune données";
 

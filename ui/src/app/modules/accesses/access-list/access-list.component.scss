@@ -1,11 +1,15 @@
 @import "all";
 
-.updateAt, .sizeSensors, .sizeUsers {
+.sizeSensors, .sizeUsers {
   display: inline-block;
   text-align: right;
-  margin-left: 10px;
+  margin-right: 10px;
   padding-left: 10px;
   padding-right: 10px;
+  background-color: lightcyan;
+  border-radius: 15px;
+  white-space: nowrap;
+  width: 60px;
 }
 
 .wrapper{
@@ -17,60 +21,37 @@
 .icon {
   height: 30px;
   width: 30px;
-  padding: 6px;
+  padding: 10px 6px 6px;
   border-radius: 5px;
-  background-color: $light-gray;
+  background-color: $white-light-gray;
 }
 
-.side i {
-  margin-left: 5px;
+.name {
+  display: block;
+  white-space: nowrap;
+  float: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .updateAt {
   width: 160px;
 }
 
-.name {
-  width: 10px;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.sizeSensors, .sizeUsers {
-  background-color: lightcyan;
-  border-radius: 15px;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.sizeSensors {
-  width: 60px;
-}
-.sizeUsers {
-  width: 60px;
-}
 
 .line {
-  margin: 10px 8px;
-  height: 40px;
   cursor: pointer;
-  padding: 5px;
-  background-color: $white-light-gray;
   border-radius: 5px;
+  border: 1px $white-light-gray solid;
+  transition: 0.5s ease all;
+  box-shadow:0 .125rem .25rem rgba(0,0,0,.075);
+  margin-top: 8px;
+  margin-bottom: 8px;
 
   &:hover {
-    background-color: $light-gray;
-
-    .icon {
-      background-color: gray;
-    }
-
-    .side {
-       background-color: $light-gray;
-     }
+    box-shadow: 0 .375rem 0.75rem rgba(0,0,0,.15);
+    margin-top: 4px;
+    margin-bottom: 12px;
   }
 }
 
-.side {
-  background-color: $white-light-gray;
-}

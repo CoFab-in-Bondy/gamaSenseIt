@@ -3,8 +3,7 @@ package ummisco.gamaSenseIt.springServer.data.model.sensor;
 public class SensorDTO {
     private long sensorMetadataId;
     private String name;
-    private String displayName;
-    private String subDisplayName;
+    private String indications;
     private Double longitude;
     private Double latitude;
     private String hiddenMessage;
@@ -28,20 +27,12 @@ public class SensorDTO {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getIndications() {
+        return indications;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getSubDisplayName() {
-        return subDisplayName;
-    }
-
-    public void setSubDisplayName(String subDisplayName) {
-        this.subDisplayName = subDisplayName;
+    public void setIndications(String indications) {
+        this.indications = indications;
     }
 
     public Double getLongitude() {

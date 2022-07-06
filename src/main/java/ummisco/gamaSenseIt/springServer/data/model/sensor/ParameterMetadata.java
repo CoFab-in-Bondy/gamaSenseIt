@@ -64,13 +64,6 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
     @JsonView(IView.Public.class)
     private DataFormat dataType;
 
-    // ----- data_parameter ----- //
-
-    @Column(name = "depreciated_parameter")
-    @JsonProperty("depreciatedParameter")
-    @JsonView(IView.Public.class)
-    private DataParameter depreciatedParameter;
-
     // ----- icon ----- //
 
     @Column(name = "icon")
@@ -99,7 +92,6 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
         this.name = name;
         this.unit = unit;
         this.dataType = type;
-        this.setIconFromParameter();
     }
 
     public ParameterMetadata(String name, String unit, DataFormat type, String icon) {
@@ -107,15 +99,6 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
         this.unit = unit;
         this.dataType = type;
         this.icon = icon;
-    }
-
-    private void setIconFromParameter() {
-        icon = switch (this.depreciatedParameter) {
-            case TEMPERATURE -> "fas fa-thermometer-three-quarters";
-            case PM10, PM2_5, PM1 -> "fab fa-cloudversify";
-            case HUMIDITY -> "fas fa-tint";
-            default -> "";
-        };
     }
 
     public Integer getIdx() {
@@ -175,14 +158,6 @@ public class ParameterMetadata implements Comparable<ParameterMetadata> {
 
     public void setDataType(DataFormat dataType) {
         this.dataType = dataType;
-    }
-
-    public DataParameter getDepreciatedParameter() {
-        return depreciatedParameter;
-    }
-
-    public void setDepreciatedParameter(DataParameter depreciatedParameter) {
-        this.depreciatedParameter = depreciatedParameter;
     }
 
     public String getIcon() {

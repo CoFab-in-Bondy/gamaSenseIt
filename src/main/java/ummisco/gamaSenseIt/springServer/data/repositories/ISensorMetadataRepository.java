@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface ISensorMetadataRepository extends CrudRepository<SensorMetadata, Long> {
-    List<SensorMetadata> findByNameAndVersion(String name, String version);
 }

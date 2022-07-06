@@ -4,25 +4,15 @@
     <app-data-table
     [sortable]="'NO'"
     [pagable]="'NO'"
-    [sizes]="[50, 120, 150, 120, 150, 400]"
+    [sizes]="[50, 280, 130, 200, 200]"
     [data]="sensors"
-    [headers]="['', 'Nom', 'Nom d\'affichage', 'Type', 'DMS', 'Signal']"
-    [formater]="formater"
+    [headers]="['', 'Nom', 'Type', 'DMS', 'Signal']"
+    [formatter]="formater"
     [linker]="linker"
     [empty]="'Aucun capteurs disponible'"
-    [height]="getSize()-44-2"
+    [height]="stateService.getHeight()-46"
     (select)="select.emit($event[0].id)">
     </app-data-table>
-    <div class="row m-0 mt-3" *ngIf="auth.isUser()">
-      <app-button
-        width="100"
-        [routerLink]="['/sensors', 'create']"
-        fa="fas fa-layer-plus"
-        class="p-0"
-      >
-        Ajouter
-      </app-button>
-    </div>
   </div>
 </div>
 

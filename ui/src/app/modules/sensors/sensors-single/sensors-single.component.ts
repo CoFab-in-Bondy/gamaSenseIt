@@ -19,9 +19,11 @@ import * as L from "leaflet";
 import {DEFAULT_CENTER, LEAFLET_URL, NO_IMG,} from "src/app/constantes";
 import {CLICK_MARKER} from "@models/icon.model";
 import {AuthService} from "@services/auth.service";
+import {DatePipe} from "@angular/common";
+import {StateService} from "@services/state.service";
 
 const widths = {
-  INTEGER: 150,
+  LONG: 150,
   DOUBLE: 150,
   STRING: 300,
   DATE: 180,
@@ -34,7 +36,7 @@ const widths = {
 })
 export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentChecked {
   id?: number;
-  metadata?: SensorMetadata;
+  metadata?: SensorMetadata<false>;
   editable: boolean = false;
   lnglat: Pos = DEFAULT_CENTER;
 
@@ -42,7 +44,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   parameters?: RecordParameters;
   records: (string | number)[][];
   edition: boolean = false;
-  sensorsMetadata: SensorMetadataExtended[] = [];
+  sensorsMetadata: SensorMetadata<true>[] = [];
   sensorForm: FormGroup;
   defaultUrl: SafeUrl = NO_IMG;
   photo?: File;
@@ -67,13 +69,20 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     private route: ActivatedRoute,
     private router: Router,
     public auth: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private datepipe: DatePipe,
+    public stateService: StateService
   ) {
   }
 
-  formater: DTFormatter<(string | number)[]> = (d) => d;
+  formatter: DTFormatter<(string | number)[]> = (d) => {
+    return [
+      <string>this.datepipe.transform(new Date(d[0]), 'yyyy-MM-dd HH:mm:ss'),
+      ...d.slice(1)
+    ];
+  };
 
-  resolveSensorMetadataExtended(smd: SensorMetadata): SensorMetadataExtended | undefined {
+  resolveSensorMetadataExtended(smd: SensorMetadata<false>): SensorMetadata<true> | undefined {
     return this.sensorsMetadata.find(it => it.id == smd.id);
   }
 
@@ -85,6 +94,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
       this.messageError = '';
       if (params["id"] == undefined || params["id"] == "create") {
         this.id = undefined;
+        this.metadata = undefined;
         if (this.auth.isUser()) this.dynamicInitCreate();
         else this.router.navigate(["/login"]);
       } else {
@@ -115,8 +125,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     this.sensorForm.patchValue({
       sensorMetadata: undefined,
       name: "",
-      displayName: "",
-      subDisplayName: "",
+      indications: "",
       longitude: 0.0,
       latitude: 0.0,
       hiddenMessage: "Capteur indisponible",
@@ -136,9 +145,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     this.edition = false;
     this.create = false;
     this.sensorForm.disable();
-    this.sensorService
-      .getImage(this.id)
-      .subscribe((url) => (this.defaultUrl = url), console.error);
+    this.sensorService.getImage(this.id).subscribe(url=>{
+       this.defaultUrl = url;
+    }, console.error)
 
     this.sensorService.getById(this.id).subscribe(
       (sensor) => {
@@ -150,8 +159,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
         this.sensorForm.patchValue({
           sensorMetadata: metadata,
           name: sensor.name,
-          displayName: sensor.displayName,
-          subDisplayName: sensor.subDisplayName,
+          indications: sensor.indications,
           longitude: sensor.longitude.toFixed(5),
           latitude: sensor.latitude.toFixed(5),
           hiddenMessage: sensor.hiddenMessage,
@@ -188,8 +196,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     this.sensorForm = this.formBuilder.group({
       sensorMetadata: ["", Validators.required],
       name: ["", Validators.required],
-      displayName: ["", Validators.required],
-      subDisplayName: ["", Validators.required],
+      indications: ["", Validators.required],
       hiddenMessage: ["", Validators.required],
       isHidden: [""],
       latitude: ["", Validators.required],
@@ -310,7 +317,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
   /**
    * Change sensor metadata.
    */
-  onChangeMetadata(event: SensorMetadata) {
+  onChangeMetadata(event: SensorMetadata<false>) {
     this.metadata = event;
   }
 
@@ -330,8 +337,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
           JSON.stringify({
             sensorMetadataId: form["sensorMetadata"]?.id,
             name: form["name"],
-            displayName: form["displayName"],
-            subDisplayName: form["subDisplayName"],
+            indications: form["indications"],
             longitude: +form["longitude"],
             latitude: +form["latitude"],
             hiddenMessage: "Aucun",
@@ -351,8 +357,6 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
         sensor => {
           console.log(sensor);
           /* TODO patch map already exist */
-          this.map.off();
-          this.map.remove();
           this.router.navigate(["/sensors", sensor.id]);
         },
         err => {
@@ -385,46 +389,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     }
   }
 
-  /**
-   * Run download for csv file.
-   */
-  onDownloadCSV(): void {
-    this.onDownload("csv");
-  }
 
-  /**
-   * Run download for csv file.
-   */
-  onDownloadXSLX(): void {
-    this.onDownload("xlsx");
-  }
-
-  /**
-   * Run download for json file.
-   */
-  onDownloadJSON(): void {
-    this.onDownload("json");
-  }
-
-  onDownload(type: QueryParams["type"]): void {
-    if (this.id == undefined) return;
-    this.sensorService
-      .download({sensorId: this.id, type: type})
-      .subscribe(() => {
-      }, console.error);
-
-  }
-
-  /**
-   * Run download for binary file.
-   */
-  onDownloadBinary(): void {
-    if (this.id == undefined) return;
-    this.sensorService
-      .binary(this.id)
-      .subscribe(() => {
-      }, console.error);
-  }
 
   /**
    * function used by datatable for format.
@@ -457,7 +422,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
    * @param index index in meta parameter.
    * @returns type as string.
    */
-  type(index: number): "INTEGER" | "DOUBLE" | "STRING" | "DATE" | undefined {
+  type(index: number): "LONG" | "DOUBLE" | "STRING" | "DATE" | undefined {
     return this.metadata?.parameters?.formats[index];
   }
 

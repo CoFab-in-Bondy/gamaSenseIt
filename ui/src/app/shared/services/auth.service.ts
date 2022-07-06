@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import {StorageModel} from "@models/storage.model";
 
 @Injectable()
 export class AuthService {
@@ -45,6 +46,7 @@ export class AuthService {
 
   logout(): Observable<any> {
     this.delRole();
+    StorageModel.clearAllStorages();
     return this.http.post<any>('/auth/logout', '');
   }
 

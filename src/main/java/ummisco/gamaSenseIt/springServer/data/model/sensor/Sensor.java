@@ -35,23 +35,21 @@ public class Sensor extends Interactible {
     private Long id;
 
 
+    // ----- token ----- //
+    @JsonIgnore
+    private String token;
+
     // ----- name ----- //
     @Column(name = "name")
     @JsonProperty("name")
     @JsonView(IView.Public.class)
     private String name;
 
-    // ----- displayName ----- //
-    @Column(name = "display_name")
-    @JsonProperty("displayName")
+    // ----- indications ----- //
+    @Column(name = "indications")
+    @JsonProperty("indications")
     @JsonView(IView.Public.class)
-    private String displayName;
-
-    // ----- subDisplayName ----- //
-    @Column(name = "sub_display_name")
-    @JsonProperty("subDisplayName")
-    @JsonView(IView.Public.class)
-    private String subDisplayName;
+    private String indications;
 
     // ----- longitude ----- //
     @Column(name = "longitude")
@@ -222,8 +220,7 @@ public class Sensor extends Interactible {
         return new Node() {{
             put("id", getId());
             put("name", getName());
-            put("displayName", getDisplayName());
-            put("subDisplayName", getSubDisplayName());
+            put("indications", getIndications());
             put("latitude", getLatitude());
             put("longitude", getLongitude());
             put("metadata", getSensorMetadata().toNode());
@@ -248,28 +245,28 @@ public class Sensor extends Interactible {
         this.id = id;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String name) {
+        this.token = name;
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String displayName) {
+        this.name = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getIndications() {
+        return indications;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getSubDisplayName() {
-        return subDisplayName;
-    }
-
-    public void setSubDisplayName(String subDisplayName) {
-        this.subDisplayName = subDisplayName;
+    public void setIndications(String subDisplayName) {
+        this.indications = subDisplayName;
     }
 
     public double getLongitude() {
@@ -338,7 +335,7 @@ public class Sensor extends Interactible {
     public String toString() {
         return String.format(
                 "Sensor(%d, %s, (%.5f, %.5f), %s, %s)",
-                id, name, longitude, latitude, notified? "N": "M", lastCaptureDate
+                id, token, longitude, latitude, notified? "N": "M", lastCaptureDate
         );
     }
 

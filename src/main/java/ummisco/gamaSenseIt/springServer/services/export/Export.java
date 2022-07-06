@@ -45,7 +45,7 @@ public abstract class Export {
         return securityUtils.sanitizeFilename(
                 (parameterMetadata == null ? "parameters" : parameterMetadata.getName())
                 + "-"
-                + sensor.getName()
+                + sensor.getToken()
                 + (start != null || end != null
                 ? "-"
                 + (start == null ? "X" : DateUtils.formatCompact(start))

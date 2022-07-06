@@ -13,12 +13,8 @@ const MarkerIcon: any = L.Icon.extend({
   },
 });
 
-export const GREEN_MARKER = new MarkerIcon({
-  iconUrl: "assets/markers/marker-green.png",
-});
-export const ORANGE_MARKER = new MarkerIcon({
-  iconUrl: "assets/markers/marker-orange.png",
-});
+export const GREEN_MARKER = new MarkerIcon({iconUrl: "assets/markers/marker-green.png",});
+export const ORANGE_MARKER = new MarkerIcon({iconUrl: "assets/markers/marker-orange.png",});
 export const RED_MARKER = new MarkerIcon({ iconUrl: "assets/markers/marker-red.png" });
 export const GRAY_MARKER = new MarkerIcon({ iconUrl: "assets/markers/marker-gray.png" });
 export const CLICK_MARKER = new MarkerIcon({ iconUrl: "assets/markers/marker-icon.png" });

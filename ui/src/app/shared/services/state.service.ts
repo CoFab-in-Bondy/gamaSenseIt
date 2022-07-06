@@ -1,5 +1,7 @@
 import {Injectable} from "@angular/core";
-import {MD} from "../../constantes";
+import {DEFAULT_CENTER, MD} from "../../constantes";
+import {LatLng, LatLngLiteral} from "leaflet";
+import {StorageModel} from "@models/storage.model";
 
 
 function isLargeScreen() {
@@ -9,12 +11,11 @@ function isLargeScreen() {
 @Injectable()
 export class StateService {
   private openned: boolean = isLargeScreen();
+  readonly lastViewLngLat = new StorageModel('lastViewLngLat', {center: DEFAULT_CENTER, zoom: 3});
 
   isLargeScreen() {
     return isLargeScreen();
   }
-
-  constructor() { }
 
   widthNav() {
     return this.isOpen()? 170: 49;
@@ -33,6 +34,16 @@ export class StateService {
       this.openned = !this.openned;
       this.refreshMargin();
     }
+  }
+
+  getHeight() {
+    const h = window.innerHeight;
+    const w = window.innerWidth;
+    if (w < 400)
+      return h - 80
+    if (w  < 576)
+      return h - 100
+    return h - 145
   }
 
 }

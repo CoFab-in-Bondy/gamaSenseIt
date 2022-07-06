@@ -15,6 +15,8 @@ import { SensorMetadataService } from "@services/sensorMetadata.service";
 import {SecurePipe} from "@pipes/secure.pipe";
 import {DomSanitizer} from "@angular/platform-browser";
 import {AuthService} from "@services/auth.service";
+import {StateService} from "@services/state.service";
+import {DateAgoPipe} from "@pipes/date-ago.pipe";
 
 @Component({
   selector: "app-sensors-map",
@@ -24,8 +26,8 @@ import {AuthService} from "@services/auth.service";
 export class SensorsMapComponent implements OnInit, OnDestroy {
   private map: L.Map;
   private routeSubscription: Subscription;
-  private sensorsMetadata: SensorMetadataExtended[] = [];
-  private markers = new Map<number, [Sensor, any]>();
+  private sensorsMetadata: SensorMetadata<true>[] = [];
+  private markers = new Map<number, [Sensor<false>, any]>();
   private markerActive: any;
 
   private sensorActive: any;
@@ -37,18 +39,23 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
   constructor(
     private sensorMetadataService: SensorMetadataService,
     public humanService: HumanService,
+    public stateService: StateService,
     private router: Router,
     private route: ActivatedRoute,
     private secure: SecurePipe,
     private sanitizer: DomSanitizer,
+    private ago: DateAgoPipe,
     public auth: AuthService
   ) {}
 
   private initMap(): void {
     this.map = L.map("map-view-map", {
-      center: DEFAULT_CENTER,
-      zoom: 2,
+      ...this.stateService.lastViewLngLat.get()
     });
+
+    this.map.on("dragend", ()=>{
+      this.stateService.lastViewLngLat.set({center: this.map.getCenter(), zoom: this.map.getZoom()});
+    })
 
     const tiles = L.tileLayer(
       LEAFLET_URL,
@@ -101,7 +108,7 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addSensorToMap(s: Sensor, smd: SensorMetadataExtended, clicked: boolean = false) {
+  private addSensorToMap(s: Sensor<false>, smd: SensorMetadata<true>, clicked: boolean = false) {
 
     // generate an icon
     const marker = L.marker(
@@ -136,15 +143,28 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
       this.secure.transform(`/public/sensors/${s.id}/image`).subscribe(
         img=>{
           const src = this.sanitizer.sanitize(SecurityContext.URL, img);
-          marker.bindPopup('<p>' + s.displayName + '</p>' +
-            '<img src="' + src +'" alt="Image du capteur" width="100px" height="100px">');
+          const html = `
+            <div style="width: 350px; padding-bottom: 10px">
+              <img src="${src}" alt="Image du capteur" width="100px" height="100px" style="display:inline-block;">
+              <div style="display:inline-block; width: 200px; margin: 10px">
+                <p style="font-weight: bold" class="ellipsis"> ${s.name}</p>
+                <p style="font-style: italic" class="ellipsis"> ${this.ago.transform(s.lastCaptureDate)} </p>
+              </div>
+            </div>
+          `;
+          console.log(html);
+          marker.bindPopup(html);
           marker.openPopup();
         },
         err=>{}
       );
     });
+
     marker.on('mouseout', function (e) {
-      setTimeout(()=>marker.closePopup(), 100);
+      setTimeout(()=>marker.closePopup(), 0);
+    });
+    marker.on('dragend', function (e) {
+      setTimeout(()=>marker.closePopup(), 0);
     });
   }
 
@@ -152,7 +172,7 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
     this.routeSubscription?.unsubscribe();
   }
 
-  state(s: Sensor): any {
+  state(s: Sensor<false>): any {
     if (s.lastCaptureDate == null) {
       return RED_MARKER;
     } else {
@@ -166,9 +186,5 @@ export class SensorsMapComponent implements OnInit, OnDestroy {
         return RED_MARKER;
       }
     }
-  }
-
-  getSize() {
-    return this.auth.isUser()? window.innerHeight - 200: window.innerHeight - 140;
   }
 }

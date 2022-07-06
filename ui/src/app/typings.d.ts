@@ -25,16 +25,6 @@ declare interface ErrorValue {
   status: number|null;
 }
 
-declare interface Parameter {
-  id: number,
-  value: number | string,
-  captureDate: number,
-  sensorId: number,
-  // sensor: Sensor,
-  parameterMetadataId: number,
-  // parameterMetadata: ParameterMetadata
-}
-
 declare interface Data {
   name: string,
   value: (number|string)[]
@@ -51,36 +41,21 @@ declare interface ParameterMetadata {
   depreciatedParameter: string,
 }
 
-declare interface PartialSensor {
-  sensorMetadataId: number,
-  name: string,
-  displayName: string,
-  subDisplayName: string,
-  longitude: number,
-  latitude: number,
-  hiddenMessage?: string,
-  isHidden?: boolean
-}
 
-
-declare interface AuthMe {
-  roles: string[],
-  name: string,
-  auth: boolean
-}
-
-
-declare interface Sensor {
+declare interface Sensor<Extended extends boolean> {
   id: number,
   name: string,
-  displayName: string,
-  subDisplayName: string,
+  indications: string,
   longitude: number,
   latitude: number,
   isHidden: boolean,
   hiddenMessage: string,
   sensorMetadataId: number,
-  lastCaptureDate: string|null
+  lastCaptureDate: string|null,
+  description: string,
+  maintenanceDescription: string,
+  manageable: boolean,
+  metadata: Extended extends true ? SensorMetadata<false> : undefined
 }
 
 declare interface User {
@@ -91,14 +66,14 @@ declare interface User {
 
 type Merge<A, B> = { [K in keyof (A | B)]: K extends keyof B ? B[K] : A[K] };
 type AccessMatchUser = {user: User, present: boolean, privilege: "MANAGE"|"VIEW"};
-type AccessMatchSensor = {sensor: Sensor, present: boolean };
+type AccessMatchSensor = {sensor: Sensor<false>, present: boolean };
 
 type AccessMatch = AccessMatchUser | AccessMatchSensor;
 type AccessSearch = AccessMatch[];
 type RGB = `rgb(${number},${''|' '}${number},${''|' '}${number})`;
 
 
-declare interface SensorMetadata {
+declare interface SensorMetadata<Extended extends boolean> {
   id: number,
   version: string,
   name: string,
@@ -108,9 +83,10 @@ declare interface SensorMetadata {
     headers : string[]
     ids : number[],
     units : string[],
-    formats : ("INTEGER"|"DOUBLE"|"STRING"|"DATE")[],
+    formats : ("LONG"|"DOUBLE"|"STRING"|"DATE")[],
     width : number
   }
+  sensors: Extended extends true? Sensor<false>[]: undefined;
 }
 
 type BypassSecurityOptions = {
@@ -119,22 +95,6 @@ type BypassSecurityOptions = {
 	script: SafeScript,
 	url: SafeUrl,
 	resourceUrl: SafeResourceUrl
-}
-
-declare interface SensorExtended {
-  id: number,
-  name: string,
-  displayName: string,
-  subDisplayName: string,
-  latitude: number,
-  longitude: number,
-  lastCaptureDate: number,
-  hiddenMessage: string,
-  isHidden: boolean,
-  description: string,
-  manageable: boolean;
-  maintenanceDescription?: string
-  metadata: SensorMetadata
 }
 
 declare interface Icon {
@@ -151,16 +111,6 @@ declare type DTLinker<D> = (d: D) => (string|number|null)[];
 declare interface RecordParameters {
   values : (string|number)[][],
   total : number,
-}
-
-declare interface SensorMetadataExtended extends SensorMetadata {
-  sensors: Sensor[],
-  parametersMetadata: ParameterMetadata[]
-}
-
-
-declare interface Params {
-  [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
 }
 
 declare interface QueryParams {

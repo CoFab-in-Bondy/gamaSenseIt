@@ -38,13 +38,7 @@ const routes: Routes = [
     path: "sensors/list",
     pathMatch: "full",
     component: SensorsListComponent
-  },
-  {
-    path: "sensors/create",
-    pathMatch: "full",
-    component: SensorsSingleComponent,
-    canActivate: [UserGuard]
-  }, {
+  },{
     path: "sensors/:id/graph",
     pathMatch: "full",
     component: SensorsGraphComponent

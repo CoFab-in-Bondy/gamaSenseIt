@@ -1,17 +1,35 @@
 # Development
+If you are a developer, you can use the indications below to have a maximum of information when you develop.
 
-you can also launch separately the back and the front end:
- 
- - Run the backend without the embed front with allowed cors
+## Setup
+
+First clone the repository
+
 ```sh
-./mvnw spring-boot:run -P=-front -Dspring-boot.run.arguments=--gamaSenseIt.cors-url=http://localhost:4200
+git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
+cd gamaSenseIt
 ```
 
-- Run the development server for angular 
+Download the javadoc from maven
 ```sh
-cd ui
-npm install
-ng serve --port 4200
+./mvnw dependency:sources
+```
+
+Install npm package 
+```sh
+(cd ui && npm install)
+```
+
+## Run
+
+First you can run angular with development server for instant refresh change.
+```sh
+(cd ui && npm start)
+```
+
+After you can run the server without embed angular for fastest build.
+```sh
+./mvnw spring-boot:run -T 2C -Dspring-boot.run.arguments=--gamaSenseIt.cors-url=http://localhost:4200 -P -front
 ```
 
 If you want rebuild the maven wrapper use the command bellow.

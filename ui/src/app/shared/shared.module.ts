@@ -45,13 +45,14 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/mater
 import {MatInputModule} from "@angular/material/input";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {DndDirective} from "./directives/dnd.directive";
+import {DndDirective} from "@directives/dnd.directive";
 import { MatOptionModule } from "@angular/material/core";
 import {MatSelectModule} from '@angular/material/select';
 import { NgxEchartsModule } from 'ngx-echarts';
 import {ServerGuard} from "@guards/server.guard";
 import {ServerService} from "@services/server.service";
 import { FakeComponent } from '@components/fake/fake.component';
+import { ResponsiveDirective } from '@directives/responsive.directive';
 
 
 @NgModule({
@@ -108,7 +109,9 @@ import { FakeComponent } from '@components/fake/fake.component';
     MatOptionModule,
     MatInputModule,
     MatSelectModule,
-    NgxEchartsModule
+    NgxEchartsModule,
+    ResponsiveDirective,
+    DndDirective
   ],
   declarations: [
     HeaderComponent,
@@ -126,7 +129,8 @@ import { FakeComponent } from '@components/fake/fake.component';
     SafePipe,
     UnsafePipe,
     DndDirective,
-    FakeComponent
+    ResponsiveDirective,
+    FakeComponent,
   ],
   providers: [],
 })

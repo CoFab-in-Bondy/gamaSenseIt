@@ -1,6 +1,5 @@
 package ummisco.gamaSenseIt.springServer.data.services.access;
 
-import org.springframework.util.comparator.Comparators;
 import ummisco.gamaSenseIt.springServer.data.classes.Node;
 import ummisco.gamaSenseIt.springServer.data.model.preference.Interactible;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
@@ -50,7 +49,10 @@ public class AccessSearch {
     }
 
     private static String getName(Node userOrSensor) {
-        return computeNode(userOrSensor, u->u.getFirstname()+ ' ' +u.getLastname(), Sensor::getName);
+        return computeNode(userOrSensor, u-> {
+            if ("public".equals(u.getMail())) return "public";
+            return u.getFirstname() + ' ' + u.getLastname();
+        }, Sensor::getName);
     }
 
     public List<Node> toNodeForUser(User currentUser) {

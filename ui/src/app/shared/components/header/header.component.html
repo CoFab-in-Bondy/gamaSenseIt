@@ -17,6 +17,10 @@
         <mat-icon mat-list-icon>list</mat-icon>
         <h4 mat-line *ngIf="state.isOpen()">Liste</h4>
       </mat-list-item>
+      <mat-list-item *ngIf="auth.isAuth()" routerLinkActive="active" [routerLink]="['/sensors/create']">
+        <mat-icon mat-list-icon>library_add</mat-icon>
+        <h4 mat-line *ngIf="state.isOpen()">Nouv. Capteur</h4>
+      </mat-list-item>
       <mat-list-item *ngIf="auth.isAuth()" routerLinkActive="active" [routerLink]="['/accesses']">
         <mat-icon mat-list-icon>group</mat-icon>
         <h4 mat-line *ngIf="state.isOpen()">Groupes</h4>

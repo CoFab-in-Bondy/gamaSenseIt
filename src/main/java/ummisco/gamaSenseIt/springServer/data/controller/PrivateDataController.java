@@ -14,9 +14,12 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.Access;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
+import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(Routes.PRIVATE)
@@ -83,16 +86,17 @@ public class PrivateDataController extends DataController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Meta-Capteur Invalide");
         }
 
-        // check if name is not already taken
-        var selectedSensors = sensorsRepo.findByName(sensorDTO.getName());
-        if (!selectedSensors.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Nom déjà utilisé");
-        }
+        Optional<Sensor> sensorsOwnToken;
+        String token;
+        do {
+            token = securityUtils.randomToken();
+            sensorsOwnToken = sensorsRepo.findByToken(token);
+        } while (sensorsOwnToken.isPresent());
 
         sensor.setSensorMetadata(sensorMetadata.get());
+        sensor.setToken(token);
         sensor.setName(sensorDTO.getName());
-        sensor.setDisplayName(sensorDTO.getDisplayName());
-        sensor.setSubDisplayName(sensorDTO.getSubDisplayName());
+        sensor.setIndications(sensorDTO.getIndications());
         sensor.setLongitude(sensorDTO.getLongitude());
         sensor.setLatitude(sensorDTO.getLatitude());
         sensor.setHidden(sensorDTO.isHidden());
@@ -135,14 +139,14 @@ public class PrivateDataController extends DataController {
             if (!selectedSensors.isEmpty() && (selectedSensors.size() == 1 && selectedSensors.get(0).getId() != sensorId)) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Nom déjà utilisé");
             }
-            sensor.setName(sensorDTO.getName());
+            sensor.setToken(sensorDTO.getName());
         }
 
-        if (sensorDTO.getDisplayName() != null)
-            sensor.setDisplayName(sensorDTO.getDisplayName());
+        if (sensorDTO.getName() != null)
+            sensor.setName(sensorDTO.getName());
 
         if (sensorDTO.getLatitude() != null)
-            sensor.setSubDisplayName(sensorDTO.getSubDisplayName());
+            sensor.setIndications(sensorDTO.getIndications());
         if (sensorDTO.getLongitude() != null)
             sensor.setLongitude(sensorDTO.getLongitude());
 

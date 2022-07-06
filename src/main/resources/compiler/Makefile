@@ -15,7 +15,7 @@ CFLAGS = \
 	-Wdouble-promotion    \
 	-Wfloat-equal         \
 	-Wextra
-NAME = UNKOWN
+TOKEN = UNKOWN
 OUT = sensor.exe
 
 .PHONY: build
@@ -23,4 +23,4 @@ build: main.o
 	$(CC) $(CFLAGS) -o "$(OUT)" main.o
 
 main.o : main.c
-	$(CC) $(CFLAGS) -c main.c -DNAME='"$(NAME)"'
+	$(CC) $(CFLAGS) -c main.c -DTOKEN='"$(TOKEN)"'

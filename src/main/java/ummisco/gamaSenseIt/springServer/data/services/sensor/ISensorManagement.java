@@ -16,13 +16,13 @@ public interface ISensorManagement {
     String DEFAULT_SENSOR_TYPE_NAME = "UNKNOWN_SENSOR_TYPE";
     String DEFAULT_SENSOR_VERSION = "UNKNOWN_SENSOR_VERSION";
 
+    void saveData(String message);
+
     Sensor updateSensorInformation(Sensor s);
 
     ParameterMetadata addParameterToSensorMetadata(SensorMetadata smd, ParameterMetadata pmd);
 
     SensorMetadata addSensorMetadata(SensorMetadata smd);
-
-    void saveData(String message, Date date);
 
     Sensor addSensorForUser(Sensor sensor, long userId);
 

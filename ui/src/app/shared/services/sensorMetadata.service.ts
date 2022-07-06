@@ -7,7 +7,7 @@ export class SensorMetadataService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<SensorMetadataExtended[]> {
-    return this.http.get<SensorMetadataExtended[]>(`/public/sensors/metadata`);
+  getAll(): Observable<SensorMetadata<true>[]> {
+    return this.http.get<SensorMetadata<true>[]>(`/public/sensors/metadata`);
   }
 }

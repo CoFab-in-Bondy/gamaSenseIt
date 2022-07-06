@@ -1,5 +1,5 @@
 int main(void);
 
-#ifndef NAME
-    #define NAME "UNKOWN"
+#ifndef TOKEN
+    #define TOKEN "UNKOWN"
 #endif

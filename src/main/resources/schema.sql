@@ -51,15 +51,15 @@ CREATE TABLE parameter_metadata (
 
 CREATE TABLE sensor (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    display_name VARCHAR(255),
+    name VARCHAR(255),
     hidden_message VARCHAR(255),
     is_hidden BIT,
     last_capture_date DATETIME,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
-    name VARCHAR(255) UNIQUE,
+    token VARCHAR(255) UNIQUE,
     sensor_metadata_id BIGINT NOT NULL,
-    sub_display_name VARCHAR(255),
+    indications VARCHAR(255),
     notified BIT NOT NULL DEFAULT TRUE,
     photo MEDIUMBLOB,
     description TEXT,

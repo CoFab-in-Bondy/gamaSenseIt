@@ -7,8 +7,8 @@ Application for sensors, you can create group or sensor and receive data from mq
 3. [Setup MySQL](docs/MySQL.md)
 4. [Configure Mosquito](docs/Mosquito.md)
 5. [Generate SSL Certificates for localhost](docs/SSL.md)
+7. [Setup for development](docs/Dev.md)
 6. [Install and run GamaSenseIt](#install-and-run-gamasenseit)
-7. [Setup for development](#setup-for-development)
 8. [Api](docs/Api.md)
 9. [License](LICENSE)
 
@@ -45,22 +45,6 @@ java -jar target/gamasenseit-0.0.1-SNAPSHOT.jar
 go on http://localhost:8080/index.html
 
 And that's all !
-
-## Setup for development
-
-Build lightweight jar
-```sh
-git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
-cd gamaSenseIt
-./mvnw dependency:sources
-(cd ui && npm install .)
-```
-
-Run the ng serve and fast build
-```sh
-(cd ui && npm start)
-./mvnw spring-boot:run -T 2C -Dspring-boot.run.arguments=--gamaSenseIt.cors-url=http://localhost:4200 -P -front
-```
 
 ## License
 

@@ -1,5 +1,8 @@
 # Certificate SSL
-## Web
+
+You can create a self-signed ssl certificate, it will not be recognized by browsers but will allow you to test.
+
+## Generate self-signed certificate
 ```
 keytool -genkeypair -alias gamasenseit -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore gamasenseit.p12 -validity 3650
 cp gamasenseit src/main/resources/gamasenseit.p12
@@ -21,12 +24,16 @@ keytool -list -v -keystore gamasenseit.p12
 Change properties.
 ```
 server.ssl.key-store=classpath:gamasenseit.p12
-server.ssl.key-store-password=password
-server.ssl.key-store-type=pkcs12
-server.ssl.key-alias=springboot
+server.ssl.key-store-password=<your-super-secret-password>
+server.ssl.key-store-type=PKCS12
+server.ssl.key-alias=gamasenseit
+server.ssl.enabled=true
 ```
 
 ## Mysql
+
+Some instance of mysql must use ssl for communicate.
+
 ```sh
 sudo -i
 mkdir -p /etc/mysql/newcerts  

@@ -43,7 +43,7 @@ Then try to connect to the database as gamasenseit.
 mysql[.exe] -u gamasenseit -pgamasenseit -h localhost -P 3306 -D gamasenseit [--skip-ssl]
 ```
 
-Set `spring.jpa.hibernate.ddl-auto=create` in `application.properties` for create tables.
+Set `spring.sql.init.mode=always` in `application.properties` for create tables.
 ```
 server.ssl.key-store=classpath:gamasenseit.p12
 server.ssl.key-store-password=password
