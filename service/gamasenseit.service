@@ -1,9 +1,0 @@
-[Unit]
-Description=GamaSenseIt Service
-
-[Service]
-Type=forking
-ExecStart=/usr/bin/GamaSenseIt/gamaSenseIt.sh
-
-[Install]
-WantedBy=multi-user.target

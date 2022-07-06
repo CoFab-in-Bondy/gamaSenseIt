@@ -1,0 +1,43 @@
+<app-dialog>
+  <app-button fa="fas fa-cloud-download" trigger width="130">
+    Télécharger
+  </app-button>
+
+  <div body>
+    <div class="buttons">
+      <app-button
+        #close
+        (click)="onDownloadCSV()"
+        url="assets/buttons/csv.svg"
+        width="80"
+      >
+        CSV
+      </app-button>
+      <app-button
+        #close
+        (click)="onDownloadJSON()"
+        url="assets/buttons/json.svg"
+        width="80"
+      >
+        JSON
+      </app-button>
+      <app-button
+        #close
+        (click)="onDownloadXSLX()"
+        url="assets/buttons/xlsx.svg"
+        width="80"
+      >
+        XSLX
+      </app-button>
+      <app-button
+        #close
+        (click)="onDownloadBinary()"
+        *ngIf="editable"
+        url="assets/buttons/binary.svg"
+        width="120"
+      >
+        Programme
+      </app-button>
+    </div>
+  </div>
+</app-dialog>
