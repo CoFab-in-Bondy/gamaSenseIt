@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Consumer;
 
-public enum DataFormat implements Serializer {
+public enum DataFormat implements DataFormatSerializer {
 
     LONG(){
         @Override

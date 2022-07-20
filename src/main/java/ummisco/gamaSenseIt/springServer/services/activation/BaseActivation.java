@@ -3,16 +3,13 @@ package ummisco.gamaSenseIt.springServer.services.activation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import ummisco.gamaSenseIt.springServer.data.model.sensor.DataFormat;
-import ummisco.gamaSenseIt.springServer.data.model.sensor.ParameterMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.Sensor;
 import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorMetadata;
 import ummisco.gamaSenseIt.springServer.data.model.user.User;
-import ummisco.gamaSenseIt.springServer.data.model.user.UserPrivilege;
 import ummisco.gamaSenseIt.springServer.data.repositories.ISensorRepository;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.SensorManagement;
 import ummisco.gamaSenseIt.springServer.data.services.user.UserManagment;
-import ummisco.gamaSenseIt.springServer.services.compiler.Compiler;
+import ummisco.gamaSenseIt.springServer.data.services.compiler.Compiler;
 import ummisco.gamaSenseIt.springServer.services.mail.PowerNotifier;
 
 import javax.annotation.PostConstruct;
@@ -45,6 +42,7 @@ public class BaseActivation {
 
     @PostConstruct
     public void activate() throws IOException, MessagingException {
+        /*
         var sensor = sensorRepo.findAll().iterator().next();
         compiler.getBinary(sensor);
 
@@ -105,6 +103,7 @@ public class BaseActivation {
                 47.325,
                 0.05
         );
+        */
     }
 
     public List<Sensor> generateDataForSensorMetadata(SensorMetadata smd, User user, long count, String prefixName, String prefixDisplayName, String hiddenMessage, double locationX, double locationY, double spray) {

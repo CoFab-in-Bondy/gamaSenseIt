@@ -12,6 +12,7 @@ public interface IParametersRequest {
             USER = "user",
             IN = "in",
             OUT = "out",
+            TOKEN = "token",
             HIDDEN_MESSAGE = "hiddenMessage",
             IS_HIDDEN = "isHidden",
             DATA_FORMAT = "dataFormat",

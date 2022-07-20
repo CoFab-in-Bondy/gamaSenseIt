@@ -30,6 +30,7 @@ public class Routes {
             SENSORS = "/sensors",
             EXTENDED = "/extended",
             BINARY = "/binary",
+            TOKEN = "/token",
             DOWNLOAD = "/download",
             LOGIN = "/login",
             REFRESH = "/refresh",

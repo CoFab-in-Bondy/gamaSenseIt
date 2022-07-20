@@ -66,26 +66,6 @@ export class SensorService {
     );
   }
 
-  binary(id: number): Observable<void> {
-    return new Observable(
-      o=>{
-        this.http.get(`/private/sensors/${id}/binary`, { responseType: 'blob' }).subscribe(
-          data=>{
-            const blob = new Blob([data], { type: 'application/octet-stream' });
-            const url = window.URL.createObjectURL(blob);
-            saveAs(url, "sensor.exe");
-            o.next();
-            o.complete();
-          },
-          err=>{
-            o.error(err);
-            o.complete();
-          }
-        )
-      }
-    );
-  }
-
   getImage(id: number): Observable<SafeUrl> {
     return this.secure.transform(`/public/sensors/${id}/image`);
   }

@@ -17,11 +17,13 @@ import ummisco.gamaSenseIt.springServer.data.model.user.User;
 import ummisco.gamaSenseIt.springServer.data.repositories.*;
 import ummisco.gamaSenseIt.springServer.data.services.access.AccessManagement;
 import ummisco.gamaSenseIt.springServer.data.services.access.InteractionManagement;
+import ummisco.gamaSenseIt.springServer.data.services.compiler.DownloadManagement;
 import ummisco.gamaSenseIt.springServer.data.services.geo.GeoService;
 import ummisco.gamaSenseIt.springServer.data.services.record.RecordManager;
 import ummisco.gamaSenseIt.springServer.data.services.sensor.ISensorManagement;
 import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
-import ummisco.gamaSenseIt.springServer.services.compiler.Compiler;
+import ummisco.gamaSenseIt.springServer.data.services.compiler.Compiler;
+import ummisco.gamaSenseIt.springServer.security.jwt.JwtUtils;
 import ummisco.gamaSenseIt.springServer.services.export.ExportResolver;
 
 import java.util.ArrayList;
@@ -35,9 +37,11 @@ public abstract class DataController {
     @Autowired
     protected SecurityUtils securityUtils;
 
+    @Autowired
+    protected DownloadManagement downloadManagement;
 
     @Autowired
-    protected Compiler compiler;
+    protected JwtUtils jwtUtils;
 
     @Autowired
     protected IAccessRepository accessRepo;
@@ -59,6 +63,9 @@ public abstract class DataController {
 
     @Autowired
     protected IParameterMetadataRepository parametersMetadataRepo;
+
+    @Autowired
+    protected IDownloadTokenRepository downloadTokenRepository;
 
     @Autowired
     protected RecordManager recordManager;

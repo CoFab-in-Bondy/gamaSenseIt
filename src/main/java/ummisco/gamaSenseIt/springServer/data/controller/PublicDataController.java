@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,7 @@ import ummisco.gamaSenseIt.springServer.services.export.ExportJSON;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -255,5 +253,10 @@ public class PublicDataController extends DataController {
         sensorRead(sensorId);
         var parameters = parametersRepo.findBySensorIdEqualsAndParameterMetadataIdEqualsOrderByCaptureDate(sensorId, parameterMetadataId);
         return parameters.stream().map(Data::new).toList();
+    }
+
+    @RequestMapping(value = Routes.BINARY + Routes.DOWNLOAD, method = RequestMethod.GET)
+    public ResponseEntity<ByteArrayResource> getBinaryDownload(@RequestParam(name = IParametersRequest.TOKEN, defaultValue = "") String token) {
+        return downloadManagement.consumeDownloadToken(token);
     }
 }

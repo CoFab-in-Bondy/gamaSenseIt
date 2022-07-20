@@ -17,6 +17,6 @@ export class ServerService {
   }
 
   getServerUrl(): string {
-    return PROXY && PROXY[0] != undefined ? PROXY[0].target : "/";
+    return PROXY && PROXY[0] != undefined ? PROXY[0].target : window.location.origin;
   }
 }

@@ -6,6 +6,7 @@ import { SensorsSingleComponent } from "./sensors-single/sensors-single.componen
 import { SensorsImageComponent } from './sensor-image/sensors-image.component';
 import { SensorsGraphComponent } from './sensors-graph/sensors-graph.component';
 import { SensorsDownloadComponent } from './sensors-download/sensors-download.component';
+import { SensorsBinaryComponent } from './sensors-binary/sensors-binary.component';
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { SensorsDownloadComponent } from './sensors-download/sensors-download.co
     SensorsSingleComponent,
     SensorsImageComponent,
     SensorsGraphComponent,
-    SensorsDownloadComponent
+    SensorsDownloadComponent,
+    SensorsBinaryComponent
   ],
   providers: [],
 })

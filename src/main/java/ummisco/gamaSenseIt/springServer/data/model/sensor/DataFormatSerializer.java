@@ -2,7 +2,7 @@ package ummisco.gamaSenseIt.springServer.data.model.sensor;
 
 import com.sun.istack.NotNull;
 
-public interface Serializer {
+public interface DataFormatSerializer {
     @NotNull
     Object bytesToObject(byte[] bytes);
 

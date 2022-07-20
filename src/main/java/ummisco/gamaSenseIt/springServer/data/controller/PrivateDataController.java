@@ -14,11 +14,13 @@ import ummisco.gamaSenseIt.springServer.data.model.sensor.SensorDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.Access;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessDTO;
 import ummisco.gamaSenseIt.springServer.data.model.user.AccessUserPrivilege;
-import ummisco.gamaSenseIt.springServer.security.SecurityUtils;
+import ummisco.gamaSenseIt.springServer.data.services.compiler.arduino.cli.ArduinoException;
+import ummisco.gamaSenseIt.springServer.data.services.compiler.arduino.cli.Properties;
 
 import java.io.IOException;
-import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -267,17 +269,33 @@ public class PrivateDataController extends DataController {
         accessManagement.delAccessSensor(accessId, sensorId);
     }
 
-    @RequestMapping(value = Routes.SENSORS + Routes.ID + Routes.BINARY, method = RequestMethod.GET)
-    public ResponseEntity<Resource> getBinarySensor(@PathVariable(name = "id") long sensorId) {
+    @RequestMapping(value = Routes.BINARY + Routes.TOKEN + Routes.ID, method = RequestMethod.POST)
+    public Map<String, String> getBinaryToken(@PathVariable(name = "id") long sensorId, @RequestBody Map<String, Object> propMap) {
         var sensor = sensorManage(sensorId);
+        var user = user();
+        var prop = new Properties();
+        var tempHumSensor = propMap.get("TEMP_HUM_SENSOR");
+        var pmSensor = propMap.get("PM_SENSOR");
+
+        if ("DHT_SENSOR".equals(tempHumSensor))
+            prop.define("DHT_SENSOR", true);
+        else if ("SHT_SENSOR".equals(tempHumSensor))
+            prop.define("SHT_SENSOR", true);
+        else
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid TEMP_HUM_SENSOR");
+
+        if ("NextPM_SENSPR".equals(pmSensor))
+            prop.define("NextPM_SENSPR", true);
+        else if ("PMS7000_SENSOR".equals(pmSensor))
+            prop.define("PMS7000_SENSOR", true);
+        else
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid PM_SENSOR");
+
         try {
-            var binary = compiler.getBinary(sensor);
-            var header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "octet-stream"));
-            header.setContentDisposition(ContentDisposition.attachment().filename("sensor.exe").build());
-            return new ResponseEntity<>(new ByteArrayResource(binary), header, HttpStatus.OK);
-        } catch (IOException err) {
-            err.printStackTrace();
+            String token = downloadManagement.generateDownloadToken(user, sensor, prop);
+            return Collections.singletonMap("token", token);
+        } catch (ArduinoException | IOException e) {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't compile Sensor");
         }
     }

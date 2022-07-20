@@ -1,0 +1,16 @@
+@import "all";
+
+.buttons app-button {
+  @include respond-below(md) {
+    display: block;
+    &:not(:last-child) {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  @include respond-above(md) {
+    &:not(:last-child) {
+      margin-right: 1.5em;
+    }
+  }
+}

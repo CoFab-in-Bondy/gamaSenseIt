@@ -1,8 +1,11 @@
 <a [attr.href]="href" [routerLink]="link"  [attr.target]="blank == 'true' || blank == true? '_blank': undefined"  rel="noopener noreferrer">
-<button [type]="type" [disabled]="disabled" class="degraded">
+<button [type]="type" [disabled]="disabled" class="degraded" #buttonElement>
 
-  <i [ngStyle]="{'background-image': url? 'url(' + url + ')': undefined }" [ngClass]="fa"></i>
-  <span [ngStyle]="{'width.px': +width || 80}" class="">
+  <i [ngStyle]="{
+    'background-image': url? 'url(' + url + ')': undefined,
+    'line-height.px': (buttonElement.offsetHeight - 20)
+  }" [ngClass]="fa" ></i>
+  <span [ngStyle]="{'width.px': +width || 80}" >
     <ng-content></ng-content>
   </span>
 

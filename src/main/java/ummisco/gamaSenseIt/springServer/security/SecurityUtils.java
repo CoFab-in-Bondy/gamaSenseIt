@@ -30,10 +30,16 @@ public class SecurityUtils {
         // remove all others chars
         name = name.replaceAll("[^a-zA-Z0-9-_]", "_");
 
+        // reduce underscore
+        name = name.replaceAll("_+", "_");
+        name = name.replaceAll("^_", "");
+        name = name.replaceAll("_$", "");
+
         // strip too long filename
         var len = name.length();
         if (len > 200)
             name = name.substring(0, 99) + "__" + name.substring(len - 99);
+
 
         if (len == 0)
             name = "_";
@@ -49,7 +55,7 @@ public class SecurityUtils {
             if (corsUrl != null && !corsUrl.isEmpty()) {
                 url = corsUrl;
             } else {
-                url = "https://localhost:"+portServer;
+                url = "https://localhost:" + portServer;
             }
         }
         url = url.replaceAll("//+$", "");

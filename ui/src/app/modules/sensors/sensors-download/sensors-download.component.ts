@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {SensorService} from "@services/sensor.service";
 
 @Component({
@@ -6,16 +6,11 @@ import {SensorService} from "@services/sensor.service";
   templateUrl: './sensors-download.component.html',
   styleUrls: ['./sensors-download.component.scss']
 })
-export class SensorsDownloadComponent implements OnInit {
+export class SensorsDownloadComponent {
 
-  @Input() id: number | undefined;
-  @Input() editable: boolean;
+  @Input() id: number;
 
   constructor(private sensorService: SensorService) { }
-
-  ngOnInit(): void {
-
-  }
 
   /**
    * Run download for csv file.
@@ -39,23 +34,11 @@ export class SensorsDownloadComponent implements OnInit {
   }
 
   onDownload(type: QueryParams["type"]): void {
-    if (this.id == undefined) return;
     this.sensorService
       .download({sensorId: this.id, type: type})
       .subscribe(() => {
       }, console.error);
 
-  }
-
-  /**
-   * Run download for binary file.
-   */
-  onDownloadBinary(): void {
-    if (this.id == undefined) return;
-    this.sensorService
-      .binary(this.id)
-      .subscribe(() => {
-      }, console.error);
   }
 
 }

@@ -389,8 +389,6 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     }
   }
 
-
-
   /**
    * function used by datatable for format.
    * @param index index of row

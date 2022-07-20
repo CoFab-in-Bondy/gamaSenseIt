@@ -151,9 +151,13 @@
       </div>
       <div class="row">
         <div class="col">
-          <app-sensors-download class="download mb-3 me-3" *ngIf="!create" [id]="id" [editable]="editable">
+          <app-sensors-download class="download mb-3 me-3" *ngIf="id" [id]="id">
 
           </app-sensors-download>
+
+          <app-sensors-binary class="binary mb-3 me-3" *ngIf="id && editable" [id]="id">
+
+          </app-sensors-binary>
 
           <app-button
             *ngIf="id"
@@ -189,7 +193,7 @@
           <app-button
             (click)="onQRCode(); $event.stopPropagation()"
             *ngIf="id"
-            class="edit col mb-3"
+            class="edit col mb-3 me-3"
             fa="fas fa-qrcode"
             width="130"
           >

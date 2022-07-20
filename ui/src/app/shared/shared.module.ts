@@ -53,6 +53,9 @@ import {ServerGuard} from "@guards/server.guard";
 import {ServerService} from "@services/server.service";
 import { FakeComponent } from '@components/fake/fake.component';
 import { ResponsiveDirective } from '@directives/responsive.directive';
+import {BinaryService} from "@services/binary.service";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -102,6 +105,8 @@ import { ResponsiveDirective } from '@directives/responsive.directive';
     FontAwesomeModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
     MatSlideToggleModule,
     MatIconModule,
     MatButtonModule,
@@ -140,6 +145,7 @@ export class SharedModule {
       ngModule: SharedModule,
       providers: [
         // shared providers
+        BinaryService,
         SensorMetadataService,
         SensorService,
         AccessService,

@@ -1,0 +1,66 @@
+@import "all";
+
+@include respond-below(xl) {
+  #binary app-button {
+
+
+    display: block;
+    &:not(:first-child) {
+      margin-top: 0.5em;
+
+    }
+  }
+
+
+  #binary .simple span, #binary .double span {
+    font-size: 10px !important;
+    font-weight: bold;
+  }
+  #binary .double span {
+      line-height: 12px;
+  }
+}
+
+@include respond-above(xl) {
+  #binary app-button {
+    &:not(:first-child) {
+      margin-left: 1.5em;
+    }
+  }
+}
+
+#binary .radio-group {
+  display: flex;
+  flex-direction: row;
+  margin: 8px 0;
+  align-items: flex-start;
+  width: 49%;
+}
+
+
+#binary #states {
+  text-align: center;
+  margin-bottom: 10px;
+  height: 30px;
+}
+
+#download-state {
+  padding-top: 10px;
+  color: $red-orange;
+}
+
+#error-state {
+  color: $red;
+}
+
+#done-state {
+  color: $green;
+}
+
+#wait-state {
+  color: $green;
+}
+
+#error-state mat-icon, #done-state mat-icon, #wait-state mat-icon {
+  transform: scale(0.95) translate(0px, 7px);
+}
