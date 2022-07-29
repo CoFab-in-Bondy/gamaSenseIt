@@ -1,0 +1,21 @@
+.doc { /* modify the selector according to your needs */
+    -fx-border-style: solid solid none solid;
+    -fx-border-width: 1;
+    -fx-border-color: black;
+}
+
+.text-area, .text-field, .scroll-pane {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-area, .text-field:focused {
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+    linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+}
+
+.button:focused {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
+}

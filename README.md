@@ -46,6 +46,16 @@ go on http://localhost:8080/index.html
 
 And that's all !
 
+## Deploy
+
+```sh
+mv .env .env.exemple
+vim .env
+mv server/src/main/resources/application.properties.exemple server/src/main/resources/application.properties
+vim server/src/main/resources/application.properties
+docker-compose up --build
+```
+
 ## License
 
 GamaSenseIt is licensed under the terms of the GNU License (see the file LICENSE).

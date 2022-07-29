@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./data:/var/lib/mysql"
+    env_file:
+      - ".env"
+
+  server:
+    image: "openjdk:17-oraclelinux8"
+    container_name: spring
+    restart: always
+    build:
+      context: "."
+      dockerfile: "./server/Dockerfile"
+    depends_on:
+      - db
+    ports:
+      - "80:8080"
+      - "443:8443"

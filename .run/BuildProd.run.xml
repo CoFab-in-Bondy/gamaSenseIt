@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BuildProd" type="MavenRunConfiguration" factoryName="Maven" activateToolWindowBeforeRun="false">
+  <configuration default="false" name="ServerBuildProd" type="MavenRunConfiguration" factoryName="Maven" activateToolWindowBeforeRun="false">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -11,9 +11,14 @@
           <option name="goals">
             <list>
               <option value="clean" />
+              <option value="install" />
               <option value="package" />
               <option value="-T" />
-              <option value="2C" />
+              <option value="4C" />
+              <option value="-pl" />
+              <option value="arduino" />
+              <option value="-pl" />
+              <option value="server" />
             </list>
           </option>
           <option name="pomFileName" />

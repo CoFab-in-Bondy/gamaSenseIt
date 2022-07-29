@@ -1,0 +1,35 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AppBuildProd" type="MavenRunConfiguration" factoryName="Maven" activateToolWindowBeforeRun="false">
+    <MavenSettings>
+      <option name="myGeneralSettings" />
+      <option name="myRunnerSettings" />
+      <option name="myRunnerParameters">
+        <MavenRunnerParameters>
+          <option name="profiles">
+            <set />
+          </option>
+          <option name="goals">
+            <list>
+              <option value="clean" />
+              <option value="install" />
+              <option value="package" />
+              <option value="-T" />
+              <option value="4C" />
+              <option value="-pl" />
+              <option value="arduino" />
+              <option value="-pl" />
+              <option value="app" />
+            </list>
+          </option>
+          <option name="pomFileName" />
+          <option name="profilesMap">
+            <map />
+          </option>
+          <option name="resolveToWorkspace" value="false" />
+          <option name="workingDirPath" value="$PROJECT_DIR$" />
+        </MavenRunnerParameters>
+      </option>
+    </MavenSettings>
+    <method v="2" />
+  </configuration>
+</component>
