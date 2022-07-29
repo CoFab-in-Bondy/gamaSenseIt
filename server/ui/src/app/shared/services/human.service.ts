@@ -50,26 +50,10 @@ export class HumanService {
               });
               o.complete();
             },
-            err => {
-              this.forwardToGetApproximateLocation(o);
-            });
-        } else {
-          this.forwardToGetApproximateLocation(o);
+            console.error);
         }
       }
     );
-  }
-
-  private forwardToGetApproximateLocation(o: Subscriber<Pos>) {
-    return this.http.get<Pos>("/public/geo").subscribe(
-      res => o.next(res),
-      _ => o.next({lat: DEFAULT_LAT, lng: DEFAULT_LNG}),
-      o.complete
-    );
-  }
-
-  getApproximateLocation(): Observable<Pos> {
-    return new Observable(o=>this.forwardToGetApproximateLocation(o));
   }
 
   date(date: Date): string {

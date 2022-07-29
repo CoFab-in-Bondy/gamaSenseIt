@@ -228,26 +228,6 @@ public class PublicDataController extends DataController {
         return smds;
     }
 
-    @RequestMapping(value = "geo", method = RequestMethod.GET)
-    public Object geo(
-            HttpServletRequest request
-    ) {
-        var city = geoService.geolocate(request);
-        if (city.isPresent()) {
-            var loc = city.get().getLocation();
-            return new Node() {{
-                put("lat", loc.getLatitude());
-                put("lng", loc.getLongitude());
-            }};
-        } else {
-            // can't find location, use server default
-            return new Node() {{
-                put("lat", 48.856614);
-                put("lng", 2.3522219);
-            }};
-        }
-    }
-
     @RequestMapping(value = Routes.SENSORS + Routes.SENSOR_ID + Routes.DATA + Routes.ID, method = RequestMethod.GET)
     public List<Data> getData(@PathVariable(name = "sensorId") long sensorId, @PathVariable(name = "id") long parameterMetadataId) {
         sensorRead(sensorId);
