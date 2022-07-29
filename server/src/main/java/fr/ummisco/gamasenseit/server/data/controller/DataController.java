@@ -20,7 +20,6 @@ import fr.ummisco.gamasenseit.server.data.model.sensor.Sensor;
 import fr.ummisco.gamasenseit.server.data.model.user.User;
 import fr.ummisco.gamasenseit.server.data.services.access.AccessManagement;
 import fr.ummisco.gamasenseit.server.data.services.access.InteractionManagement;
-import fr.ummisco.gamasenseit.server.data.services.geo.GeoService;
 import fr.ummisco.gamasenseit.server.data.services.record.RecordManager;
 import fr.ummisco.gamasenseit.server.data.services.sensor.ISensorManagement;
 import fr.ummisco.gamasenseit.server.services.export.ExportResolver;
@@ -71,9 +70,6 @@ public abstract class DataController {
 
     @Autowired
     protected ExportResolver export;
-
-    @Autowired
-    protected GeoService geoService;
 
     @Autowired
     protected AccessManagement accessManagement;

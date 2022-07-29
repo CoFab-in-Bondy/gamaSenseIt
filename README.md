@@ -49,7 +49,9 @@ And that's all !
 ## Deploy
 
 ```sh
-mv .env .env.exemple
+git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
+cd gamaSenseIt
+mv .env.exemple .env
 vim .env
 mv server/src/main/resources/application.properties.exemple server/src/main/resources/application.properties
 vim server/src/main/resources/application.properties
