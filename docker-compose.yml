@@ -11,6 +11,8 @@ services:
       - "./data:/var/lib/mysql"
     env_file:
       - ".env"
+    command:
+      - "--log-bin-trust-function-creators=1"
 
   server:
     image: "openjdk:17-oraclelinux8"
@@ -20,7 +22,7 @@ services:
       context: "."
       dockerfile: "./server/Dockerfile"
     depends_on:
-      - db
+      - mysql
     ports:
       - "80:8080"
       - "443:8443"

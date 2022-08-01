@@ -52,10 +52,10 @@ gamaSenseIt.refreshTokenValidity=604800000
 gamaSenseIt.download.validity=600000
 jwt.secret=
 
-# Database Connections
+# Database Connections (password length max : 32)
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://mysql:3306/gamasenseit
-spring.datasource.username=root
+spring.datasource.username=gamasenseit
 spring.datasource.password=
 spring.datasource.datasource=classpath:data.sql
 

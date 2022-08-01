@@ -46,4 +46,16 @@ hs_err_pid*
 /server/src/main/resources/application.properties
 /.env
 
+# Container data
 /data
+
+# LaTeX
+/docs/user/*.log
+/docs/user/*.acn
+/docs/user/*.aux
+/docs/user/*.glo
+/docs/user/*.out
+/docs/user/*.toc
+/docs/user/build
+texput.log
+auxil

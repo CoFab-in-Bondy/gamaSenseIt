@@ -1,0 +1,86 @@
+\documentclass{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage[french]{babel}
+\usepackage{geometry}
+
+\geometry{
+    paper=a4paper, % Paper size
+    top=2.5cm, % Top margin
+    bottom=2.5cm, % Bottom margin
+    left=2.5cm, % Left margin
+    right=2.4cm, % Right margin
+    headheight=0.75cm, % Header height
+    footskip=1.5cm, % Space from the bottom margin to the baseline of the footer
+    headsep=0.75cm, % Space from the top margin to the baseline of the header
+}
+
+\usepackage{blindtext}
+\usepackage{amsmath, amsfonts, amsthm, amssymb}
+\usepackage{braket, nicefrac}
+\usepackage{siunitx}
+\usepackage{enumitem, multicol}
+\usepackage{float}  % Use option [H] to force the placement of a figure
+\usepackage{keystroke}
+\usepackage{pgfplots}\usepgfplotslibrary{units}\pgfplotsset{compat=1.16}
+\setcounter{tocdepth}{3}
+\usepackage[none]{hyphenat}
+\usepackage[font=small,skip=0pt]{caption}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{textcomp} % For ~ char
+\usepackage{booktabs}
+\usepackage{setspace}
+
+\hypersetup{
+    pdfauthor = {UMMISCO},
+    pdftitle = {GamaSenseIt - Manuel utilisateur},
+    pdfsubject = {GamaSenseIt},
+    pdfkeywords = {Capteur, UMMISCO, IRD, GamaSenseIt, QameleO},
+    pdfstartview = {FitH},
+    colorlinks = true,
+    allcolors = darkgray,
+    breaklinks = true
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{GamaSenseIt - Manuel utilisateur}
+\chead{
+\href{https://www.ummisco.fr}{\includegraphics[height=16px]{resources/ummisco.png}}
+\href{https://www.ird.fr}{\includegraphics[height=16px]{resources/ird.png}}
+}
+\rhead{UMMISCO \textcopyright}
+\cfoot{Page~\thepage~sur~\pageref*{LastPage}}
+
+%------------------------------- Glossary --------------
+
+\usepackage[xindy, toc, nogroupskip, nopostdot, nonumberlist, style=list, acronym]{glossaries}
+
+\usepackage{glossaries-extra}
+\renewcommand*{\glstextformat}[1]{\textit{#1}} % customize link color here
+
+\makenoidxglossaries
+
+%--------------------% Storage Path for images %-----------------%
+
+\graphicspath{{graphics/}{Graphics/}{./}}
+
+\begin{document}
+
+    \input{parties/00_garde}
+
+    \clearpage
+    \begin{spacing}{1.25} % Permet de réduire l'espace
+        \tableofcontents
+    \end{spacing}
+
+    \input{parties/01_home}
+    \input{parties/02_list}
+    \input{parties/03_map}
+\end{document}
