@@ -64,7 +64,7 @@ chmod +x ./script/ssl.sh
 chmod +x ./script/docker.sh
 ./script/docker.sh
 
-scp "C:\Users\***REMOVED***\Desktop\gamasenseit-tools\data.sql" "***REMOVED***:./gamaSenseIt/server/src/main/resources"
+scp "path/to/your/data.sql" "username@host:./gamaSenseIt/server/src/main/resources"
 sudo docker-compose up -d --build
 sudo docker-compose logs -f
 ```
