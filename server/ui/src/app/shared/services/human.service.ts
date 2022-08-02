@@ -50,7 +50,10 @@ export class HumanService {
               });
               o.complete();
             },
-            console.error);
+            err=>{
+              console.error("Failed to get position");
+              console.error(err);
+            });
         }
       }
     );

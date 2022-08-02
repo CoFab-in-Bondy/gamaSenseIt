@@ -1,7 +1,9 @@
 # GamaSenseIt
+
 Application for sensors, you can create group or sensor and receive data from mqtt.
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Install JDK 17](docs/dev/Java.md)
 3. [Setup MySQL](docs/dev/MySQL.md)
@@ -17,12 +19,12 @@ Application for sensors, you can create group or sensor and receive data from mq
 Before all please run update on your computer.
 
 Update Ubuntu.
-```
+```sh
 sudo apt -y update; sudo apt -y upgrade
 ```
 
 Update Manjaro.
-```
+```sh
 yay -Syyu
 ```
 
@@ -49,25 +51,34 @@ And that's all !
 ## Deploy
 
 ```sh
+ssh USERNAME@HOST
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt install openjdk-17-jre
 git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
 cd gamaSenseIt
+
 mv .env.exemple .env
 vi .env
 mv server/src/main/resources/application.properties.exemple server/src/main/resources/application.properties
 vi server/src/main/resources/application.properties
+vi app/src/main/resources/settings.properties
 
-sudo apt install openjdk-17-jre
 chmod +x ./script/ssl.sh
 ./script/ssl.sh
 chmod +x ./script/docker.sh
 ./script/docker.sh
 
-scp "path/to/your/data.sql" "username@host:./gamaSenseIt/server/src/main/resources"
-sudo docker-compose up -d --build
+sudo docker-compose up mysql -d --build
+exit
+mysql -e "source schema.sql;source data.sql" -u gamasenseit -D gamasenseit -pDB_PASSWORD -h HOST -P 3307 --default-character-set=UTF8
+
+ssh USERNAME@HOST
+sudo docker-compose up server -d --build
 sudo docker-compose logs -f
 ```
+
+You can generate unique password with `python3 -c "print(__import__('secrets').token_urlsafe(30))"`
 
 ## License
 

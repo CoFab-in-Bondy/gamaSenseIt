@@ -2,8 +2,7 @@
 <button [type]="type" [disabled]="disabled" class="degraded" #buttonElement>
 
   <i [ngStyle]="{
-    'background-image': url? 'url(' + url + ')': undefined,
-    'line-height.px': (buttonElement.offsetHeight - 20)
+    'background-image': url? 'url(' + url + ')': undefined
   }" [ngClass]="fa" ></i>
   <span [ngStyle]="{'width.px': +width || 80}" >
     <ng-content></ng-content>

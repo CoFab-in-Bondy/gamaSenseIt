@@ -1,6 +1,7 @@
 # CORS URL allowed
 # Remove if front-end and back-end is on the same server and port
 #gamaSenseIt.cors-url=http://localhost:4200
+gamaSenseIt.base-url=https://localhost
 
 # Password strength (8-32) (8 ~ 40ms / 10 ~ 150ms / 16 ~ 9s)
 gamaSenseIt.password-strength=10

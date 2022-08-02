@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ServerRunDev" type="CompoundRunConfigurationType">
-    <toRun name="ServerBuildAndRunDevBackend" type="JarApplication" />
     <toRun name="ServerRunDevFrontend" type="js.build_tools.npm" />
+    <toRun name="ServerRunDevBackend" type="SpringBootApplicationConfigurationType" />
     <method v="2" />
   </configuration>
 </component>

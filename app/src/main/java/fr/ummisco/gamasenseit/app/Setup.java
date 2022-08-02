@@ -31,8 +31,8 @@ public class Setup {
 
     private String getExternalIconPath() throws IOException {
         if (externalIconPath == null) {
-            InputStream inIco = Objects.requireNonNull(Setup.class.getResourceAsStream(Constantes.ICON_PATH));
-            Path ico = getHome().resolve(Constantes.ICON_NAME);
+            InputStream inIco = Objects.requireNonNull(Setup.class.getResourceAsStream(AppProperties.iconPath()));
+            Path ico = getHome().resolve(AppProperties.iconName());
             Files.copy(inIco, ico, StandardCopyOption.REPLACE_EXISTING);
             externalIconPath = ico.toString();
         }
@@ -41,7 +41,7 @@ public class Setup {
 
     private String getJavaPath() {
         if (javaPath == null) {
-            javaPath = new File(new File(new File(System.getProperty("java.home")), "bin"), Constantes.JAVA_EXE).toString();
+            javaPath = new File(new File(new File(System.getProperty("java.home")), "bin"), AppProperties.java()).toString();
         }
         return javaPath;
     }
@@ -54,24 +54,25 @@ public class Setup {
     }
 
     public void setupWindowInstall() throws IOException, InterruptedException, URISyntaxException {
-        InputStream inBat = Objects.requireNonNull(Setup.class.getResourceAsStream(Constantes.SCRIPT_PATH + "/" + Constantes.GAMASENSEIT_NAME_WINDOWS));
-        Path bat = getHome().resolve(Constantes.GAMASENSEIT_NAME_WINDOWS);
-        Files.copy(inBat, bat, StandardCopyOption.REPLACE_EXISTING);
+        try (InputStream inBat = Objects.requireNonNull(Setup.class.getResourceAsStream(AppProperties.scriptPath() + "/" + AppProperties.gamaSenseItNameWindows()))) {
+            Path bat = getHome().resolve(AppProperties.gamaSenseItNameWindows());
+            Files.copy(inBat, bat, StandardCopyOption.REPLACE_EXISTING);
 
-        ArrayList<String> listArgs = new ArrayList<>();
-        listArgs.add(bat.toString());
-        listArgs.add(getJavaPath());
-        listArgs.add(getJarPath());
-        listArgs.add(getExternalIconPath());
+            ArrayList<String> listArgs = new ArrayList<>();
+            listArgs.add(bat.toString());
+            listArgs.add(getJavaPath());
+            listArgs.add(getJarPath());
+            listArgs.add(getExternalIconPath());
 
-        Process p = new ProcessBuilder(listArgs).inheritIO().start();
-        p.waitFor();
-        Thread.sleep(1000);
+            Process p = new ProcessBuilder(listArgs).inheritIO().start();
+            p.waitFor();
+            Thread.sleep(1000);
+        }
     }
 
     public boolean checkWindowsInstall() throws URISyntaxException, IOException {
         try {
-            for (String key : new String[]{Constantes.GAMASENSEIT_FILE, Constantes.GAMASENSEIT_LAUNCHER}) {
+            for (String key : new String[]{AppProperties.gamaSenseItFile(), AppProperties.gamaSenseItLauncher()}) {
                 String regCmd = Advapi32Util.registryGetExpandableStringValue(WinReg.HKEY_CLASSES_ROOT, key + "\\Shell\\Open\\Command", null);
                 if (!regCmd.contains(getJarPath()) || !regCmd.contains(getJavaPath()))
                     return false;

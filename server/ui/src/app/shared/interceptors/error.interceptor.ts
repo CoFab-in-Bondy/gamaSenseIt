@@ -21,7 +21,7 @@ export class ErrorInterceptor implements ErrorHandler {
     } else if (!(error instanceof HttpErrorResponse)) {
       error = error.rejection; // get the error object
     }
-    this.error.setError(error?.title || error?.name || 'Unknow Error', error?.message, error?.status);
+    this.error.setError(error?.error?.message || error?.title || error?.name || 'Unknown Error',  error?.message, error?.status);
   }
 
 }

@@ -1,5 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AppBuildAndRunProd" type="JarApplication">
+  <configuration default="false" name="ServerRunDevBackend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="-front" />
+    <module name="server" />
+    <option name="PROGRAM_PARAMETERS" value="--gamaSenseIt.cors-url=http://localhost:4200" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="fr.ummisco.gamasenseit.server.Application" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
@@ -10,9 +14,8 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </extension>
-    <option name="JAR_PATH" value="$PROJECT_DIR$/app/target/app-jar-with-dependencies.jar" />    <option name="ALTERNATIVE_JRE_PATH" />
     <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="-T 4C clean package -pl arduino -pl app" />
+      <option name="Make" enabled="true" />
     </method>
   </configuration>
 </component>

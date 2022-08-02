@@ -37,12 +37,18 @@ public class PowerNotifier {
 
     @Autowired
     private ISensorRepository sensorRepository;
+
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private JavaMailSender emailSender;
+
     @Autowired
     private SecurityUtils securityUtils;
     @Value("${gamaSenseIt.power-notifier-delay}")
     private long initialDelayString;
+
+    @Value("${gamaSenseIt.base-url}")
+    private String baseUrl;
 
     private static final String mailTemplate = getMailTemplate();
 
@@ -74,13 +80,13 @@ public class PowerNotifier {
         helper.setTo(email);
         helper.setSubject("Signal perdu - " + sensor.getName());
         var body = mailTemplate.formatted(
-                securityUtils.getFrontUrl(),
+                this.baseUrl,
                 esc(String.format("#%05d", sensor.getId())),
                 esc(sensor.getName()),
                 esc(sensor.getIndications()),
                 sensor.getLastCaptureDate() != null ? "le " + esc(DateUtils.formatPretty(sensor.getLastCaptureDate())) : "toujours",
-                securityUtils.getFrontUrl() + "/sensors/" + sensor.getId(),
-                securityUtils.getFrontUrl() + "/sensors/" + sensor.getId()
+                this.baseUrl + "/sensors/" + sensor.getId(),
+                this.baseUrl + "/sensors/" + sensor.getId()
         );
         helper.setText(body, true);
         helper.addInline("ico", new ClassPathResource("mail/ico.png"));

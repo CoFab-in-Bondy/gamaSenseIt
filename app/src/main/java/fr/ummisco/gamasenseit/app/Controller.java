@@ -81,7 +81,7 @@ public class Controller implements Initializable {
     public void processInstallArduino() {
         installer = new Installer();
         try {
-            installer.getResolver().setVersion(Constantes.ARDUINO_CLI_VERSION);
+            installer.getResolver().setVersion(AppProperties.arduinoVersion());
             String arduinoPath = installer.check();
             if (arduinoPath == null) {
                 Alert alertInstall = App.warning(
@@ -100,7 +100,7 @@ public class Controller implements Initializable {
                 manager = new ArduinoManager(cli);
                 Alert infoSetupDone = App.info(
                         "Information",
-                        "Installation terminé !",
+                        "Installation terminée !",
                         ButtonType.OK
                 );
                 infoSetupDone.showAndWait();
@@ -118,7 +118,7 @@ public class Controller implements Initializable {
             if (!setup.checkInstall()) {
                 Alert alert = App.warning(
                         "Avertissement installation",
-                        "L'application nécéssite une installation priviliégié\n"
+                        "L'application nécéssite une installation priviliégiée\n"
                                 + "Voulez-vous lancer l'installation en tant qu'Administrateur ?",
                         ButtonType.YES,
                         ButtonType.CANCEL
@@ -145,8 +145,8 @@ public class Controller implements Initializable {
         if (!params.isEmpty()) {
             try {
                 String base = params.get(0);
-                if (base.startsWith(Constantes.GAMASENSEIT_LAUNCHER + ":")) {
-                    String key = base.substring(Constantes.GAMASENSEIT_LAUNCHER.length() + 1);
+                if (base.startsWith(AppProperties.gamaSenseItLauncher() + ":")) {
+                    String key = base.substring(AppProperties.gamaSenseItLauncher().length() + 1);
                     downloadAndUploadFile(key);
                 } else {
                     importFile(base);
@@ -229,7 +229,7 @@ public class Controller implements Initializable {
     private void downloadFile(final String key, final String dest) throws Exception {
         System.out.println();
         try {
-            FileHelper.downloadFileTo("https://localhost/public/binary/download?token=" + key, dest);
+            FileHelper.downloadFileTo(AppProperties.baseUrl() + "/public/binary/download?token=" + key, dest);
         } catch (SSLHandshakeException e) {
             Alert alert = App.warning(
                     "Avertissement de sécurité",
@@ -242,7 +242,7 @@ public class Controller implements Initializable {
                 throw e;
 
             FileHelper.withDisabledSSL(() -> {
-                FileHelper.downloadFileTo("https://localhost/public/binary/download?token=" + key, dest);
+                FileHelper.downloadFileTo(AppProperties.baseUrl() + "/public/binary/download?token=" + key, dest);
             });
         } catch (IOException err) {
             Alert alert = App.error(

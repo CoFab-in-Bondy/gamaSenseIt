@@ -43,7 +43,9 @@ GeoLite2-Country.mmdb
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# Secrets files
 /server/src/main/resources/application.properties
+/app/src/main/resources/application.properties
 /.env
 
 # Container data

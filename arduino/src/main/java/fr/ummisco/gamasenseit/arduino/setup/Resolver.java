@@ -14,6 +14,7 @@ public class Resolver {
     private static final String DEFAULT_PROJECT_NAME = "arduino-cli";
     private static final String DEFAULT_VERSION = "0.25.0";
     private static final String DEFAULT_ARCH = "64bit";
+    private static final String DEFAULT_OS = "Linux";
 
     private String os;
     private String arch;
@@ -70,6 +71,10 @@ public class Resolver {
             this.os = "macOS";
         else if (os.startsWith("MINGW") || os.startsWith("MSYS") || os.startsWith("Windows"))
             this.os = "Windows";
+        else {
+            System.err.println("Set os to default : " + DEFAULT_OS + " (" + os + ")");
+            this.os = DEFAULT_OS;
+        }
         return this;
     }
 
@@ -104,10 +109,11 @@ public class Resolver {
                     this.arch = "32bit";
                     break;
                 case "x86_64":
+                case "amd64":
                     this.arch = "64bit";
                     break;
                 default:
-                    System.err.println("Set default arch");
+                    System.err.println("Set arch to default : " + DEFAULT_ARCH + " (" + arch + ")" );
                     this.arch = DEFAULT_ARCH;
             }
         }

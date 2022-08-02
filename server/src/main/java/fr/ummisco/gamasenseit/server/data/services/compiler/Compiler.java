@@ -95,7 +95,7 @@ public class Compiler {
                     .addText("GSM_PASS", brokerPassword)
                     .addText("GSM_MQTT_BROKER", getBrokenAuthority())
                     .addText("SENSOR_NAME", sensor.getToken());
-            System.out.println("TEST : " + properties.asString());
+            logger.info("Compile with " + properties.toString());
 
             var executable = arduinoManager.compile(
                     Arduino.ARDUINO_AVG_MEGA,
