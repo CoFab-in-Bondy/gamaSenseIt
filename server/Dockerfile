@@ -2,14 +2,10 @@ FROM maven:3.8.3-openjdk-17 as build
 
 WORKDIR "/code"
 
-COPY "./server" "."
-COPY "./arduino" "."
-COPY "./app" "."
-COPY "./script" "."
-COPY "./pom.xml" "."
-COPY "./.mvnw" "."
-RUN ./script/arduino.sh
-
+COPY "." "."
+RUN mvn clean package -T 4C -pl arduino -pl app
+RUN mkdir --parents ./server/src/main/resources/static/download/
+RUN cp ./app/target/app-jar-with-dependencies.jar ./server/src/main/resources/static/download/gamasenseit-app.jar
 RUN mvn package -T 4C
 
 FROM openjdk:17-oraclelinux8 as prod

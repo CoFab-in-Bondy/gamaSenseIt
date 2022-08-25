@@ -59,5 +59,7 @@ hs_err_pid*
 /docs/user/*.out
 /docs/user/*.toc
 /docs/user/build
+/docs/user/auxil
+/docs/user/out/main.synctex(busy)
+/docs/user/out/main.synctex.gz
 texput.log
-auxil

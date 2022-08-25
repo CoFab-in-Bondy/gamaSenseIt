@@ -227,9 +227,10 @@ public class Controller implements Initializable {
     }
 
     private void downloadFile(final String key, final String dest) throws Exception {
-        System.out.println();
+        String query = AppProperties.baseUrl() + "/public/binary/download?token=" + key;
+        System.out.println("Request to " + query);
         try {
-            FileHelper.downloadFileTo(AppProperties.baseUrl() + "/public/binary/download?token=" + key, dest);
+            FileHelper.downloadFileTo(query, dest);
         } catch (SSLHandshakeException e) {
             Alert alert = App.warning(
                     "Avertissement de sécurité",
@@ -242,7 +243,7 @@ public class Controller implements Initializable {
                 throw e;
 
             FileHelper.withDisabledSSL(() -> {
-                FileHelper.downloadFileTo(AppProperties.baseUrl() + "/public/binary/download?token=" + key, dest);
+                FileHelper.downloadFileTo(query, dest);
             });
         } catch (IOException err) {
             Alert alert = App.error(

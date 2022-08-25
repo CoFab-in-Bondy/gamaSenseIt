@@ -26,7 +26,7 @@ public class ExportCSV extends Export {
 
 
     public ExportCSV() {
-        super(new MediaType("text", "csv"), "csv");
+        super(new MediaType("text", "csv"), "csv", true);
     }
 
     @Override

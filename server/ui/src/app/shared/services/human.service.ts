@@ -3,11 +3,12 @@ import { Injectable } from "@angular/core";
 import { Observable, Subscriber } from "rxjs";
 import { DEFAULT_LAT, DEFAULT_LNG } from "src/app/constantes";
 import { DatePipe } from "@angular/common";
+import {StateService} from "@services/state.service";
 
 @Injectable()
 export class HumanService {
 
-  constructor(private http: HttpClient, public datepipe: DatePipe) {}
+  constructor(private http: HttpClient, public datepipe: DatePipe, private state: StateService) {}
 
   coordsToHumain(lat: number, long: number, precision = 3): string {
     return this.coord(lat, "N", "S", precision) + " " + this.coord(long, "E", "W", precision);
@@ -39,22 +40,26 @@ export class HumanService {
   getLocation() {
     return new Observable<Pos>(
       o => {
-        if ("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            pos => {
-              console.log(`ACCURACY : ${pos.coords.accuracy}`);
-              console.log(pos.coords.heading);
-              o.next({
-                lng: pos.coords.longitude,
-                lat: pos.coords.latitude
+        setTimeout(()=>{
+          if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+              pos => {
+                console.log(`ACCURACY : ${pos.coords.accuracy}`);
+                console.log(pos.coords.heading);
+                o.next({
+                  lng: pos.coords.longitude,
+                  lat: pos.coords.latitude
+                });
+                o.complete();
+              },
+              err=>{
+                console.error("Failed to get position");
+                console.error(err);
+                o.next(this.state.lastViewLngLat.get().center);
+                o.complete();
               });
-              o.complete();
-            },
-            err=>{
-              console.error("Failed to get position");
-              console.error(err);
-            });
-        }
+          }
+        }, 500);
       }
     );
   }

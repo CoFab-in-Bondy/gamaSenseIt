@@ -3,12 +3,13 @@ import {Observable} from "rxjs";
 import {saveAs} from "file-saver";
 import {HttpClient} from "@angular/common/http";
 import { map } from 'rxjs/operators';
+import {ServerService} from "@services/server.service";
 
 
 @Injectable()
 export class BinaryService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private server: ServerService) {
 
   }
 
@@ -24,14 +25,10 @@ export class BinaryService {
         observe: 'response'
       }).subscribe(
         resp => {
-          const contentDisposition = resp.headers.get('content-disposition');
-          const filename = contentDisposition
-            ? contentDisposition.split(';')[1].split('filename')[1].split('=')[1].replace(/"/g, '').trim()
-            : "default.gmst";
           if (resp.body == null) return;
           const blob = new Blob([resp.body], {type: 'application/octet-stream'});
           const url = window.URL.createObjectURL(blob);
-          saveAs(url, filename);
+          saveAs(url, this.server.getFilename(resp.headers));
           o.next();
           o.complete();
         },

@@ -62,6 +62,7 @@ mv .env.exemple .env
 vi .env
 mv server/src/main/resources/application.properties.exemple server/src/main/resources/application.properties
 vi server/src/main/resources/application.properties
+mb app/src/main/resources/settings.properties.exemple app/src/main/resources/settings.properties
 vi app/src/main/resources/settings.properties
 
 chmod +x ./script/ssl.sh
@@ -69,12 +70,12 @@ chmod +x ./script/ssl.sh
 chmod +x ./script/docker.sh
 ./script/docker.sh
 
-sudo docker-compose up mysql -d --build
+sudo docker-compose up -d --build mysql
 exit
 mysql -e "source schema.sql;source data.sql" -u gamasenseit -D gamasenseit -pDB_PASSWORD -h HOST -P 3307 --default-character-set=UTF8
 
 ssh USERNAME@HOST
-sudo docker-compose up server -d --build
+sudo docker-compose up -d --build server
 sudo docker-compose logs -f
 ```
 

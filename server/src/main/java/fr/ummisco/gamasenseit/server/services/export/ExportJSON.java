@@ -22,7 +22,7 @@ public class ExportJSON extends Export {
     private RecordManager recordManager;
 
     public ExportJSON() {
-        super(new MediaType("text", "json"), "json");
+        super(new MediaType("text", "json"), "json", true);
     }
 
 

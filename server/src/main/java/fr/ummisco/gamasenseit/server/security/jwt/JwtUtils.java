@@ -53,8 +53,10 @@ public class JwtUtils {
             return Optional.of(jwt);
         } catch (SignatureException ex) {
             logger.error("Invalid JWT Signature");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, JwtRequestFilter.REFRESH);
         } catch (MalformedJwtException ex) {
             logger.error("Malformed JWT");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, JwtRequestFilter.REFRESH);
         } catch (ExpiredJwtException ex) {
             logger.info("JWT Token has expired");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, JwtRequestFilter.REFRESH);

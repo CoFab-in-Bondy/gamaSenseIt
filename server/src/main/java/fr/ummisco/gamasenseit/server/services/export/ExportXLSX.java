@@ -39,7 +39,7 @@ public class ExportXLSX extends Export {
     private RecordManager recordManager;
 
     public ExportXLSX() {
-        super(new MediaType("application", "vnd.ms-excel"), "xlsx");
+        super(new MediaType("application", "vnd.ms-excel"), "xlsx", false);
     }
 
     private static XDDFLineProperties hex2XDDFColor(String colorStr) {

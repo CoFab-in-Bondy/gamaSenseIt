@@ -23,6 +23,8 @@ public abstract class Export {
     private final String ext;
     private final MediaType media;
 
+    private final boolean compressed;
+
     @Autowired
     protected NamedParameterJdbcTemplate jdbc;
 
@@ -30,9 +32,10 @@ public abstract class Export {
     private SecurityUtils securityUtils;
 
 
-    public Export(@NotNull MediaType media, @NotNull String ext) {
+    public Export(@NotNull MediaType media, @NotNull String ext, boolean compressed) {
         this.ext = ext;
         this.media = media;
+        this.compressed = compressed;
     }
 
     private String buildFilename(
@@ -44,12 +47,12 @@ public abstract class Export {
     ) {
         return securityUtils.sanitizeFilename(
                 (parameterMetadata == null ? "parameters" : parameterMetadata.getName())
-                + "-"
+                + "_"
                 + sensor.getToken()
                 + (start != null || end != null
-                ? "-"
+                ? "_"
                 + (start == null ? "X" : DateUtils.formatCompact(start))
-                + "-"
+                + "_"
                 + (end == null ? "X" :  DateUtils.formatCompact(end))
                 : "")
         ) + "." + type;
@@ -91,12 +94,17 @@ public abstract class Export {
         String filename = buildFilename(sensor, ext, parameterMetadata, start, end);
         var header = new HttpHeaders();
         var res = toBytes(sensor, parameterMetadata, start, end);
-        try {
-            res = zipBytes(filename, res);
-            header.setContentType(new MediaType("application", "zip"));
-            header.setContentDisposition(ContentDisposition.attachment().filename(filename + ".zip").build());
-        } catch (IOException err) {
-            err.printStackTrace();
+        if (compressed) {
+            try {
+                res = zipBytes(filename, res);
+                header.setContentType(new MediaType("application", "zip"));
+                header.setContentDisposition(ContentDisposition.attachment().filename(filename + ".zip").build());
+            } catch (IOException err) {
+                err.printStackTrace();
+                header.setContentType(media);
+                header.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
+            }
+        } else {
             header.setContentType(media);
             header.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
         }

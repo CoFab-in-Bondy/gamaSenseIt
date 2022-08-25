@@ -70,8 +70,7 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
     private router: Router,
     public auth: AuthService,
     private cdr: ChangeDetectorRef,
-    private datepipe: DatePipe,
-    public stateService: StateService
+    private datepipe: DatePipe
   ) {
   }
 
@@ -151,7 +150,9 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
 
     this.sensorService.getById(this.id).subscribe(
       (sensor) => {
-        this.markMap({lat: sensor.latitude, lng: sensor.longitude});
+        setTimeout(() => {
+          this.markMap({lat: sensor.latitude, lng: sensor.longitude});
+        }, 500);
         this.metadata = sensor.metadata;
         this.editable = sensor.manageable;
         const metadata = this.resolveSensorMetadataExtended(sensor.metadata);
@@ -223,8 +224,8 @@ export class SensorsSingleComponent implements OnInit, OnDestroy, AfterContentCh
       if (!this.create) return;
       const {lat, lng} = event.latlng;
       this.markMap({
-        lat: Math.round(lat * 100000) / 100000,
-        lng: Math.round(lng * 100000) / 100000,
+        lat: Math.round(lat * 10000) / 10000,
+        lng: Math.round(lng * 10000) / 10000,
       });
     });
   }
