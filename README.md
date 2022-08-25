@@ -38,8 +38,8 @@ mv .env.exemple .env
 vi .env
 mv server/src/main/resources/application.properties.exemple server/src/main/resources/application.properties
 vi server/src/main/resources/application.properties
-mb app/src/main/resources/settings.properties.exemple app/src/main/resources/settings.properties
-vi app/src/main/resources/settings.properties
+mv app/src/main/resources/application.properties.exemple app/src/main/resources/application.properties
+vi app/src/main/resources/application.properties
 
 chmod +x ./script/ssl.sh
 ./script/ssl.sh

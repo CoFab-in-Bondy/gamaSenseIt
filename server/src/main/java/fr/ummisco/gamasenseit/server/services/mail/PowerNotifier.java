@@ -50,6 +50,9 @@ public class PowerNotifier {
     @Value("${gamaSenseIt.base-url}")
     private String baseUrl;
 
+    @Value("${spring.mail.host:}")
+    private String mailHost;
+
     private static final String mailTemplate = getMailTemplate();
 
     private static String getMailTemplate() {
@@ -107,6 +110,8 @@ public class PowerNotifier {
     )
     @Transactional
     public void checkPowerOff() {
+        if (mailHost == null || mailHost.isEmpty())
+            return;
         logger.info("Checking notifications for power off sensor");
         sensorRepository.findPowerOffNotAlreadyNotified(initialDelayString)
             .parallelStream().forEach(sensor -> {
