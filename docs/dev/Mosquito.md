@@ -4,15 +4,6 @@ Mosquito is a broker often used with raspberry pi and arduino, it allows to redi
 
 ## Installation
 
-Install for Manjaro.
-```sh
-yay -S mosquitto
-
-sudo systemctl enable mosquitto
-sudo systemctl restart mosquitto
-systemctl status mosquitto
-```
-
 Install for Ubuntu.
 ```sh
 sudo apt install mosquitto

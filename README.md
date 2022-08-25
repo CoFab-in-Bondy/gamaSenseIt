@@ -23,37 +23,13 @@ Update Ubuntu.
 sudo apt -y update; sudo apt -y upgrade
 ```
 
-Update Manjaro.
-```sh
-yay -Syyu
-```
-
 Once the update are performed you can install all dependency. please see the [Table of Contents](#table-of-contents). 
 
 ## Install and run GamaSenseIt
 
-Build standalone JAR package
-```sh
-git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
-cd gamaSenseIt
-./mvnw -T 2C clean package
-```
-
-Run the server
-```sh
-java -jar target/gamasenseit-0.0.1-SNAPSHOT.jar
-```
-
-go on http://localhost:8080/index.html
-
-And that's all !
-
-## Deploy
-
 ```sh
 ssh USERNAME@HOST
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt -y update; sudo apt -y upgrade
 sudo apt install openjdk-17-jre
 git clone https://github.com/CoFab-in-Bondy/gamaSenseIt.git gamaSenseIt
 cd gamaSenseIt
@@ -80,6 +56,13 @@ sudo docker-compose logs -f
 ```
 
 You can generate unique password with `python3 -c "print(__import__('secrets').token_urlsafe(30))"`
+
+## Remove application
+
+```sh
+sudo docker-compose stop
+sudo docker-compose rm
+```
 
 ## License
 

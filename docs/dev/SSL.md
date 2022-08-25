@@ -1,8 +1,8 @@
 # Certificate SSL
 
-You can create a self-signed ssl certificate, it will not be recognized by browsers but will allow you to test.
+You can create a self-signed ssl certificate, **it will not be recognized by browsers** but will allow you to test.
 
-## Generate self-signed certificate
+## Generate self-signed certificate for https
 ```
 keytool -genkeypair -alias gamasenseit -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore gamasenseit.p12 -validity 3650
 cp gamasenseit src/main/resources/gamasenseit.p12
@@ -57,7 +57,7 @@ chown -R mysql:mysql /etc/mysql/newcerts
 
 sudo mysql_ssl_rsa_setup --uid=mysql
 ```
-`vi /etc/my.cnf`
+Open configuration with `vi /etc/my.cnf`
 ```
 [mysqld]
 ssl
@@ -73,16 +73,11 @@ ssl-cert=/etc/mysql/newcerts/client-cert.pem
 ssl-key=/etc/mysql/newcerts/client-key2.pem
 ```
 
-`service mysqld restart / systemctl restart mysql`
+Run `service mysqld restart / systemctl restart mysql`
 
+
+If you want to verify state of ssl in mysql just run the command below inside mysql.
 ```sql
 SHOW STATUS LIKE 'Ssl_cipher';  
 SHOW VARIABLES LIKE '%%ssl%%';
-```
-
-```shell
--Djavax.net.ssl.keyStore=/path/to/keystore/keystore.jks
--Djavax.net.ssl.keyStorePassword=password
--Djavax.net.ssl.trustStore=/path/to/keystore/truststore.jks
--Djavax.net.ssl.trustStorePassword=password
 ```

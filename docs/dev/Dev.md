@@ -1,7 +1,7 @@
 # Development
 If you are a developer, you can use the indications below to have a maximum of information when you develop.
 
-## Setup
+## Install packages for completions
 
 First clone the repository
 
@@ -20,19 +20,21 @@ Install npm package
 (cd ui && npm install)
 ```
 
-## Run
+## Install Intellij
 
-First you can run angular with development server for instant refresh change.
-```sh
-(cd ui && npm start)
-```
+This project was developed on Intellij, if u want full support please install it.
 
-After you can run the server without embed angular for fastest build.
-```sh
-./mvnw spring-boot:run -T 2C -Dspring-boot.run.arguments=--gamaSenseIt.cors-url=http://localhost:4200 -P -front
-```
+[Download Intellij IDEA](https://www.jetbrains.com/fr-fr/idea/download)
+
+## Make a maven wrapper
 
 If you want rebuild the maven wrapper use the command bellow.
 ```
-mvn -N io.takari:maven:wrapper -Dmaven=3.8.4
+mvn -N io.takari:maven:wrapper -Dmaven=3.8.5
 ```
+
+## Build documentation
+
+To build the documentation please install miktex :
+
+[Install MiKTeX](https://miktex.org/download)
